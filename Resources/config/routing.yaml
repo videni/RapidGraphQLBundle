@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Action\PlaceholderAction:
+        public: true
+
+    App\Bundle\RestBundle\Routing\ResourceRouteLoader:
+        arguments:
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '@App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
+            - 'App\Bundle\RestBundle\Action\PlaceholderAction'
+            - '%simple_rest.resource_class_directories%'
+        tags: [ 'routing.loader' ]
+
+    App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver:
+        arguments:
+            - '@App\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator'
+
+    App\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator: ~
+

@@ -1,0 +1,22 @@
+services:
+    App\Bundle\RestBundle\Provider\FormatsProvider:
+        arguments:
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '%simple_rest.formats%'
+
+    App\Bundle\RestBundle\Serializer\SerializerContextBuilder:
+        arguments:
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+
+    App\Bundle\RestBundle\EventListener\DeserializeListener:
+        arguments:
+            - '@jms_serializer'
+            - '@App\Bundle\RestBundle\Provider\FormatsProvider'
+            - '@App\Bundle\RestBundle\Serializer\SerializerContextBuilder'
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', priority: 2 }
+
+    jms_serializer.object_constructor: '@App\Bundle\RestBundle\Serializer\ObjectConstructor'
+
+    App\Bundle\RestBundle\Serializer\ObjectConstructor:
+        arguments: ['@jms_serializer.doctrine_object_constructor']

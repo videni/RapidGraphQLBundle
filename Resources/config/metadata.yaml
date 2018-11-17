@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory:
+        arguments:
+            - '@App\Bundle\RestBundle\Metadata\Extractor\ExtractorChain'
+
+    App\Bundle\RestBundle\Metadata\Resource\Factory\CachedResourceMetadataFactory:
+        decorates: App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory
+        arguments:
+            - "@simple_rest.cache.metadata.resource"
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\CachedResourceMetadataFactory.inner'
+
+    simple_rest.cache.metadata.resource:
+        autowire: true
+        autoconfigure: false
+        public: false
+        parent: "cache.system"
+        tags: [ "cache.pool" ]

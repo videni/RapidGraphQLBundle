@@ -1,0 +1,12 @@
+imports:
+    - { resource: 'metadata.yaml'}
+    - { resource: 'routing.yaml'}
+    - { resource: 'extractor.yaml'}
+    - { resource: 'serializer.yaml'}
+
+parameters:
+    simple_rest.resource_class_directories:
+        - "%kernel.project_dir%/config/packages/videni_resources"
+    simple_rest.formats:
+        json:
+            mime_types: 'application/json'

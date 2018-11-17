@@ -1,0 +1,15 @@
+services:
+    App\Bundle\RestBundle\Metadata\Extractor\AbstractExtractor:
+        abstract: true
+
+    App\Bundle\RestBundle\Metadata\Extractor\YamlExtractor:
+        parent: 'App\Bundle\RestBundle\Metadata\Extractor\AbstractExtractor'
+        arguments:
+            - "%simple_rest.resource_class_directories%"
+
+    App\Bundle\RestBundle\Metadata\Extractor\ExtractorChain:
+        arguments:
+            - ['@App\Bundle\RestBundle\Metadata\Extractor\YamlExtractor']
+
+
+    App\Bundle\RestBundle\Metadata\Extractor\ExtractorInterface: '@App\Bundle\RestBundle\Metadata\Extractor\ExtractorChain'
