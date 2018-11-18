@@ -29,17 +29,17 @@ final class ResourceRouteLoader extends Loader
     private $resourceMetadataFactory;
     private $operationPathResolver;
     private $resourceClassDirectories;
-    private $placeholderAction;
+    private $resourceControllerId;
 
     public function __construct(
         ResourceMetadataFactoryInterface $resourceMetadataFactory,
         OperationPathResolverInterface $operationPathResolver,
-        string $placeholderAction,
+        string $resourceControllerId,
         array $resourceClassDirectories = []
     ) {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->operationPathResolver = $operationPathResolver;
-        $this->placeholderAction = $placeholderAction;
+        $this->resourceControllerId = $resourceControllerId;
         $this->resourceClassDirectories = $resourceClassDirectories;
     }
 
@@ -60,18 +60,11 @@ final class ResourceRouteLoader extends Loader
                 throw new InvalidResourceException(sprintf('Resource %s has no short name defined.', $resourceClass));
             }
 
-            if (null !== $collectionOperations = $resourceMetadata->getCollectionOperations()) {
-                foreach ($collectionOperations as $operationName => $operation) {
-                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata, OperationType::COLLECTION);
+            if (null !== $operations = $resourceMetadata->getOperations()) {
+                foreach ($operations as $operationName => $operation) {
+                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata);
                 }
             }
-
-            if (null !== $itemOperations = $resourceMetadata->getItemOperations()) {
-                foreach ($itemOperations as $operationName => $operation) {
-                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata, OperationType::ITEM);
-                }
-            }
-
         }
 
         return $routeCollection;
@@ -90,7 +83,7 @@ final class ResourceRouteLoader extends Loader
      *
      * @throws RuntimeException
      */
-    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, array $operation, ResourceMetadata $resourceMetadata, string $operationType)
+    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, array $operation, ResourceMetadata $resourceMetadata)
     {
         $resourceShortName = $resourceMetadata->getShortName();
 
@@ -98,16 +91,23 @@ final class ResourceRouteLoader extends Loader
             return;
         }
 
-        if (!isset($operation['methods'])) {
-            throw new \RuntimeException(sprintf('Either a "route_name" or a "methods" operation attribute must exist for the operation "%s" of the resource "%s".', $operationName, $resourceClass));
+        if (!isset($operation['action'])) {
+            throw new \RuntimeException(sprintf('Either a "route_name" or a "action" operation attribute must exist for the operation "%s" of the resource "%s".', $operationName, $resourceClass));
+        }
+
+        $action = $operation['action'];
+        if (!ActionTypes::isSupport($action)) {
+            throw new \RuntimeException(sprintf('%s is not a valid action', $action));
         }
 
         if (null === $controller = $operation['controller'] ?? null) {
-            $controller = $this->placeholderAction;
+            $controller = sprintf('%s:%s', $this->resourceControllerId, $action);
         }
 
         $path = trim(trim($resourceMetadata->getAttribute('route_prefix', '')), '/');
-        $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operation, $operationType, $operationName);
+        $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operation, $operationName);
+
+        $defaultMethods = ActionTypes::getMethods($operation['action']);
 
         $route = new Route(
             $path,
@@ -115,16 +115,16 @@ final class ResourceRouteLoader extends Loader
                 '_controller' => $controller,
                 '_format' => null,
                 '_api_resource_class' => $resourceClass,
-                sprintf('_api_%s_operation_name', $operationType) => $operationName,
+                '_api_operation_name' => $operationName,
             ] + ($operation['defaults'] ?? []),
             $operation['requirements'] ?? [],
             $operation['options'] ?? [],
             $operation['host'] ?? '',
             $operation['schemes'] ?? [],
-            $operation['methods'],
+            !isset($operation['methods']) ? $defaultMethods : array_merge($defaultMethods, $operation['methods']),
             $operation['condition'] ?? ''
         );
 
-        $routeCollection->add(RouteNameGenerator::generate($operationName, $resourceShortName, $operationType), $route);
+        $routeCollection->add(RouteNameGenerator::generate($operationName, $resourceShortName), $route);
     }
 }

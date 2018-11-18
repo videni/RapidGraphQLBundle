@@ -11,21 +11,18 @@ final class ResourceMetadata implements \Serializable
 {
     private $shortName;
     private $description;
-    private $collectionOperations;
-    private $itemOperations;
+    private $operations;
     private $attributes;
 
     public function __construct(
         string $shortName = null,
         string $description = null,
-        array $itemOperations = null,
-        array $collectionOperations = null,
+        array $operations = null,
         array $attributes = null
     ) {
         $this->shortName = $shortName;
         $this->description = $description;
-        $this->collectionOperations = $collectionOperations;
-        $this->itemOperations = $itemOperations;
+        $this->operations = $operations;
         $this->attributes = $attributes;
     }
 
@@ -54,64 +51,19 @@ final class ResourceMetadata implements \Serializable
      *
      * @return array|null
      */
-    public function getItemOperations()
+    public function getOperations()
     {
-        return $this->itemOperations;
+        return $this->operations;
     }
 
-    /**
-     * Gets collection operations.
-     *
-     * @return array|null
-     */
-    public function getCollectionOperations()
-    {
-        return $this->collectionOperations;
-    }
-
-    /**
-     * Gets a collection operation attribute, optionally fallback to a resource attribute.
-     */
-    public function getCollectionOperationAttribute(string $operationName = null, string $key, $defaultValue = null, bool $resourceFallback = false)
-    {
-        return $this->findOperationAttribute($this->collectionOperations, $operationName, $key, $defaultValue, $resourceFallback);
-    }
-
-    /**
-     * Gets an item operation attribute, optionally fallback to a resource attribute.
-     */
-    public function getItemOperationAttribute(string $operationName = null, string $key, $defaultValue = null, bool $resourceFallback = false)
-    {
-        return $this->findOperationAttribute($this->itemOperations, $operationName, $key, $defaultValue, $resourceFallback);
-    }
-
-    /**
-     * Gets the first available operation attribute according to the following order: collection, item, optionally fallback to a default value.
-     */
-    public function getOperationAttribute(array $attributes, string $key, $defaultValue = null, bool $resourceFallback = false)
-    {
-        if (isset($attributes['collection_operation_name'])) {
-            return $this->getCollectionOperationAttribute($attributes['collection_operation_name'], $key, $defaultValue, $resourceFallback);
-        }
-
-        if (isset($attributes['item_operation_name'])) {
-            return $this->getItemOperationAttribute($attributes['item_operation_name'], $key, $defaultValue, $resourceFallback);
-        }
-
-        if ($resourceFallback && isset($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-
-        return $defaultValue;
-    }
 
      /**
      * Gets an operation attribute, optionally fallback to a resource attribute.
      */
-    private function findOperationAttribute(array $operations = null, string $operationName = null, string $key, $defaultValue = null, bool $resourceFallback = false)
+    public function getOperationAttribute(string $operationName, string $key, $defaultValue = null, bool $resourceFallback = false)
     {
-        if (null !== $operationName && isset($operations[$operationName][$key])) {
-            return $operations[$operationName][$key];
+        if (isset($this->operations[$operationName][$key])) {
+            return $this->operations[$operationName][$key];
         }
 
         if ($resourceFallback && isset($this->attributes[$key])) {
@@ -160,8 +112,7 @@ final class ResourceMetadata implements \Serializable
         return serialize(array(
         $this->shortName,
         $this->description,
-        $this->collectionOperations,
-        $this->itemOperations,
+        $this->operations,
         $this->attributes
         ));
     }
@@ -171,8 +122,7 @@ final class ResourceMetadata implements \Serializable
         list(
         $this->shortName,
         $this->description,
-        $this->collectionOperations,
-        $this->itemOperations,
+        $this->operations,
         $this->attributes
         ) = unserialize($str);
     }

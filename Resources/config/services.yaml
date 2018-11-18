@@ -3,10 +3,26 @@ imports:
     - { resource: 'routing.yaml'}
     - { resource: 'extractor.yaml'}
     - { resource: 'serializer.yaml'}
+    - { resource: 'controller.yaml'}
+    - { resource: 'processors/create.yaml'}
 
 parameters:
     simple_rest.resource_class_directories:
         - "%kernel.project_dir%/config/packages/videni_resources"
+
     simple_rest.formats:
         json:
             mime_types: 'application/json'
+
+services:
+    App\Component\ChainProcessor\ProcessorBagConfigProvider:
+        public: false
+        arguments:
+            - [] # groups; they are set by App\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
+            - [] # processors; they are set by App\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
+
+    Oro\Component\ChainProcessor\Debug\TraceLogger:
+        public: false
+        arguments:
+            - 'data_api'
+            - '@?debug.stopwatch'

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Bundle\RestBundle\Provider;
 
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
-use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 
 /**
  * {@inheritdoc}
@@ -13,11 +12,9 @@ use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInter
 final class FormatsProvider implements FormatsProviderInterface
 {
     private $configuredFormats;
-    private $resourceMetadataFactory;
 
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, array $configuredFormats)
+    public function __construct(array $configuredFormats)
     {
-        $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->configuredFormats = $configuredFormats;
     }
 
@@ -26,15 +23,9 @@ final class FormatsProvider implements FormatsProviderInterface
      *
      * @throws InvalidArgumentException
      */
-    public function getFormatsFromAttributes(array $attributes): array
+    public function getFormats(ResourceMetadata $resourceMetadata, $operationName): array
     {
-        if (!$attributes || !isset($attributes['resource_class'])) {
-            return $this->configuredFormats;
-        }
-
-        $resourceMetadata = $this->resourceMetadataFactory->create($attributes['resource_class']);
-
-        if (!$formats = $resourceMetadata->getOperationAttribute($attributes, 'formats', [], true)) {
+        if (!$formats = $resourceMetadata->getOperationAttribute($operationName, 'formats', [], true)) {
             return $this->configuredFormats;
         }
 

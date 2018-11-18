@@ -1,9 +1,4 @@
 services:
-    App\Bundle\RestBundle\Provider\FormatsProvider:
-        arguments:
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
-            - '%simple_rest.formats%'
-
     App\Bundle\RestBundle\Serializer\SerializerContextBuilder:
         arguments:
             - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'

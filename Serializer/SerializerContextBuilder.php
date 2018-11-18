@@ -22,62 +22,33 @@ final class SerializerContextBuilder implements SerializerContextBuilderInterfac
     private $resourceMetadataFactory;
     private $resourceFactory;
 
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, ResourceFactoryInterface $resourceFactory)
-    {
+    private $resourceMetadata;
+
+    public function __construct(
+        ResourceMetadataFactoryInterface $resourceMetadataFactory,
+        ResourceFactoryInterface $resourceFactory
+    ) {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
         $this->resourceFactory = $resourceFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createFromRequest(Request $request, bool $normalization, array $attributes): Context
+    public function createContext($class, $operationName, bool $normalization)
     {
-        $resourceMetadata = $this->resourceMetadataFactory->create($attributes['resource_class']);
+        $this->resourceMetadata = $this->resourceMetadataFactory->create($attributes['resource_class']);
 
-        $context = $normalization ? new SerializationContext(): new DeserializationContext();
-
-        $key = $normalization ? 'normalization_context' : 'denormalization_context';
-
-        $operationKey = null;
-        $operationType = null;
-        $factory = [];
-        $groups = null;
-
-        if (isset($attributes['collection_operation_name'])) {
-            $operationKey = 'collection_operation_name';
-            $operationType = OperationType::COLLECTION;
-
-            $groups = $resourceMetadata->getCollectionOperationAttribute($attributes[$operationKey], $key, [], true);
-            $factory = $resourceMetadata->getCollectionOperationAttribute($attributes[$operationKey], 'factory', [], true);
-
-        } else {
-            $operationKey = 'item_operation_name';
-            $operationType = OperationType::ITEM;
-
-            $groups = $resourceMetadata->getItemOperationAttribute($attributes[$operationKey], $key, [], true);
-            $factory = $resourceMetadata->getCollectionOperationAttribute($attributes[$operationKey], 'factory', [], true);
+        $context = $normalization? new SerializationContext():  new DeserializationContext();
+        if (!$normalization) {
+            $factory = $this->resourceMetadata->getOperationAttribute($operationName, 'factory', [], true);
         }
 
-        if ($key === "denormalization_context") {
-            $object = $this->resourceFactory->create($request, ['class' => $attributes['resource_class']] + $factory);
-            $context->setAttribute('object_to_update', $object);
-        }
+        $context->setAttribute('api_operation_name', $operationName);
 
+        $groups = $this->resourceMetadata->getOperationAttribute($operationName, 'denormalization_context', [], true);
         if (isset($groups['groups'])) {
             $context->setGroups($groups['groups']);
         }
 
-        $context->setAttribute($operationKey, $attributes[$operationKey]);
-        $context->setAttribute('operation_type', $operationType);
-
-        if (!$normalization && !$context->hasAttribute('api_allow_update')) {
-            $context->setAttribute('api_allow_update', \in_array($request->getMethod(), ['PUT', 'PATCH'], true));
-        }
-
         $context->setAttribute('resource_class', $attributes['resource_class']);
-        $context->setAttribute('request_uri', $request->getRequestUri());
-        $context->setAttribute('uri', $request->getUri());
 
         return $context;
     }

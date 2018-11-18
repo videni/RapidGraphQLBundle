@@ -1,0 +1,6 @@
+services:
+   App\Bundle\RestBundle\Processor\CreateProcessor:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Processor\ActionProcessorBag'
+            - 'create'

@@ -73,8 +73,7 @@ final class YamlExtractor extends AbstractExtractor
             $resources[$resourceName] = new ResourceMetadata(
                 $this->phpize($resourceYaml, 'shortName', 'string')?? $this->getClassName($resourceName),
                 $this->phpize($resourceYaml, 'description', 'string'),
-                $resourceYaml['itemOperations'] ?? null,
-                $resourceYaml['collectionOperations'] ?? null,
+                $resourceYaml['operations'] ?? null,
                 $resourceYaml['attributes'] ?? null
             );
         }

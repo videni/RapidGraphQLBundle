@@ -4,14 +4,11 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Action\PlaceholderAction:
-        public: true
-
     App\Bundle\RestBundle\Routing\ResourceRouteLoader:
         arguments:
             - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
             - '@App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
-            - 'App\Bundle\RestBundle\Action\PlaceholderAction'
+            - 'App\Bundle\RestBundle\Controller\ResourceController'
             - '%simple_rest.resource_class_directories%'
         tags: [ 'routing.loader' ]
 

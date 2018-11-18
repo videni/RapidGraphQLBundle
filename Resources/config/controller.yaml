@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Controller\ResourceController: ~
+
+    App\Bundle\RestBundle\Processor\ActionProcessorBag: ~
+
+    App\Bundle\RestBundle\Processor\ActionProcessorBagInterface: '@App\Bundle\RestBundle\Processor\ActionProcessorBag'
+
+    App\Bundle\RestBundle\Processor\ContextFactory: ~
+
+    App\Bundle\RestBundle\Provider\FormatsProvider:
+        arguments:
+            - '%simple_rest.formats%'
+
+    App\Bundle\RestBundle\Provider\FormatsProviderInterface: "@App\Bundle\RestBundle\Provider\FormatsProvider"
