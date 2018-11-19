@@ -19,5 +19,5 @@ interface SerializerContextBuilderInterface
      *
      * @throws RuntimeException
      */
-    public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes): Context;
+    public function createContext($class, $operationName, bool $normalization): Context;
 }

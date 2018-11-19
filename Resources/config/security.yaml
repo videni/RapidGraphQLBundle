@@ -1,0 +1,10 @@
+services:
+        App\Bundle\RestBundle\ResourceAccessChecker:
+            arguments:
+                - '@App\Bundle\RestBundle\Security\ExpressionLanguage'
+                - '@?security.authentication.trust_resolver'
+                - '@?security.role_hierarchy'
+                - '@?security.token_storage'
+                - '@?security.authorization_checker'
+
+        App\Bundle\RestBundle\Security\ExpressionLanguage: ~

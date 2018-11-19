@@ -8,6 +8,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use App\Bundle\RestBundle\Processor\ActionProcessorBag;
 use Oro\Component\ChainProcessor\Debug\TraceLogger;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
 
 class AppRestExtension extends Extension
 {
@@ -23,6 +26,8 @@ class AppRestExtension extends Extension
         $loader->load('services.yaml');
 
         $this->registerActionProcessors($container, $config);
+
+        $container->setParameter('app_rest.confg', $config);
     }
 
      /**
@@ -54,7 +59,7 @@ class AppRestExtension extends Extension
 
                 // decorate with TraceableActionProcessor
                 if ($debug) {
-                    $actionProcessorDecoratorServiceId = $actionProcessorServiceId . '.simple_rest_api.profiler';
+                    $actionProcessorDecoratorServiceId = $actionProcessorServiceId . '.app_rest_api.profiler';
                     $container
                         ->register($actionProcessorDecoratorServiceId, TraceableActionProcessor::class)
                         ->setArguments([

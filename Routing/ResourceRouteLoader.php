@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolverInterface;
+use App\Bundle\RestBundle\Operation\ActionTypes;
 
 /**
  * Loads Resources.
@@ -116,6 +117,7 @@ final class ResourceRouteLoader extends Loader
                 '_format' => null,
                 '_api_resource_class' => $resourceClass,
                 '_api_operation_name' => $operationName,
+                '_action' => $action,
             ] + ($operation['defaults'] ?? []),
             $operation['requirements'] ?? [],
             $operation['options'] ?? [],

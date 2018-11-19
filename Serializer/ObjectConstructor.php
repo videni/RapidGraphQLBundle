@@ -9,7 +9,7 @@ use JMS\Serializer\VisitorInterface;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\DeserializationContext;
 
-class ObjectConstructor
+class ObjectConstructor implements ObjectConstructorInterface
 {
     private $decorated;
 

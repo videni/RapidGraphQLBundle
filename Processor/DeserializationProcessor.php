@@ -9,6 +9,7 @@ use JMS\Serializer\DeserializationContext;
 use App\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
+use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 
 final class DeserializationProcessor implements ProcessorInterface
 {
@@ -30,27 +31,32 @@ final class DeserializationProcessor implements ProcessorInterface
     {
         /** @var Context $context */
 
-        $denormalizationContext = $this->createContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
+        $denormalizationContext = $this->createDenormalizationContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
+
+        $requestContent = $context->getRequest()->getContent();
 
         $data = $this->serializer->deserialize(
             $requestContent,
-            $attributes['resource_class'],
+            $context->getClassName(),
             $context->getFormat(),
             $denormalizationContext
         );
 
-        $context->set('data', $data);
+        $context->set('denormalized_data', $data);
     }
 
 
 
-    public function createContext($class, $operationName, ResourceMetadata $resourceMetadata)
+    public function createDenormalizationContext($class, $operationName, ResourceMetadata $resourceMetadata)
     {
+        $context = new DeserializationContext();
+
         $factory = $resourceMetadata->getOperationAttribute($operationName, 'factory', [], true);
 
         $context->setAttribute('api_operation_name', $operationName);
 
         $groups = $resourceMetadata->getOperationAttribute($operationName, 'denormalization_context', [], true);
+
         if (isset($groups['groups'])) {
             $context->setGroups($groups['groups']);
         }

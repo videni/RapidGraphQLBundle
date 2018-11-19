@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace App\Bundle\RestBundle\Processor\Create;
+
+use App\Bundle\RestBundle\Processor\RequestActionProcessor;
+use App\Bundle\RestBundle\Processor\NormalizeResultContext;
 
 /**
  * The main processor for "create" action.
@@ -12,19 +15,6 @@ class CreateProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new CreateContext();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getLogContext(NormalizeResultContext $context): array
-    {
-        $result = parent::getLogContext($context);
-        if (array_key_exists('id', $result) && empty($result['id'])) {
-            unset($result['id']);
-        }
-
-        return $result;
+        return new CreateContext($this->resourceMetadataFatory);
     }
 }

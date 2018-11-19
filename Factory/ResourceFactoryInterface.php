@@ -12,5 +12,5 @@ interface ResourceFactoryInterface
      *
      * @return ResourceInterface
      */
-    public function create(ResourceMetadata $resourceMetadata, FactoryInterface $factory);
+    public function create(Request $request, array $factoryConfigurations);
 }

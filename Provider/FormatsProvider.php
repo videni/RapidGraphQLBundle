@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Bundle\RestBundle\Provider;
 
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
+use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 
 /**
  * {@inheritdoc}
@@ -23,9 +24,9 @@ final class FormatsProvider implements FormatsProviderInterface
      *
      * @throws InvalidArgumentException
      */
-    public function getFormats(ResourceMetadata $resourceMetadata, $operationName): array
+    public function getFormats(ResourceMetadata $metadata, string $operationName): array
     {
-        if (!$formats = $resourceMetadata->getOperationAttribute($operationName, 'formats', [], true)) {
+        if (!$formats = $metadata->getOperationAttribute($operationName, 'formats', [], true)) {
             return $this->configuredFormats;
         }
 

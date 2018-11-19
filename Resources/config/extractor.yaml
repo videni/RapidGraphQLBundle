@@ -5,7 +5,7 @@ services:
     App\Bundle\RestBundle\Metadata\Extractor\YamlExtractor:
         parent: 'App\Bundle\RestBundle\Metadata\Extractor\AbstractExtractor'
         arguments:
-            - "%simple_rest.resource_class_directories%"
+            - "%app_rest.resource_class_directories%"
 
     App\Bundle\RestBundle\Metadata\Extractor\ExtractorChain:
         arguments:

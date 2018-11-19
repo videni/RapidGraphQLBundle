@@ -6,29 +6,29 @@ use Oro\Component\ChainProcessor\DependencyInjection\ProcessorsLoader;
 use Oro\Component\ChainProcessor\ProcessorBagConfigBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use App\Component\ChainProcessor\ProcessorBagConfigProvider;
+use Oro\Component\ChainProcessor\ProcessorBagConfigProvider;
 
 /**
  * Adds all registered Data API processors to the processor bag service.
  */
 class ProcessorBagCompilerPass implements CompilerPassInterface
 {
-    private const PROCESSOR_TAG                            = 'simple_rest.api.processor';
+    private const PROCESSOR_TAG  = 'app_rest.processor';
 
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $processorBagConfigProviderServiceDef = $containter->getDefinition(ProcessorBagConfigProvider::class);
+        $processorBagConfigProviderServiceDef = $container->getDefinition(ProcessorBagConfigProvider::class);
 
         if (null !== $processorBagConfigProviderServiceDef) {
             $groups = [];
-            $config = DependencyInjectionUtil::getConfig($container);
+            $config = $container->getParameter('app_rest.confg');
             foreach ($config['actions'] as $action => $actionConfig) {
                 if (isset($actionConfig['processing_groups'])) {
                     foreach ($actionConfig['processing_groups'] as $group => $groupConfig) {
-                        $groups[$action][$group] = DependencyInjectionUtil::getPriority($groupConfig);
+                        $groups[$action][$group] = $this->getAttribute($groupConfig, 'priority', 0);
                     }
                 }
             }
@@ -37,5 +37,23 @@ class ProcessorBagCompilerPass implements CompilerPassInterface
             $processorBagConfigProviderServiceDef->replaceArgument(0, $builder->getGroups());
             $processorBagConfigProviderServiceDef->replaceArgument(1, $builder->getProcessors());
         }
+    }
+
+        /**
+     * Gets a value of the specific tag attribute.
+     *
+     * @param array  $attributes
+     * @param string $attributeName
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
+    public static function getAttribute(array $attributes, $attributeName, $defaultValue)
+    {
+        if (!array_key_exists($attributeName, $attributes)) {
+            return $defaultValue;
+        }
+
+        return $attributes[$attributeName];
     }
 }

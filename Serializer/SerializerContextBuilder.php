@@ -20,19 +20,16 @@ use JMS\Serializer\Context;
 final class SerializerContextBuilder implements SerializerContextBuilderInterface
 {
     private $resourceMetadataFactory;
-    private $resourceFactory;
 
     private $resourceMetadata;
 
     public function __construct(
-        ResourceMetadataFactoryInterface $resourceMetadataFactory,
-        ResourceFactoryInterface $resourceFactory
+        ResourceMetadataFactoryInterface $resourceMetadataFactory
     ) {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->resourceFactory = $resourceFactory;
     }
 
-    public function createContext($class, $operationName, bool $normalization)
+    public function createContext($class, $operationName, bool $normalization): Context
     {
         $this->resourceMetadata = $this->resourceMetadataFactory->create($attributes['resource_class']);
 

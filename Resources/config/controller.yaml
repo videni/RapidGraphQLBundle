@@ -10,10 +10,10 @@ services:
 
     App\Bundle\RestBundle\Processor\ActionProcessorBagInterface: '@App\Bundle\RestBundle\Processor\ActionProcessorBag'
 
-    App\Bundle\RestBundle\Processor\ContextFactory: ~
+    App\Bundle\RestBundle\Processor\SerializerFormat: ~
 
     App\Bundle\RestBundle\Provider\FormatsProvider:
         arguments:
-            - '%simple_rest.formats%'
+            - '%app_rest.formats%'
 
-    App\Bundle\RestBundle\Provider\FormatsProviderInterface: "@App\Bundle\RestBundle\Provider\FormatsProvider"
+    App\Bundle\RestBundle\Provider\FormatsProviderInterface: '@App\Bundle\RestBundle\Provider\FormatsProvider'

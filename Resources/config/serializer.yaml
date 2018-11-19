@@ -1,15 +1,10 @@
 services:
-    App\Bundle\RestBundle\Serializer\SerializerContextBuilder:
-        arguments:
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
 
-    App\Bundle\RestBundle\EventListener\DeserializeListener:
-        arguments:
-            - '@jms_serializer'
-            - '@App\Bundle\RestBundle\Provider\FormatsProvider'
-            - '@App\Bundle\RestBundle\Serializer\SerializerContextBuilder'
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', priority: 2 }
+    App\Bundle\RestBundle\Serializer\SerializerContextBuilder: ~
 
     jms_serializer.object_constructor: '@App\Bundle\RestBundle\Serializer\ObjectConstructor'
 

@@ -7,15 +7,29 @@ namespace App\Bundle\RestBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Bundle\RestBundle\Processor\Context;
 use App\Bundle\RestBundle\Processor\ContextFactory;
+use Symfony\Component\HttpFoundation\Request;
+use App\Bundle\RestBundle\Processor\ActionProcessorBagInterface;
+use App\Bundle\RestBundle\Request\RestRequestHeaders;
+use App\Bundle\RestBundle\Operation\ActionTypes;
+use App\Bundle\RestBundle\Processor\SerializerFormat;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResourceController extends Controller
 {
+    private $serializerFormat;
+    private $actionProcessorBag;
+    private $viewHandler;
 
-    private $contextFactory;
-
-    public function __construct(ContextFactory $contextFactory)
-    {
-        $this->contextFactory = $contextFactory;
+    public function __construct(
+        ActionProcessorBagInterface $actionProcessorBag,
+        ViewHandlerInterface $viewHandler,
+        SerializerFormat $serializerFormat
+    ) {
+        $this->actionProcessorBag = $actionProcessorBag;
+        $this->serializerFormat = $serializerFormat;
+        $this->viewHandler = $viewHandler;
     }
 
     /**
@@ -27,13 +41,17 @@ class ResourceController extends Controller
      */
     public function index(Request $request)
     {
+        $processor = $this->getProcessor(ActionTypes::INDEX);
+
         /** @var GetListContext $context */
-        $context = $this->contextFactory->create($processor, $request);
-        $context->setFilterValues(new RestFilterValueAccessor($request));
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
+                $context->setFilterValues(new RestFilterValueAccessor($request));
 
         $processor->process($context);
 
-        return $context;
+        return $this->buildResponse($context);
     }
 
     /**
@@ -45,14 +63,18 @@ class ResourceController extends Controller
      */
     public function view(Request $request)
     {
+        $processor = $this->getProcessor(ActionTypes::VIEW);
+
         /** @var GetContext $context */
-        $context = $this->contextFactory->create($processor, $request);
-        $context->setId($request->attributes->get('id'));
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
+                $context->setId($request->attributes->get('id'));
         $context->setFilterValues(new RestFilterValueAccessor($request));
 
         $processor->process($context);
 
-        return $context;
+        return $this->buildResponse($context);
     }
 
     /**
@@ -64,8 +86,13 @@ class ResourceController extends Controller
      */
     public function delete(Request $request)
     {
+         $processor = $this->getProcessor(ActionTypes::CREATE);
+
         /** @var DeleteContext $context */
-        $context = $this->contextFactory->create($processor, $request);
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
+
         $context->setId($request->attributes->get('id'));
 
         $processor->process($context);
@@ -82,13 +109,17 @@ class ResourceController extends Controller
      */
     public function deleteBatch(Request $request)
     {
+         $processor = $this->getProcessor(ActionTypes::CREATE);
+
         /** @var DeleteListContext $context */
-        $context = $this->contextFactory->create($processor, $request);
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
         $context->setFilterValues(new RestFilterValueAccessor($request));
 
         $processor->process($context);
 
-        return $context;
+        return $this->buildResponse($context);
     }
 
     /**
@@ -100,14 +131,18 @@ class ResourceController extends Controller
      */
     public function update(Request $request)
     {
+        $processor = $this->getProcessor(ActionTypes::UPDATE);
+
         /** @var UpdateContext $context */
-        $context = $this->contextFactory->create($processor, $request);
-        $context->setId($request->attributes->get('id'));
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
+                $context->setId($request->attributes->get('id'));
         $context->setRequestData($request->request->all());
 
         $processor->process($context);
 
-        return $context;
+        return $this->buildResponse($context);
     }
 
     /**
@@ -119,13 +154,52 @@ class ResourceController extends Controller
      */
     public function create(Request $request)
     {
+        $processor = $this->getProcessor(ActionTypes::CREATE);
+
         /** @var CreateContext $context */
-        $context = $this->contextFactory->create($processor, $request);
-        $context->setRequestData($request->request->all());
+        $context = $processor->createContext();
+
+        $this->prepareContext($context, $request);
 
         $processor->process($context);
 
+        return $this->buildResponse($context);
+    }
 
-        return $context;
+     /**
+     * {@inheritdoc}
+     */
+    protected function buildResponse(Context $context): Response
+    {
+        $view = View::create($context->getResult());
+        $view->setFormat($context->getFormat());
+
+        $view->setStatusCode($context->getResponseStatusCode() ?: Response::HTTP_OK);
+        foreach ($context->getResponseHeaders()->toArray() as $key => $value) {
+            $view->setHeader($key, $value);
+        }
+
+        return $this->viewHandler->handle($view);
+    }
+
+    private function prepareContext(Context $context, Request $request)
+    {
+        $context->setRequest($request);
+        $context->setClassName($request->attributes->get('_api_resource_class'));
+        $context->setOperationName($request->attributes->get('_api_operation_name'));
+        $context->setRequestHeaders(new RestRequestHeaders($request));
+        $context->setFormat($this->serializerFormat->getFormat($request, $context));
+
+        $context->loadMetadata();
+    }
+
+         /**
+     * @param Request $request
+     *
+     * @return ActionProcessorInterface
+     */
+    private function getProcessor($action)
+    {
+        return $this->actionProcessorBag->getProcessor($action);
     }
 }

@@ -1,0 +1,144 @@
+app_rest:
+    actions:
+            # get_list:
+            #     processor_service_id: app_rest.get_list.processor
+            #     processing_groups:
+            #         initialize:
+            #             priority: -10
+            #         resource_check:
+            #             priority: -15
+            #         normalize_input:
+            #             priority: -20
+            #         security_check:
+            #             priority: -30
+            #         build_query:
+            #             priority: -40
+            #         load_data:
+            #             priority: -50
+            #         data_security_check:
+            #             priority: -55
+            #         normalize_data:
+            #             priority: -60
+            #         finalize:
+            #             priority: -70
+            #         normalize_result:
+            #             priority: -80
+            # get:
+            #     processor_service_id: app_rest.get.processor
+            #     processing_groups:
+            #         initialize:
+            #             priority: -10
+            #         resource_check:
+            #             priority: -15
+            #         normalize_input:
+            #             priority: -20
+            #         security_check:
+            #             priority: -30
+            #         build_query:
+            #             priority: -40
+            #         load_data:
+            #             priority: -50
+            #         data_security_check:
+            #             priority: -55
+            #         normalize_data:
+            #             priority: -60
+            #         finalize:
+            #             priority: -70
+            #         normalize_result:
+            #             priority: -80
+            # delete:
+            #     processor_service_id: app_rest.delete.processor
+            #     processing_groups:
+            #         initialize:
+            #             priority: -10
+            #         resource_check:
+            #             priority: -15
+            #         normalize_input:
+            #             priority: -20
+            #         security_check:
+            #             priority: -30
+            #         load_data:
+            #             priority: -40
+            #         data_security_check:
+            #             priority: -45
+            #         delete_data:
+            #             priority: -50
+            #         finalize:
+            #             priority: -60
+            #         normalize_result:
+            #             priority: -70
+            # delete_list:
+            #     processor_service_id: app_rest.delete_list.processor
+            #     processing_groups:
+            #         initialize:
+            #             priority: -10
+            #         resource_check:
+            #             priority: -15
+            #         normalize_input:
+            #             priority: -20
+            #         security_check:
+            #             priority: -30
+            #         build_query:
+            #             priority: -40
+            #         load_data:
+            #             priority: -50
+            #         data_security_check:
+            #             priority: -55
+            #         delete_data:
+            #             priority: -60
+            #         finalize:
+            #             priority: -70
+            #         normalize_result:
+            #             priority: -80
+            create:
+                processor_service_id: App\Bundle\RestBundle\Processor\Create\CreateProcessor
+                processing_groups:
+                    initialize:
+                        priority: -10
+                    resource_check:
+                        priority: -15
+                    security:
+                        priority: -20
+                    deserialize:
+                        priority: -25
+                    validate:
+                        priority: -30
+                    load_data:
+                        priority: -40
+                    data_security_check:
+                        priority: -45
+                    transform_data:
+                        priority: -50
+                    save_data:
+                        priority: -60
+                    normalize_data:
+                        priority: -70
+                    finalize:
+                        priority: -80
+                    normalize_result:
+                        priority: -90
+            # update:
+            #     processor_service_id: app_rest.update.processor
+            #     processing_groups:
+            #         initialize:
+            #             priority: -10
+            #         resource_check:
+            #             priority: -15
+            #         normalize_input:
+            #             priority: -20
+            #         security_check:
+            #             priority: -30
+            #         load_data:
+            #             priority: -40
+            #         data_security_check:
+            #             priority: -45
+            #         transform_data:
+            #             priority: -50
+            #         save_data:
+            #             priority: -60
+            #         normalize_data:
+            #             priority: -70
+            #         finalize:
+            #             priority: -80
+            #         normalize_result:
+            #             priority: -90

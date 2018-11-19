@@ -5,6 +5,8 @@ namespace App\Bundle\RestBundle\Processor;
 use Oro\Component\ChainProcessor\ParameterBag;
 use Oro\Component\ChainProcessor\ParameterBagInterface;
 use Oro\Component\ChainProcessor\Context as BaseContext;
+use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class Context extends BaseContext implements ContextInterface
 {
@@ -30,7 +32,7 @@ class Context extends BaseContext implements ContextInterface
     /** the response status code */
     const RESPONSE_STATUS_CODE = 'responseStatusCode';
 
-    const OPERATION_NAME = '_api_operation_name';
+    const OPERATION_NAME = 'operationName';
 
     /** @var Error[] */
     private $errors;
@@ -51,8 +53,6 @@ class Context extends BaseContext implements ContextInterface
      */
     public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory)
     {
-        parent::__construct();
-
         $this->resourceMetadataFactory = $resourceMetadataFactory;
     }
 
@@ -83,7 +83,7 @@ class Context extends BaseContext implements ContextInterface
 
     public function getOperationName()
     {
-        $this->get(self::OPERATION_NAME);
+        return $this->get(self::OPERATION_NAME);
     }
 
     /**
@@ -270,23 +270,23 @@ class Context extends BaseContext implements ContextInterface
     }
 
     /**
-     * Returns request data.
+     * Returns request.
      *
-     * @return array
+     * @return Request
      */
-    public function getRequestData()
+    public function getRequest()
     {
-        return $this->requestData;
+        return $this->request;
     }
 
     /**
-     * Sets request data to the context.
+     * Sets request to the context.
      *
-     * @param array $requestData
+     * @param Request request
      */
-    public function setRequestData(array $requestData)
+    public function setRequest(Request $request)
     {
-        $this->requestData = $requestData;
+        $this->request = $request;
     }
 
       /**
@@ -324,7 +324,7 @@ class Context extends BaseContext implements ContextInterface
     /**
      * Loads an entity metadata.
      */
-    protected function loadMetadata()
+    public function loadMetadata()
     {
         $entityClass = $this->getClassName();
         if (empty($entityClass)) {
