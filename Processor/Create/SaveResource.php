@@ -10,6 +10,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use App\Bundle\RestBundle\Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Saves new ORM entity to the database and save its identifier into the context.
@@ -50,7 +51,9 @@ class SaveResource implements ProcessorInterface
             // the metadata does not exist
             return;
         }
-
+        if (null === $entity->getId()) {
+            $context->setResponseStatusCode(Response::HTTP_CREATED);
+        }
         $em->persist($entity);
         try {
             $em->flush();

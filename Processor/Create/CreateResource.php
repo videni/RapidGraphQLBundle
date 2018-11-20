@@ -9,7 +9,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 use App\Bundle\RestBundle\Exception;
-use App\Bundle\RestBundle\DependencyInjection\Compiler\RegisterResourcesCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;

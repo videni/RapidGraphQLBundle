@@ -15,6 +15,7 @@ use App\Bundle\RestBundle\Processor\SerializerFormat;
 use FOS\RestBundle\View\View;
 use App\Bundle\RestBundle\Handler\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResourceController extends Controller
 {
@@ -65,14 +66,15 @@ class ResourceController extends Controller
     {
         $processor = $this->getProcessor(ActionTypes::VIEW);
 
-        /** @var GetContext $context */
+        /** @var ViewContext $context */
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-                $context->setId($request->attributes->get('id'));
-        $context->setFilterValues(new RestFilterValueAccessor($request));
+        $context->setId($request->attributes->get('id'));
 
         $processor->process($context);
+
+        $this->throwNotFoundHttpException($context);
 
         return $this->buildResponse($context);
     }
@@ -142,6 +144,8 @@ class ResourceController extends Controller
 
         $processor->process($context);
 
+        $this->throwNotFoundHttpException($context);
+
         return $this->buildResponse($context);
     }
 
@@ -201,5 +205,12 @@ class ResourceController extends Controller
     private function getProcessor($action)
     {
         return $this->actionProcessorBag->getProcessor($action);
+    }
+
+    private function throwNotFoundHttpException(Context $context)
+    {
+        if (null === $context->getResult()) {
+            throw new NotFoundHttpException(sprintf('The "%s" has not been found', $context->getMetadata()->getShortName()));
+        }
     }
 }

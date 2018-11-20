@@ -6,6 +6,7 @@ imports:
     - { resource: 'controller.yaml'}
     - { resource: 'security.yaml'}
     - { resource: 'processors/create.yaml'}
+    - { resource: 'processors/view.yaml'}
 
 parameters:
     app_rest.resource_class_directories:

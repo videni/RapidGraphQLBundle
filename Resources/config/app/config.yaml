@@ -23,29 +23,15 @@ app_rest:
             #             priority: -70
             #         normalize_result:
             #             priority: -80
-            # get:
-            #     processor_service_id: app_rest.get.processor
-            #     processing_groups:
-            #         initialize:
-            #             priority: -10
-            #         resource_check:
-            #             priority: -15
-            #         normalize_input:
-            #             priority: -20
-            #         security_check:
-            #             priority: -30
-            #         build_query:
-            #             priority: -40
-            #         load_data:
-            #             priority: -50
-            #         data_security_check:
-            #             priority: -55
-            #         normalize_data:
-            #             priority: -60
-            #         finalize:
-            #             priority: -70
-            #         normalize_result:
-            #             priority: -80
+            view:
+                processor_service_id: App\Bundle\RestBundle\Processor\View\ViewProcessor
+                processing_groups:
+                    initialize:
+                        priority: -10
+                    security:
+                        priority: -15
+                    finalize:
+                        priority: -70
             # delete:
             #     processor_service_id: app_rest.delete.processor
             #     processing_groups:

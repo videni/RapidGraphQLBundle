@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Processor\View\ViewProcessor:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - 'view'
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+
+    App\Bundle\RestBundle\Processor\View\LoadResource:
+        arguments: ['@service_container']
+        tags:
+            - { name: app_rest.processor, action: view, group: initialize, priority: 10 }
