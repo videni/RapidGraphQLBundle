@@ -4,8 +4,6 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Serializer\SerializerContextBuilder: ~
-
     jms_serializer.object_constructor: '@App\Bundle\RestBundle\Serializer\ObjectConstructor'
 
     App\Bundle\RestBundle\Serializer\ObjectConstructor:

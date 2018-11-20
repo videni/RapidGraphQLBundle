@@ -14,17 +14,17 @@ use App\Bundle\RestBundle\Exception;
 /**
  * Saves new ORM entity to the database and save its identifier into the context.
  */
-class SaveEntity implements ProcessorInterface
+class SaveResource implements ProcessorInterface
 {
     /** @var ManagerRegistry */
-    protected $registery;
+    protected $registry;
 
     /**
-     * @param registery $registery
+     * @param ManagerRegistry $registry
      */
-    public function __construct(ManagerRegistry $registery)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->registery = $registery;
+        $this->registry = $registry;
     }
 
     /**
@@ -39,7 +39,7 @@ class SaveEntity implements ProcessorInterface
             return;
         }
 
-        $em = $this->registery->getEntityManager($entity, false);
+        $em = $this->getEntityManager($entity, false);
         if (!$em) {
             // only manageable entities are supported
             return;

@@ -101,8 +101,10 @@ app_rest:
                         priority: -20
                     validate:
                         priority: -30
-                    save:
+                    transform:
                         priority: -40
+                    save:
+                        priority: -50
                     finalize:
                         priority: -60
             # update:

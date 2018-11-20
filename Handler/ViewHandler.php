@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Bundle\RestBundle\Processor\Context as ProcessorContext;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface as RestViewHandlerInterface;
+use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 
 final class ViewHandler implements ViewHandlerInterface
 {
@@ -30,7 +31,7 @@ final class ViewHandler implements ViewHandlerInterface
      */
     public function handle(ProcessorContext $context, View $view): Response
     {
-        $viewContext = $this->createContext($context->getClassName, $context->getOperationName(), $context->getMetadata());
+        $viewContext = $this->createContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
         $view->setContext($viewContext);
 
         return $this->restViewHandler->handle($view);

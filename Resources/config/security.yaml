@@ -1,5 +1,5 @@
 services:
-        App\Bundle\RestBundle\ResourceAccessChecker:
+        App\Bundle\RestBundle\Security\ResourceAccessChecker:
             arguments:
                 - '@App\Bundle\RestBundle\Security\ExpressionLanguage'
                 - '@?security.authentication.trust_resolver'
@@ -7,4 +7,5 @@ services:
                 - '@?security.token_storage'
                 - '@?security.authorization_checker'
 
+        App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@App\Bundle\RestBundle\Security\ResourceAccessChecker'
         App\Bundle\RestBundle\Security\ExpressionLanguage: ~

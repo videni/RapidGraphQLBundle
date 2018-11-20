@@ -3,7 +3,6 @@
 namespace App\Bundle\RestBundle\Processor;
 
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
-use App\Bundle\RestBundle\Utils\AttributesExtractor;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\DeserializationContext;
 use App\Bundle\RestBundle\Processor\Context;
@@ -33,6 +32,8 @@ final class DeserializationProcessor implements ProcessorInterface
 
         $denormalizationContext = $this->createDenormalizationContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
 
+        $denormalizationContext->setAttribute('target', $context->get('new_resource'));
+
         $requestContent = $context->getRequest()->getContent();
 
         $data = $this->serializer->deserialize(
@@ -42,14 +43,12 @@ final class DeserializationProcessor implements ProcessorInterface
             $denormalizationContext
         );
 
-        $context->set('denormalized_data', $data);
+        $context->setResult($data);
     }
 
     public function createDenormalizationContext($class, $operationName, ResourceMetadata $resourceMetadata)
     {
         $context = new DeserializationContext();
-
-        $factory = $resourceMetadata->getOperationAttribute($operationName, 'factory', [], true);
 
         $context->setAttribute('api_operation_name', $operationName);
 

@@ -28,8 +28,6 @@ final class ValidationProcessor implements ProcessorInterface
     {
         $validationGroups = $context->getMetadata()->getOperationAttribute($context->getClassName(), 'validation_groups', null, true);
 
-        $data = $context->get('denormalized_data');
-
-        $this->validator->validate($data, ['groups' => $validationGroups]);
+        $this->validator->validate($context->getResult(), ['groups' => $validationGroups]);
     }
 }

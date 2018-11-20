@@ -41,7 +41,8 @@ services:
 
     App\Bundle\RestBundle\Factory\ResourceFactory: ~
 
-    App\Bundle\RestBundle\Factory\ParametersParser: ~
+    App\Bundle\RestBundle\Factory\ParametersParser:
+        arguments: ['@service_container', '@App\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage']
 
     App\Bundle\RestBundle\Factory\ParametersParserInterface: '@App\Bundle\RestBundle\Factory\ParametersParser'
 

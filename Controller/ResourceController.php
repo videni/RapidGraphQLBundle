@@ -179,7 +179,7 @@ class ResourceController extends Controller
             $view->setHeader($key, $value);
         }
 
-        return $this->viewHandler->handle($view);
+        return $this->viewHandler->handle($context, $view);
     }
 
     private function prepareContext(Context $context, Request $request)

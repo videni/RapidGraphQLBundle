@@ -56,11 +56,6 @@ final class ResourceRouteLoader extends Loader
 
         foreach ($this->resourceMetadataFactory->getAllResourceMetadatas() as $resourceClass => $resourceMetadata) {
             $resourceShortName = $resourceMetadata->getShortName();
-
-            if (null === $resourceShortName) {
-                throw new InvalidResourceException(sprintf('Resource %s has no short name defined.', $resourceClass));
-            }
-
             if (null !== $operations = $resourceMetadata->getOperations()) {
                 foreach ($operations as $operationName => $operation) {
                     $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata);
