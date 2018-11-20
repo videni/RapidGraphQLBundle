@@ -95,28 +95,16 @@ app_rest:
                 processing_groups:
                     initialize:
                         priority: -10
-                    resource_check:
-                        priority: -15
                     security:
-                        priority: -20
+                        priority: -15
                     deserialize:
-                        priority: -25
+                        priority: -20
                     validate:
                         priority: -30
-                    load_data:
+                    save:
                         priority: -40
-                    data_security_check:
-                        priority: -45
-                    transform_data:
-                        priority: -50
-                    save_data:
-                        priority: -60
-                    normalize_data:
-                        priority: -70
                     finalize:
-                        priority: -80
-                    normalize_result:
-                        priority: -90
+                        priority: -60
             # update:
             #     processor_service_id: app_rest.update.processor
             #     processing_groups:

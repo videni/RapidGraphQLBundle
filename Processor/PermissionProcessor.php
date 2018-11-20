@@ -21,7 +21,7 @@ use App\Bundle\RestBundle\Validator\ValidatorInterface;
 /**
  * Denies access to the current resource if the logged user doesn't have sufficient permissions.
  */
-final class PermissionProcessor
+final class PermissionProcessor implements ProcessorInterface
 {
     private $resourceAccessChecker;
 

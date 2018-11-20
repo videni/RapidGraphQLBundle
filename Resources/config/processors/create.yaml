@@ -16,9 +16,18 @@ services:
         tags:
             - { name: app_rest.processor, action: create, group: deserialize, priority: 10 }
 
+    App\Bundle\RestBundle\Processor\SerializationProcessor:
+        arguments: ['@jms_serializer']
+        tags:
+            - { name: app_rest.processor, action: create, group: normalize, priority: 10 }
+
     App\Bundle\RestBundle\Processor\ValidationProcessor:
         tags:
             - { name: app_rest.processor, action: create, group: validate, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Create\SaveEntity:
+        tags:
+            - { name: app_rest.processor, action: create, group: save, priority: 10 }
 
     App\Bundle\RestBundle\Validator\Validator:
         arguments: ['@validator', '@service_container']

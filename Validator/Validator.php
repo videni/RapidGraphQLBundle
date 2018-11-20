@@ -31,8 +31,7 @@ class Validator implements ValidatorInterface
     public function validate($data, array $context = [])
     {
         if (null !== $validationGroups = $context['groups'] ?? null) {
-            if (
-                $this->container &&
+            if ($this->container &&
                 \is_string($validationGroups) &&
                 $this->container->has($validationGroups) &&
                 ($service = $this->container->get($validationGroups)) &&

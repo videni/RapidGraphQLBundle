@@ -13,7 +13,7 @@ use App\Bundle\RestBundle\Request\RestRequestHeaders;
 use App\Bundle\RestBundle\Operation\ActionTypes;
 use App\Bundle\RestBundle\Processor\SerializerFormat;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandlerInterface;
+use App\Bundle\RestBundle\Handler\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResourceController extends Controller

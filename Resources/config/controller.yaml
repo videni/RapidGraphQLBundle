@@ -17,3 +17,7 @@ services:
             - '%app_rest.formats%'
 
     App\Bundle\RestBundle\Provider\FormatsProviderInterface: '@App\Bundle\RestBundle\Provider\FormatsProvider'
+
+    App\Bundle\RestBundle\Handler\ViewHandler: ~
+
+    App\Bundle\RestBundle\Handler\ViewHandlerInterface:  '@App\Bundle\RestBundle\Handler\ViewHandler'

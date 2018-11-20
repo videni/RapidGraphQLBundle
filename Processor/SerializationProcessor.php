@@ -5,13 +5,13 @@ namespace App\Bundle\RestBundle\Processor;
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
 use App\Bundle\RestBundle\Utils\AttributesExtractor;
 use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use App\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 
-final class DeserializationProcessor implements ProcessorInterface
+final class SerializationProcessor implements ProcessorInterface
 {
     private $serializer;
 
@@ -31,7 +31,7 @@ final class DeserializationProcessor implements ProcessorInterface
     {
         /** @var Context $context */
 
-        $denormalizationContext = $this->createDenormalizationContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
+        $serializationContext = $this->createSerializationContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
 
         $requestContent = $context->getRequest()->getContent();
 
@@ -39,21 +39,18 @@ final class DeserializationProcessor implements ProcessorInterface
             $requestContent,
             $context->getClassName(),
             $context->getFormat(),
-            $denormalizationContext
+            $serializationContext
         );
 
-        $context->set('denormalized_data', $data);
+        $context->set('serialized_data', $data);
     }
 
-    public function createDenormalizationContext($class, $operationName, ResourceMetadata $resourceMetadata)
+    public function createSerializationContext($class, $operationName, ResourceMetadata $resourceMetadata)
     {
-        $context = new DeserializationContext();
-
-        $factory = $resourceMetadata->getOperationAttribute($operationName, 'factory', [], true);
-
+        $context = new SerializationContext();
         $context->setAttribute('api_operation_name', $operationName);
 
-        $groups = $resourceMetadata->getOperationAttribute($operationName, 'denormalization_context', [], true);
+        $groups = $resourceMetadata->getOperationAttribute($operationName, 'normalization_context', [], true);
 
         if (isset($groups['groups'])) {
             $context->setGroups($groups['groups']);
