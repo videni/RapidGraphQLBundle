@@ -17,9 +17,8 @@ final class DeserializationProcessor implements ProcessorInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(
-        SerializerInterface $serializer
-    ) {
+    public function __construct(SerializerInterface $serializer)
+    {
         $this->serializer = $serializer;
     }
 

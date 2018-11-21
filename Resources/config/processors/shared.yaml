@@ -14,6 +14,7 @@ services:
         tags:
             - { name: app_rest.processor, action: view, group: initialize, priority: 10 }
             - { name: app_rest.processor, action: update, group: initialize, priority: 10 }
+            - { name: app_rest.processor, action: delete, group: initialize, priority: 10 }
 
     App\Bundle\RestBundle\Processor\Shared\ValidationProcessor:
         tags:

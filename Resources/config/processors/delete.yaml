@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Processor\Delete\DeleteProcessor:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - 'delete'
+            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+
+    # intialize
+
+    # security
+
+    # delete
+    App\Bundle\RestBundle\Processor\Delete\DeleteResource:
+        tags:
+            - { name: app_rest.processor, action: delete, group: delete, priority: 10 }

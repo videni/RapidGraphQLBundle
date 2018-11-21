@@ -9,6 +9,7 @@ imports:
     - { resource: 'processors/view.yaml'}
     - { resource: 'processors/shared.yaml'}
     - { resource: 'processors/update.yaml'}
+    - { resource: 'processors/delete.yaml'}
 
 parameters:
     app_rest.resource_class_directories:
@@ -81,7 +82,12 @@ services:
 
     App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory: ~
 
+    App\Bundle\RestBundle\Util\DoctrineHelper: ~
+
     App\Bundle\RestBundle\Validator\Validator:
         arguments: ['@validator', '@service_container']
 
     App\Bundle\RestBundle\Validator\ValidatorInterface: '@App\Bundle\RestBundle\Validator\Validator'
+
+    App\Bundle\RestBundle\Handler\DeleteHandler: ~
+    App\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@App\Bundle\RestBundle\Handler\DeleteHandler'

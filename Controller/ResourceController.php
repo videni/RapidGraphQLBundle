@@ -48,7 +48,7 @@ class ResourceController extends Controller
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-                $context->setFilterValues(new RestFilterValueAccessor($request));
+        $context->setFilterValues(new RestFilterValueAccessor($request));
 
         $processor->process($context);
 
@@ -70,8 +70,6 @@ class ResourceController extends Controller
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-        $context->setId($request->attributes->get('id'));
-
         $processor->process($context);
 
         $this->throwNotFoundHttpException($context);
@@ -88,14 +86,12 @@ class ResourceController extends Controller
      */
     public function delete(Request $request)
     {
-         $processor = $this->getProcessor(ActionTypes::CREATE);
+         $processor = $this->getProcessor(ActionTypes::DELETE);
 
         /** @var DeleteContext $context */
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-
-        $context->setId($request->attributes->get('id'));
 
         $processor->process($context);
 

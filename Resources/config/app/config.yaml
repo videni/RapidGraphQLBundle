@@ -31,28 +31,18 @@ app_rest:
                     security:
                         priority: -15
                     finalize:
-                        priority: -70
-            # delete:
-            #     processor_service_id: app_rest.delete.processor
-            #     processing_groups:
-            #         initialize:
-            #             priority: -10
-            #         resource_check:
-            #             priority: -15
-            #         normalize_input:
-            #             priority: -20
-            #         security_check:
-            #             priority: -30
-            #         load_data:
-            #             priority: -40
-            #         data_security_check:
-            #             priority: -45
-            #         delete_data:
-            #             priority: -50
-            #         finalize:
-            #             priority: -60
-            #         normalize_result:
-            #             priority: -70
+                        priority: -20
+            delete:
+                processor_service_id: App\Bundle\RestBundle\Processor\Delete\DeleteProcessor
+                processing_groups:
+                    initialize:
+                        priority: -10
+                    security:
+                        priority: -15
+                    delete:
+                        priority:  -20
+                    finalize:
+                        priority:  -25
             # delete_list:
             #     processor_service_id: app_rest.delete_list.processor
             #     processing_groups:
