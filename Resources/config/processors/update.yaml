@@ -4,15 +4,19 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\View\ViewProcessor:
+    App\Bundle\RestBundle\Processor\Update\UpdateProcessor:
         public: false
         arguments:
             - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
-            - 'view'
+            - 'update'
             - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
 
     # initialize
-    App\Bundle\RestBundle\Processor\View\LoadResource:
-        arguments: ['@service_container']
-        tags:
-            - { name: app_rest.processor, action: view, group: initialize, priority: 10 }
+
+    # security
+
+    # deserialize
+
+    # validate
+
+    # save

@@ -139,8 +139,6 @@ class ResourceController extends Controller
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-                $context->setId($request->attributes->get('id'));
-        $context->setRequestData($request->request->all());
 
         $processor->process($context);
 

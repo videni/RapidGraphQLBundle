@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Processor;
+namespace App\Bundle\RestBundle\Processor\Shared;
 
 use App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

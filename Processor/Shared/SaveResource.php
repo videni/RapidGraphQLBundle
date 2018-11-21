@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Create;
+namespace App\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Bundle\RestBundle\Processor\SingleItemContext;

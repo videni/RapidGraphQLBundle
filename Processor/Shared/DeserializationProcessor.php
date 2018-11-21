@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace App\Bundle\RestBundle\Processor\Shared;
 
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
 use JMS\Serializer\SerializerInterface;
@@ -32,7 +32,7 @@ final class DeserializationProcessor implements ProcessorInterface
 
         $denormalizationContext = $this->createDenormalizationContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
 
-        $denormalizationContext->setAttribute('target', $context->get('new_resource'));
+        $denormalizationContext->setAttribute('target', $context->getResult());
 
         $requestContent = $context->getRequest()->getContent();
 

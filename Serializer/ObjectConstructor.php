@@ -20,7 +20,7 @@ class ObjectConstructor implements ObjectConstructorInterface
 
     public function construct(VisitorInterface $visitor, ClassMetadata $metadata, $data, array $type, DeserializationContext $context)
     {
-        if ($context->hasAttribute('target') && $context->getDepth() === 1) {
+        if ($context->hasAttribute('target') && $context->getDepth() === 1 && null !== $context->getAttribute('target')) {
             return $context->getAttribute('target');
         }
 

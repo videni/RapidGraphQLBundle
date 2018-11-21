@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace App\Bundle\RestBundle\Processor\Shared;
 
 use App\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;

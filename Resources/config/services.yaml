@@ -7,6 +7,8 @@ imports:
     - { resource: 'security.yaml'}
     - { resource: 'processors/create.yaml'}
     - { resource: 'processors/view.yaml'}
+    - { resource: 'processors/shared.yaml'}
+    - { resource: 'processors/update.yaml'}
 
 parameters:
     app_rest.resource_class_directories:
@@ -78,3 +80,8 @@ services:
     App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory: ~
 
     App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory: ~
+
+    App\Bundle\RestBundle\Validator\Validator:
+        arguments: ['@validator', '@service_container']
+
+    App\Bundle\RestBundle\Validator\ValidatorInterface: '@App\Bundle\RestBundle\Validator\Validator'

@@ -35,7 +35,7 @@ class CreateResource implements ProcessorInterface
     {
         $resource = $this->create($context->getRequest(), $context->getOperationName(), $context->getClassName(), $context->getMetadata());
 
-        $context->set('new_resource', $resource);
+        $context->setResult($resource);
     }
 
     /**

@@ -1,11 +1,17 @@
 services:
-        App\Bundle\RestBundle\Security\ResourceAccessChecker:
-            arguments:
-                - '@App\Bundle\RestBundle\Security\ExpressionLanguage'
-                - '@?security.authentication.trust_resolver'
-                - '@?security.role_hierarchy'
-                - '@?security.token_storage'
-                - '@?security.authorization_checker'
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
 
-        App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@App\Bundle\RestBundle\Security\ResourceAccessChecker'
-        App\Bundle\RestBundle\Security\ExpressionLanguage: ~
+    App\Bundle\RestBundle\Security\ResourceAccessChecker:
+        arguments:
+            - '@App\Bundle\RestBundle\Security\ExpressionLanguage'
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@security.authentication.trust_resolver'
+            - '@?security.role_hierarchy'
+
+    App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@App\Bundle\RestBundle\Security\ResourceAccessChecker'
+
+    App\Bundle\RestBundle\Security\ExpressionLanguage: ~

@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Processor\Shared\SaveResource:
+        tags:
+            - { name: app_rest.processor, action: create, group: save, priority: 10 }
+            - { name: app_rest.processor, action: update, group: save, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Shared\LoadResource:
+        arguments: ['@service_container']
+        tags:
+            - { name: app_rest.processor, action: view, group: initialize, priority: 10 }
+            - { name: app_rest.processor, action: update, group: initialize, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Shared\ValidationProcessor:
+        tags:
+            - { name: app_rest.processor, action: create, group: validate, priority: 10 }
+            - { name: app_rest.processor, action: update, group: validate, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Shared\PermissionProcessor:
+        tags:
+            - { name: app_rest.processor, action: create, group: security, priority: 10 }
+            - { name: app_rest.processor, action: update, group: security, priority: 10 }
+            - { name: app_rest.processor, action: view, group: security, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Shared\DeserializationProcessor:
+        arguments: ['@jms_serializer']
+        tags:
+            - { name: app_rest.processor, action: create, group: deserialize, priority: 10 }
+            - { name: app_rest.processor, action: update, group: deserialize, priority: 10 }
