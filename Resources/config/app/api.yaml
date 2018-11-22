@@ -1,0 +1,31 @@
+api:
+    paginators:
+        comment_paginator:
+            class: 'App\Bundle\AppBundle\Entity\Comment'
+            page_size: 10
+            max_results: 50
+            sortings:
+                publishedAt:
+                    property_path: publishedAt
+                    description: '按发布日期排序'
+                    order: asc
+                enabled: asc
+            disable_sorting: false
+            filters:
+                publishedAt:
+                    type: string
+                    description: '发布日期'
+                    property_path: 'publishedAt'
+                    allow_array: false
+                    allow_range: true
+                    options: ~
+                    operators: ['=', '!=', '<', '<=', '>']
+                    collection: false
+                enabled:
+                    type: boolean
+                    description: '是否启用'
+                    allow_array: false
+                    allow_range: true
+                    options: ~
+                    operators: ['=', '!=', '<', '<=', '>']
+                    collection: false

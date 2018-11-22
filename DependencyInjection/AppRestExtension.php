@@ -32,7 +32,7 @@ class AppRestExtension extends Extension
         $this->registerActionProcessors($container, $config);
         $this->registerFilterOperators($container, $config);
 
-        $this->loadPaginatorConfiguration($container, $config);
+        $this->loadPaginatorConfiguration($container);
 
         $container->setParameter('app_rest.confg', $config);
     }
@@ -103,11 +103,10 @@ class AppRestExtension extends Extension
      *
      * @return array
      */
-    private function loadPaginatorConfiguration($container): array
+    private function loadPaginatorConfiguration($container)
     {
-        $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api')];
+        $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
 
-        $config = [];
         $configLoader = new CumulativeConfigLoader('app_rest', $configFileLoaders);
         $resources = $configLoader->load($container);
         foreach ($resources as $resource) {
@@ -116,9 +115,11 @@ class AppRestExtension extends Extension
             }
         }
 
-        return $this->processConfiguration(
+        $configs =  $this->processConfiguration(
             new PaginatorConfiguration($container->get(FilterOperatorRegistry::class)),
             $config
         );
+
+        $container->setParameter('app_rest.paginators', $configs);
     }
 }

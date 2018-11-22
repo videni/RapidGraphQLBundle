@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Config\PaginatorConfigProvider:
+        arguments:
+            - '@App\Bundle\RestBundle\Config\PaginatorConfigLoader'
+            - '%app_rest.paginators%'
+
+    App\Bundle\RestBundle\Config\PaginatorConfigLoader:  ~
