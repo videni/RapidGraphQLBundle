@@ -18,16 +18,17 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('app_rest');
 
         $node = $rootNode->children();
-        $this->appendActionsNode($node);
+
+        $this->addActionsNode($node);
+        $this->appendFilterOperatorsNode($node);
 
         return $treeBuilder;
     }
 
-
     /**
      * @param NodeBuilder $node
      */
-    private function appendActionsNode(NodeBuilder $node)
+    private function addActionsNode(NodeBuilder $node)
     {
         $node
             ->arrayNode('actions')
@@ -35,12 +36,12 @@ class Configuration implements ConfigurationInterface
                 ->example(
                     [
                         'get' => [
-                            'processor_service_id' => 'oro_api.get.processor',
+                            'processor_service_id' => 'app_rest.get.processor',
                             'processing_groups' => [
-                                'load_data' => [
+                                'intialize' => [
                                     'priority' => -10
                                 ],
-                                'normalize_data' => [
+                                'security' => [
                                     'priority' => -20
                                 ]
                             ]
@@ -82,6 +83,28 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param NodeBuilder $node
+     */
+    private function appendFilterOperatorsNode(NodeBuilder $node)
+    {
+        $node
+            ->arrayNode('filter_operators')
+                ->info(
+                    'A definition of operators for filters.'
+                    . ' The key is the name of an operator.'
+                    . ' The value is optional and it is a short name of an operator.'
+                )
+                ->example([
+                    'eq'     => '=',
+                    'regexp' => null
+                ])
+                ->useAttributeAsKey('name')
+                ->prototype('scalar')
                 ->end()
             ->end();
     }

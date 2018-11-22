@@ -11,5 +11,4 @@ services:
         arguments:
             - ['@App\Bundle\RestBundle\Metadata\Extractor\YamlExtractor']
 
-
     App\Bundle\RestBundle\Metadata\Extractor\ExtractorInterface: '@App\Bundle\RestBundle\Metadata\Extractor\ExtractorChain'

@@ -4,17 +4,18 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Update\UpdateProcessor:
+    App\Bundle\RestBundle\Processor\Index\IndexProcessor:
         arguments:
             - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
-            - 'update'
+            - 'index'
             - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+    # intialize
 
-    # initialize
 
     # security
 
     # deserialize
+
 
     # validate
 

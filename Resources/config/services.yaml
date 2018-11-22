@@ -5,11 +5,14 @@ imports:
     - { resource: 'serializer.yaml'}
     - { resource: 'controller.yaml'}
     - { resource: 'security.yaml'}
+    - { resource: 'filters.yaml'}
     - { resource: 'processors/create.yaml'}
     - { resource: 'processors/view.yaml'}
     - { resource: 'processors/shared.yaml'}
     - { resource: 'processors/update.yaml'}
     - { resource: 'processors/delete.yaml'}
+    - { resource: 'processors/bulk_delete.yaml'}
+    - { resource: 'processors/index.yaml'}
 
 parameters:
     app_rest.resource_class_directories:

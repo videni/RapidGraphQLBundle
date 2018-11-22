@@ -1,28 +1,31 @@
 app_rest:
+    filter_operators:
+        eq:  '='  # equal to
+        neq: '!=' # not equal to
+        gt:  '>'  # greater than
+        lt:  '<'  # less than
+        gte: '>=' # greater than or equal to
+        lte: '<=' # less than or equal to
+        exists: '*' # exists (IS NOT NULL) and not exists (IS NULL), value is true = exists, value is false = not exists
+        neq_or_null:     '!*' # not equal to or IS NULL
+        contains:        '~'  # contains (LIKE %value%)
+        not_contains:    '!~' # not contains (NOT LIKE %value%)
+        starts_with:     '^'  # starts with (LIKE value%)
+        not_starts_with: '!^' # not starts with (NOT LIKE value%)
+        ends_with:       '$'  # ends with (LIKE %value)
+        not_ends_with:   '!$' # not ends with (NOT LIKE %value)
     actions:
-            # get_list:
-            #     processor_service_id: app_rest.get_list.processor
-            #     processing_groups:
-            #         initialize:
-            #             priority: -10
-            #         resource_check:
-            #             priority: -15
-            #         normalize_input:
-            #             priority: -20
-            #         security_check:
-            #             priority: -30
-            #         build_query:
-            #             priority: -40
-            #         load_data:
-            #             priority: -50
-            #         data_security_check:
-            #             priority: -55
-            #         normalize_data:
-            #             priority: -60
-            #         finalize:
-            #             priority: -70
-            #         normalize_result:
-            #             priority: -80
+            index:
+                processor_service_id: App\Bundle\RestBundle\Processor\Index\IndexProcessor
+                processing_groups:
+                    initialize:
+                        priority: -10
+                    security:
+                        priority: -15
+                    index:
+                        priority: -20
+                    finalize:
+                        priority: -25
             view:
                 processor_service_id: App\Bundle\RestBundle\Processor\View\ViewProcessor
                 processing_groups:
@@ -43,29 +46,17 @@ app_rest:
                         priority:  -20
                     finalize:
                         priority:  -25
-            # delete_list:
-            #     processor_service_id: app_rest.delete_list.processor
-            #     processing_groups:
-            #         initialize:
-            #             priority: -10
-            #         resource_check:
-            #             priority: -15
-            #         normalize_input:
-            #             priority: -20
-            #         security_check:
-            #             priority: -30
-            #         build_query:
-            #             priority: -40
-            #         load_data:
-            #             priority: -50
-            #         data_security_check:
-            #             priority: -55
-            #         delete_data:
-            #             priority: -60
-            #         finalize:
-            #             priority: -70
-            #         normalize_result:
-            #             priority: -80
+            bulk_delete:
+                processor_service_id: App\Bundle\RestBundle\Processor\BulkDelete\BulkDeleteProcessor
+                processing_groups:
+                    initialize:
+                        priority: -10
+                    security:
+                        priority: -15
+                    delete:
+                        priority:  -20
+                    finalize:
+                        priority:  -25
             create:
                 processor_service_id: App\Bundle\RestBundle\Processor\Create\CreateProcessor
                 processing_groups:

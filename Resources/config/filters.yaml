@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Filter\FilterOperatorRegistry:
+        class: App\Bundle\RestBundle\Filter\FilterOperatorRegistry
+        arguments:
+            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\OroApiExtension
+
+    App\Bundle\RestBundle\Filter\FilterValueAccessorFactory:
+        arguments:
+            # regex pattern to match the following operators: =, !=, <>, >, <, >=, <=, *, !*, ~, !~, ^, !^, $, !$
+            - '(!|<|>|%%21|%%3C|%%3E)?=|<>|%%3C%%3E|<|>|\*|%%3C|%%3E|%%2A|(!|%%21)?(\*|~|\^|\$|%%2A|%%7E|%%5E|%%24)'
+            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\OroApiExtension
+
+    App\Bundle\RestBundle\DependencyInjection\PaginatorConfiguration:
+        class: App\Bundle\RestBundle\DependencyInjection\PaginatorConfiguration
+        arguments:
+            - '@App\Bundle\RestBundle\Filter\FilterOperatorRegistry'

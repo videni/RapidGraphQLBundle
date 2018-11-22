@@ -11,6 +11,10 @@ use Oro\Component\ChainProcessor\Debug\TraceLogger;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
+use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
+use App\Bundle\RestBundle\Filter\FilterValueAccessorFactory;
+use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
+use Oro\Component\Config\Loader\CumulativeConfigLoader;
 
 class AppRestExtension extends Extension
 {
@@ -26,6 +30,9 @@ class AppRestExtension extends Extension
         $loader->load('services.yaml');
 
         $this->registerActionProcessors($container, $config);
+        $this->registerFilterOperators($container, $config);
+
+        $this->loadPaginatorConfiguration($container, $config);
 
         $container->setParameter('app_rest.confg', $config);
     }
@@ -72,5 +79,46 @@ class AppRestExtension extends Extension
                 }
             }
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function registerFilterOperators(ContainerBuilder $container, array $config)
+    {
+        $filterOperatorRegistryDef = $container->getDefinition(FilterOperatorRegistry::class);
+
+        if (null !== $filterOperatorRegistryDef) {
+            $filterOperatorRegistryDef->replaceArgument(0, $config['filter_operators']);
+        }
+        $restFilterValueAccessorFactoryDef = $container->getDefinition(FilterValueAccessorFactory::class);
+        if (null !== $restFilterValueAccessorFactoryDef) {
+            $restFilterValueAccessorFactoryDef->replaceArgument(1, $config['filter_operators']);
+        }
+    }
+
+    /**
+     * @param string $fileName
+     *
+     * @return array
+     */
+    private function loadPaginatorConfiguration($container): array
+    {
+        $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api')];
+
+        $config = [];
+        $configLoader = new CumulativeConfigLoader('app_rest', $configFileLoaders);
+        $resources = $configLoader->load($container);
+        foreach ($resources as $resource) {
+            if (array_key_exists(PaginatorConfiguration::ROOT_NODE, $resource->data)) {
+                $config[] = $resource->data[PaginatorConfiguration::ROOT_NODE];
+            }
+        }
+
+        return $this->processConfiguration(
+            new PaginatorConfiguration($container->get(FilterOperatorRegistry::class)),
+            $config
+        );
     }
 }

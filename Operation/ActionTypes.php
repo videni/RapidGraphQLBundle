@@ -12,6 +12,8 @@ final class ActionTypes
     const CREATE = 'create';
     const VIEW = 'view';
 
+    const BULK_DELETE = 'bulk_delete';
+
     public static function getMethods($actionType)
     {
         switch ($actionType) {
@@ -25,6 +27,8 @@ final class ActionTypes
                 return ['GET'];
             case self::UPDATE:
                 return ['PUT'];
+            case self::BULK_DELETE:
+                return ['PUT', 'POST', 'GET'];
             default:
                 return [];
         }
@@ -37,6 +41,6 @@ final class ActionTypes
 
     public static function isSupport($action)
     {
-        return in_array($action, [self::UPDATE, self::DELETE, self::VIEW, self::INDEX, self::CREATE]);
+        return in_array($action, [self::UPDATE, self::DELETE, self::VIEW, self::INDEX, self::CREATE, self::BULK_DELETE]);
     }
 }

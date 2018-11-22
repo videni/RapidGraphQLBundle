@@ -105,15 +105,14 @@ class ResourceController extends Controller
      *
      * @return Context
      */
-    public function deleteBatch(Request $request)
+    public function bulkDelete(Request $request)
     {
-         $processor = $this->getProcessor(ActionTypes::CREATE);
+         $processor = $this->getProcessor(ActionTypes::BULK_DELETE);
 
         /** @var DeleteListContext $context */
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
-        $context->setFilterValues(new RestFilterValueAccessor($request));
 
         $processor->process($context);
 

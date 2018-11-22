@@ -10,6 +10,7 @@ use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Bundle\RestBundle\Handler\DeleteHandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The base class for processors that deletes entities by DeleteHandler.
@@ -38,10 +39,8 @@ abstract class DeleteProcessor implements ProcessorInterface
     public function process(ContextInterface $context)
     {
         /** @var Context $context */
-
-        if (!$context->hasResult()) {
-            // result deleted or not supported
-            return;
+        if (null === $context->getResult()) {
+            throw new NotFoundHttpException(sprintf('The "%s" has not been found', $context->getMetadata()->getShortName()));
         }
 
         $className = $context->getClassName();

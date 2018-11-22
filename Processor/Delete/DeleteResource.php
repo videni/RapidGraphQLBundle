@@ -7,28 +7,12 @@ use App\Bundle\RestBundle\Processor\Shared\DeleteProcessor;
 use App\Bundle\RestBundle\Handler\DeleteHandlerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Oro\Component\ChainProcessor\ContextInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Deletes an entity by DeleteHandler.
  */
 class DeleteResource extends DeleteProcessor
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContextInterface $context)
-    {
-        /** @var Context $context */
-        if (null === $context->getResult()) {
-            throw new NotFoundHttpException(sprintf('The "%s" has not been found', $context->getMetadata()->getShortName()));
-        }
-
-        parent::process($context);
-
-        $context->setResponseStatusCode(Response::HTTP_NO_CONTENT);
-    }
-
     /**
      * {@inheritdoc}
      */
