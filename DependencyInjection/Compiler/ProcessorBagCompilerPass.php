@@ -7,6 +7,7 @@ use Oro\Component\ChainProcessor\ProcessorBagConfigBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Oro\Component\ChainProcessor\ProcessorBagConfigProvider;
+use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
 
 /**
  * Adds all registered Data API processors to the processor bag service.
@@ -24,7 +25,7 @@ class ProcessorBagCompilerPass implements CompilerPassInterface
 
         if (null !== $processorBagConfigProviderServiceDef) {
             $groups = [];
-            $config = $container->getParameter('app_rest.confg');
+            $config = DependencyInjectionUtil::getConfig($container);
             foreach ($config['actions'] as $action => $actionConfig) {
                 if (isset($actionConfig['processing_groups'])) {
                     foreach ($actionConfig['processing_groups'] as $group => $groupConfig) {

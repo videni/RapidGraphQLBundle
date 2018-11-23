@@ -8,6 +8,9 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class DoctrineHelper
 {
+     /** @var array */
+    protected $manageableEntityClasses = [];
+
     /** @var ManagerRegistry */
     protected $registry;
 
@@ -76,5 +79,20 @@ class DoctrineHelper
         }
 
         return $manager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isManageableEntityClass($entityClass)
+    {
+        if (isset($this->manageableEntityClasses[$entityClass])) {
+            return $this->manageableEntityClasses[$entityClass];
+        }
+
+        $isManageable = null !== $this->registry->getManagerForClass($entityClass);
+        $this->manageableEntityClasses[$entityClass] = $isManageable;
+
+        return $isManageable;
     }
 }

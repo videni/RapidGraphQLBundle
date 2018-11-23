@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace App\Bundle\RestBundle\Filter\FilterValue;
 
 /**
  * Represents input option that is used to filter data requested by Data API.

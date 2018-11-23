@@ -7,6 +7,9 @@ use Oro\Component\ChainProcessor\ParameterBagInterface;
 use Oro\Component\ChainProcessor\Context as BaseContext;
 use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Bundle\RestBundle\Filter\FilterCollection;
+use App\Bundle\RestBundle\Filter\FilterValueAccessorInterface;
+use App\Bundle\RestBundle\Config\PaginatorConfigProvider;
 
 class Context extends BaseContext implements ContextInterface
 {
@@ -19,6 +22,10 @@ class Context extends BaseContext implements ContextInterface
     const METADATA = 'metadata';
 
     const FORMAT = 'format';
+
+    const CRITERIA = 'criteria';
+
+    const PAGINATOR_CONFIG = 'paginator_config';
 
     /**
      * a value indicates whether errors should just stop processing
@@ -47,13 +54,23 @@ class Context extends BaseContext implements ContextInterface
 
     private $resourceMetadataFactory;
 
+    private $paginatorConfigProvider;
+
+    /** @var FilterCollection */
+    private $filters;
+
+    private $filterValues;
+
     /**
      * @param ConfigProvider   $configProvider
      * @param MetadataProvider $metadataProvider
      */
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory)
-    {
+    public function __construct(
+        ResourceMetadataFactoryInterface $resourceMetadataFactory,
+        PaginatorConfigProvider $paginatorConfigProvider = null
+    ) {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
+        $this->paginatorConfigProvider = $paginatorConfigProvider;
     }
 
     /**
@@ -334,5 +351,108 @@ class Context extends BaseContext implements ContextInterface
         $metadata = $this->resourceMetadataFactory->create($entityClass);
 
         $this->set(self::METADATA, $metadata);
+    }
+
+        /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        if (null === $this->filters) {
+            $this->filters = new FilterCollection();
+        }
+
+        return $this->filters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilterValues()
+    {
+        if (null === $this->filterValues) {
+            $this->filterValues = new NullFilterValueAccessor();
+        }
+
+        return $this->filterValues;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFilterValues(FilterValueAccessorInterface $accessor)
+    {
+        $this->filterValues = $accessor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasPaginatorConfig()
+    {
+        return $this->has(self::PAGINATOR_CONFIG);
+    }
+
+    public function getPaginatorConfig()
+    {
+        if (!$this->has($key)) {
+            $this->loadPaginatorConfig();
+        }
+
+        return $this->get(self::PAGINATOR_CONFIG);
+    }
+
+     /**
+     * Load paginator config
+     */
+    protected function loadPaginatorConfig()
+    {
+        $entityClass = $this->getClassName();
+        if (empty($entityClass)) {
+            throw new RuntimeException(
+                'A class name must be set in the context before a paginator config is loaded.'
+            );
+        }
+
+        $metadata = $this->hasMetadata();
+        if (!$this->hasMetadata()) {
+            throw new RuntimeException('Resource metadata is not loaded for current request');
+        }
+
+        $operationName = $this->getOperationName();
+        if (!$operationName) {
+            throw new RuntimeException('Make sure operation name is set for current request');
+        }
+
+        try {
+            $paginatorKey = $this->metadata->getOperationAttribute($operationName, 'paginator', null, true);
+            if (null === $paginatorKey) {
+                return;
+            }
+
+            $config = $this->paginatorConfigProvider->get($paginatorKey);
+
+            $this->set(self::PAGINATOR_CONFIG, $config);
+        } catch (\Exception $e) {
+            $this->processLoadedConfig(null);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCriteria()
+    {
+        return $this->get(self::CRITERIA);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCriteria($criteria)
+    {
+        $this->set(self::CRITERIA, $criteria);
     }
 }

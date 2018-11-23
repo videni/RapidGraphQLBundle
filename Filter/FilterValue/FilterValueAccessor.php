@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace App\Bundle\RestBundle\Filter\FilterValue;
 
 use App\Bundle\RestBundle\Filter\FilterValue;
 use App\Bundle\RestBundle\Filter\FilterValueAccessorInterface;

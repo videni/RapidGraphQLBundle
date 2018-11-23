@@ -1,6 +1,6 @@
 api:
     paginators:
-        comment_paginator:
+        comment:
             class: 'App\Bundle\AppBundle\Entity\Comment'
             page_size: 10
             max_results: 50

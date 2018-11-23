@@ -7,15 +7,169 @@ services:
     App\Bundle\RestBundle\Filter\FilterOperatorRegistry:
         class: App\Bundle\RestBundle\Filter\FilterOperatorRegistry
         arguments:
-            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\OroApiExtension
+            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\AppRestExtension
 
-    App\Bundle\RestBundle\Filter\FilterValueAccessorFactory:
+    App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory:
         arguments:
             # regex pattern to match the following operators: =, !=, <>, >, <, >=, <=, *, !*, ~, !~, ^, !^, $, !$
             - '(!|<|>|%%21|%%3C|%%3E)?=|<>|%%3C%%3E|<|>|\*|%%3C|%%3E|%%2A|(!|%%21)?(\*|~|\^|\$|%%2A|%%7E|%%5E|%%24)'
-            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\OroApiExtension
+            - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\AppRestExtension
 
     App\Bundle\RestBundle\DependencyInjection\PaginatorConfiguration:
         class: App\Bundle\RestBundle\DependencyInjection\PaginatorConfiguration
         arguments:
             - '@App\Bundle\RestBundle\Filter\FilterOperatorRegistry'
+
+    App\Bundle\RestBundle\Filter\Factory\ChainFilterFactory: ~
+
+    App\Bundle\RestBundle\Filter\Factory\SimpleFilterFactory:
+        tags:
+            - { name: app_rest.filter_factory, priority: -10 }
+
+    App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface: '@App\Bundle\RestBundle\Filter\Factory\ChainFilterFactory'
+
+
+    App\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory:
+        public: false
+        arguments:
+            - [] # The composite expressions. They are set by App\Bundle\RestBundle\DependencyInjection\Compiler\QueryExpressionCompilerPass
+            - [] # The comparison expressions. They are set by App\Bundle\RestBundle\DependencyInjection\Compiler\QueryExpressionCompilerPass
+            - '@oro_entity.orm.entity_class_resolver'
+
+    app_rest.query.composite_expression.and:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\AndCompositeExpression
+        public: false
+        tags:
+          - { name: app_rest.query.composite_expression, type: 'AND' }
+
+    app_rest.query.composite_expression.or:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\OrCompositeExpression
+        public: false
+        tags:
+          - { name: app_rest.query.composite_expression, type: 'OR' }
+
+    app_rest.query.composite_expression.not:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NotCompositeExpression
+        public: false
+        tags:
+          - { name: app_rest.query.composite_expression, type: 'NOT' }
+
+    app_rest.query.comparison_expression.eq:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\EqComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: '=' }
+
+    app_rest.query.comparison_expression.neq:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NeqComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: '<>' }
+
+    app_rest.query.comparison_expression.gt:
+       class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\GtComparisonExpression
+       public: false
+       tags:
+         - { name: app_rest.query.comparison_expression, operator: '>' }
+
+    app_rest.query.comparison_expression.gte:
+       class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\GteComparisonExpression
+       public: false
+       tags:
+         - { name: app_rest.query.comparison_expression, operator: '>=' }
+
+    app_rest.query.comparison_expression.lt:
+       class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\LtComparisonExpression
+       public: false
+       tags:
+         - { name: app_rest.query.comparison_expression, operator: '<' }
+
+    app_rest.query.comparison_expression.lte:
+       class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\LteComparisonExpression
+       public: false
+       tags:
+         - { name: app_rest.query.comparison_expression, operator: '<=' }
+
+    app_rest.query.comparison_expression.in:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\InComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'IN' }
+
+    app_rest.query.comparison_expression.nin:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NinComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NIN' }
+
+    app_rest.query.comparison_expression.member_of:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\MemberOfComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'MEMBER_OF' }
+
+    app_rest.query.comparison_expression.all_member_of:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\AllMemberOfComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'ALL_MEMBER_OF' }
+
+    app_rest.query.comparison_expression.exists:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\ExistsComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'EXISTS' }
+
+    app_rest.query.comparison_expression.empty:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\EmptyComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'EMPTY' }
+
+    app_rest.query.comparison_expression.neq_or_null:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NeqOrNullComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NEQ_OR_NULL' }
+
+    app_rest.query.comparison_expression.neq_or_empty:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NeqOrEmptyComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NEQ_OR_EMPTY' }
+
+    app_rest.query.comparison_expression.contains:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\ContainsComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'CONTAINS' }
+
+    app_rest.query.comparison_expression.not_contains:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NotContainsComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NOT_CONTAINS' }
+
+    app_rest.query.comparison_expression.starts_with:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\StartsWithComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'STARTS_WITH' }
+
+    app_rest.query.comparison_expression.not_starts_with:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NotStartsWithComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NOT_STARTS_WITH' }
+
+    app_rest.query.comparison_expression.ends_with:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\EndsWithComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'ENDS_WITH' }
+
+    app_rest.query.comparison_expression.not_ends_with:
+        class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\NotEndsWithComparisonExpression
+        public: false
+        tags:
+          - { name: app_rest.query.comparison_expression, operator: 'NOT_ENDS_WITH' }

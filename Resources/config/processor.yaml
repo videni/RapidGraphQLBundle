@@ -1,0 +1,20 @@
+imports:
+    - { resource: 'processors/create.yaml'}
+    - { resource: 'processors/view.yaml'}
+    - { resource: 'processors/shared.yaml'}
+    - { resource: 'processors/update.yaml'}
+    - { resource: 'processors/delete.yaml'}
+    - { resource: 'processors/bulk_delete.yaml'}
+    - { resource: 'processors/index.yaml'}
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    App\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilters: ~
+
+    App\Bundle\RestBundle\Util\EntityClassResolver: ~
+
+    App\Bundle\RestBundle\Util\CriteriaConnector: ~

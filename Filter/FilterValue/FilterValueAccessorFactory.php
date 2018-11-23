@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace App\Bundle\RestBundle\Filter\FilterValue;
 
 use App\Bundle\RestBundle\Filter\FilterValueAccessorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class FilterValueAccessorFactory
      */
     public function create(Request $request)
     {
-        return new RestFilterValueAccessor(
+        return new FilterValueAccessor(
             $request,
             $this->operatorPattern,
             $this->operators

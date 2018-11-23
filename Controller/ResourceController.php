@@ -16,21 +16,26 @@ use FOS\RestBundle\View\View;
 use App\Bundle\RestBundle\Handler\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 
 class ResourceController extends Controller
 {
     private $serializerFormat;
     private $actionProcessorBag;
     private $viewHandler;
+    private $filterValueAccessorFactory;
 
     public function __construct(
         ActionProcessorBagInterface $actionProcessorBag,
         ViewHandlerInterface $viewHandler,
-        SerializerFormat $serializerFormat
+        SerializerFormat $serializerFormat,
+        FilterValueAccessorFactory $filterValueAccessorFactory
     ) {
         $this->actionProcessorBag = $actionProcessorBag;
         $this->serializerFormat = $serializerFormat;
         $this->viewHandler = $viewHandler;
+        $this->filterValueAccessorFactory = $filterValueAccessorFactory;
     }
 
     /**
@@ -46,9 +51,8 @@ class ResourceController extends Controller
 
         /** @var GetListContext $context */
         $context = $processor->createContext();
-
         $this->prepareContext($context, $request);
-        $context->setFilterValues(new RestFilterValueAccessor($request));
+        $context->setFilterValues($this->getRequestFilters($request));
 
         $processor->process($context);
 
@@ -107,12 +111,13 @@ class ResourceController extends Controller
      */
     public function bulkDelete(Request $request)
     {
-         $processor = $this->getProcessor(ActionTypes::BULK_DELETE);
+        $processor = $this->getProcessor(ActionTypes::BULK_DELETE);
 
         /** @var DeleteListContext $context */
         $context = $processor->createContext();
 
         $this->prepareContext($context, $request);
+        $context->setFilterValues($this->getRequestFilters($request));
 
         $processor->process($context);
 
@@ -161,6 +166,14 @@ class ResourceController extends Controller
         $processor->process($context);
 
         return $this->buildResponse($context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRequestFilters(Request $request): FilterValueAccessorInterface
+    {
+        return $this->filterValueAccessorFactory->create($request);
     }
 
      /**

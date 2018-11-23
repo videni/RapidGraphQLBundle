@@ -7,13 +7,7 @@ imports:
     - { resource: 'security.yaml'}
     - { resource: 'filters.yaml'}
     - { resource: 'paginator.yaml'}
-    - { resource: 'processors/create.yaml'}
-    - { resource: 'processors/view.yaml'}
-    - { resource: 'processors/shared.yaml'}
-    - { resource: 'processors/update.yaml'}
-    - { resource: 'processors/delete.yaml'}
-    - { resource: 'processors/bulk_delete.yaml'}
-    - { resource: 'processors/index.yaml'}
+    - { resource: 'processor.yaml'}
 
 parameters:
     app_rest.resource_class_directories:
@@ -95,3 +89,45 @@ services:
 
     App\Bundle\RestBundle\Handler\DeleteHandler: ~
     App\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@App\Bundle\RestBundle\Handler\DeleteHandler'
+
+    App\Bundle\RestBundle\Util\CriteriaConnector:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Util\CriteriaNormalizer'
+            - '@App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver'
+            - '@App\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory'
+            - '@App\Bundle\RestBundle\Util\EntityClassResolver'
+
+    App\Bundle\RestBundle\Util\CriteriaNormalizer:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Util\DoctrineHelper'
+            - '@App\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory'
+            - '@App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory'
+
+    App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver:
+        class: App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver
+        public: false
+
+    App\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory:
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker'
+
+    App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker:
+        class: App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker
+        public: false
+
+    App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory:
+        class: App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory
+        public: false
+        arguments:
+            - '@App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker'
+
+    App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker:
+        class: App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker
+        public: false
+
+    App\Bundle\RestBundle\Util\EntityClassResolver: ~
+
+

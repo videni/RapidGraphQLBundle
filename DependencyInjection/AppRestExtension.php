@@ -12,9 +12,10 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
 use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
-use App\Bundle\RestBundle\Filter\FilterValueAccessorFactory;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
+use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
 
 class AppRestExtension extends Extension
 {
@@ -34,7 +35,7 @@ class AppRestExtension extends Extension
 
         $this->loadPaginatorConfiguration($container);
 
-        $container->setParameter('app_rest.confg', $config);
+        DependencyInjectionUtil::setConfig($container, $config);
     }
 
      /**

@@ -20,6 +20,8 @@ class AppRestBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new Compiler\ProcessorBagCompilerPass());
+        $container->addCompilerPass(new Compiler\FilterFactoryCompilerPass());
+        $container->addCompilerPass(new Compiler\QueryExpressionCompilerPass());
 
         $container->addCompilerPass(
             new LoadApplicableCheckersCompilerPass('app_rest.processor_bag', 'app_rest.processor.applicable_checker')
