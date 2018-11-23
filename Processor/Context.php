@@ -8,7 +8,7 @@ use Oro\Component\ChainProcessor\Context as BaseContext;
 use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Bundle\RestBundle\Filter\FilterCollection;
-use App\Bundle\RestBundle\Filter\FilterValueAccessorInterface;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
 use App\Bundle\RestBundle\Config\PaginatorConfigProvider;
 
 class Context extends BaseContext implements ContextInterface

@@ -4,10 +4,10 @@ namespace App\Bundle\RestBundle\Collection;
 
 use Doctrine\Common\Collections\Criteria as BaseCriteria;
 use Doctrine\ORM\ORMException;
-use Oro\Bundle\EntityBundle\ORM\EntityClassResolver;
+use App\Bundle\RestBundle\Util\EntityClassResolver;
 
 /**
- * Criteria for filtering data requrned by ORM queries.
+ * Criteria for filtering data returned by ORM queries.
  */
 class Criteria extends BaseCriteria
 {

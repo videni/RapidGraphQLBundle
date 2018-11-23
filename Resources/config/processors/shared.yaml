@@ -33,8 +33,12 @@ services:
             - { name: app_rest.processor, action: create, group: deserialize, priority: 10 }
             - { name: app_rest.processor, action: update, group: deserialize, priority: 10 }
 
-
     App\Bundle\RestBundle\Processor\Shared\InitializeCriteria:
         tags:
             - { name: app_rest.processor, action: index, group: initialize, priority: 10 }
+
+    App\Bundle\RestBundle\Processor\Shared\BuildQuery:
+        tags:
+            - { name: app_rest.processor, action: index, group: initialize, priority: 10 }
+            - { name: app_rest.processor, action: bulk_delete, group: initialize, priority: 10 }
 

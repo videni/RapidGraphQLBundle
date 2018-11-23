@@ -5,7 +5,7 @@ namespace App\Bundle\RestBundle\Processor\Shared;
 use App\Bundle\RestBundle\Collection\Criteria;
 use App\Bundle\RestBundle\Processor\Context;
 use App\Bundle\RestBundle\Util\DoctrineHelper;
-use App\Bundle\RestBundle\ORM\EntityClassResolver;
+use App\Bundle\RestBundle\Util\EntityClassResolver;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 
@@ -47,11 +47,7 @@ class InitializeCriteria implements ProcessorInterface
             return;
         }
 
-        $entityClass = $this->doctrineHelper->getManageableEntityClass(
-            $context->getClassName(),
-            $context->getConfig()
-        );
-        if (!$entityClass) {
+        if (!$this->doctrineHelper->isManageableEntityClass($context->getClassName())) {
             // only manageable entities or resources based on manageable entities are supported
             return;
         }

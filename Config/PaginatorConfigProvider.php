@@ -2,6 +2,8 @@
 
 namespace App\Bundle\RestBundle\Config;
 
+use App\Bundle\RestBundle\Exception\PaginatorConfigNotFoundException;
+
 class PaginatorConfigProvider
 {
    /**
@@ -9,7 +11,7 @@ class PaginatorConfigProvider
      */
     private $paginatorConfigs = [];
 
-    private $paginatorConfiguration;
+    private $paginatorConfigurations;
 
     private $loader;
 
@@ -17,7 +19,7 @@ class PaginatorConfigProvider
     public function __construct(PaginatorConfigLoader $loader, array $paginatorConfigurations)
     {
         $this->loader = $loader;
-        $this->paginatorConfiguration = $paginatorConfiguration;
+        $this->paginatorConfigurations = $paginatorConfigurations;
     }
 
     public function get($code)
@@ -26,10 +28,10 @@ class PaginatorConfigProvider
             return  $this->paginatorConfigs[$code];
         }
 
-        if (isset($this->paginatorConfiguration[$code])) {
-            $this->paginatorConfigs[$code] = $loader->load($code, $paginatorConfiguration);
+        if (isset($this->$paginatorConfigurations[$code])) {
+            $this->paginatorConfigs[$code] = $loader->load($code, $this->$paginatorConfigurations[$code]);
         }
 
-        throw new UndefinedGridException($code);
+        throw new PaginatorConfigNotFoundException($code);
     }
 }

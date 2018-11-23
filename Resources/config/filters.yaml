@@ -34,7 +34,7 @@ services:
         arguments:
             - [] # The composite expressions. They are set by App\Bundle\RestBundle\DependencyInjection\Compiler\QueryExpressionCompilerPass
             - [] # The comparison expressions. They are set by App\Bundle\RestBundle\DependencyInjection\Compiler\QueryExpressionCompilerPass
-            - '@oro_entity.orm.entity_class_resolver'
+            - '@App\Bundle\RestBundle\Util\EntityClassResolver'
 
     app_rest.query.composite_expression.and:
         class: App\Bundle\RestBundle\Collection\QueryVisitorExpression\AndCompositeExpression
