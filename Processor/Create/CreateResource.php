@@ -12,9 +12,10 @@ use App\Bundle\RestBundle\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 use Doctrine\Common\Inflector\Inflector;
 use App\Bundle\RestBundle\Factory\Factory;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use App\Bundle\RestBundle\Config\Resource\ServiceConfig;
 
 class CreateResource implements ProcessorInterface
 {
@@ -33,7 +34,7 @@ class CreateResource implements ProcessorInterface
      */
     public function process(ContextInterface $context)
     {
-        $resource = $this->create($context->getRequest(), $context->getOperationName(), $context->getClassName(), $context->getMetadata());
+        $resource = $this->create($context->getRequest(), $context->getOperationName(), $context->getClassName(), $context->getResourceConfig());
 
         $context->setResult($resource);
     }
@@ -41,21 +42,20 @@ class CreateResource implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function create(Request $request, $operationName, $className, ResourceMetadata $resourceMetadata)
+    public function create(Request $request, $operationName, $className, ResourceConfig $resourceConfig)
     {
-        $factoryConfigurations = $resourceMetadata->getOperationAttribute($operationName, 'factory', [], true);
-        $factoryInstance = null;
-
-        if (isset($factoryConfigurations['id'])) {
-            $factoryInstance = $this->container->get($factoryConfigurations['id']);
-        } else {
-            $factoryServiceId = self::getFactoryServiceId($resourceMetadata->getShortName());
-            $factoryInstance =  $this->container->has($factoryServiceId) ? $this->container->get($factoryServiceId):  new Factory($className);
+        /** @var ServiceConfig  */
+        $factoryConfig = $resourceConfig->getOperationAttribute($operationName, 'factory');
+        var_dump($resourceConfig);exit;
+        if (null === $factoryConfig) {
+            throw new \RuntimeException(sprintf('No resource factory found for class %s', $className));
         }
 
-        $method = isset($factoryConfigurations['method'])? $factoryConfigurations['method']: 'createNew';
+        $factoryInstance = $this->container->get($factoryConfig->getId());
 
-        $arguments = isset($factoryConfigurations['arguments'])? $factoryConfigurations['arguments']: [];
+        $method = $factoryConfig->has('method')? $factoryConfig->get('method'): 'createNew';
+
+        $arguments = $factoryConfig->has('arguments')? $factoryConfig->getArguments(): [];
         if (!is_array($arguments)) {
             $arguments = [$arguments];
         }
@@ -63,13 +63,5 @@ class CreateResource implements ProcessorInterface
         $arguments = array_values($this->parametersParser->parseRequestValues($arguments, $request));
 
         return $factoryInstance->$method(...$arguments);
-    }
-
-
-    private static function getFactoryServiceId($resourceShortName)
-    {
-         $name = Inflector::tableize($resourceShortName);
-
-         return sprintf('app_rest.factory.%s', $name);
     }
 }

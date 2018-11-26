@@ -5,11 +5,11 @@ namespace App\Bundle\RestBundle\Processor;
 use Oro\Component\ChainProcessor\ParameterBag;
 use Oro\Component\ChainProcessor\ParameterBagInterface;
 use Oro\Component\ChainProcessor\Context as BaseContext;
-use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Bundle\RestBundle\Filter\FilterCollection;
 use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
-use App\Bundle\RestBundle\Config\PaginatorConfigProvider;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 
 class Context extends BaseContext implements ContextInterface
 {
@@ -19,7 +19,7 @@ class Context extends BaseContext implements ContextInterface
     const VERSION = 'version';
 
      /** metadata of an entity */
-    const METADATA = 'metadata';
+    const RESOURCE_CONFIG = 'resource_config';
 
     const FORMAT = 'format';
 
@@ -52,9 +52,7 @@ class Context extends BaseContext implements ContextInterface
 
     private $requestData;
 
-    private $resourceMetadataFactory;
-
-    private $paginatorConfigProvider;
+    private $resourceConfigProvider;
 
     /** @var FilterCollection */
     private $filters;
@@ -62,15 +60,12 @@ class Context extends BaseContext implements ContextInterface
     private $filterValues;
 
     /**
-     * @param ConfigProvider   $configProvider
-     * @param MetadataProvider $metadataProvider
+     * @param ResourceConfigProvider $resourceConfigProvider
      */
     public function __construct(
-        ResourceMetadataFactoryInterface $resourceMetadataFactory,
-        PaginatorConfigProvider $paginatorConfigProvider = null
+        ResourceConfigProvider $resourceConfigProvider
     ) {
-        $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->paginatorConfigProvider = $paginatorConfigProvider;
+        $this->resourceConfigProvider = $resourceConfigProvider;
     }
 
     /**
@@ -309,48 +304,48 @@ class Context extends BaseContext implements ContextInterface
       /**
      * {@inheritdoc}
      */
-    public function hasMetadata()
+    public function hasResourceConfig()
     {
-        return $this->has(self::METADATA);
+        return $this->has(self::RESOURCE_CONFIG);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMetadata()
+    public function getResourceConfig()
     {
-        if (!$this->has(self::METADATA)) {
-            $this->loadMetadata();
+        if (!$this->has(self::RESOURCE_CONFIG)) {
+            $this->loadResourceConfig();
         }
 
-        return $this->get(self::METADATA);
+        return $this->get(self::RESOURCE_CONFIG);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setMetadata(?EntityMetadata $metadata)
+    public function setResourceConfig(?ResourceConfig $resourceConfig)
     {
-        if ($metadata) {
-            $this->set(self::METADATA, $metadata);
+        if ($resourceConfig) {
+            $this->set(self::RESOURCE_CONFIG, $resourceConfig);
         } else {
-            $this->remove(self::METADATA);
+            $this->remove(self::RESOURCE_CONFIG);
         }
     }
 
     /**
      * Loads an entity metadata.
      */
-    public function loadMetadata()
+    public function loadResourceConfig()
     {
         $entityClass = $this->getClassName();
         if (empty($entityClass)) {
             return;
         }
 
-        $metadata = $this->resourceMetadataFactory->create($entityClass);
+        $resourceConfig = $this->resourceConfigProvider->get($entityClass);
 
-        $this->set(self::METADATA, $metadata);
+        $this->set(self::RESOURCE_CONFIG, $resourceConfig);
     }
 
         /**
@@ -414,8 +409,8 @@ class Context extends BaseContext implements ContextInterface
             );
         }
 
-        $metadata = $this->hasMetadata();
-        if (!$this->hasMetadata()) {
+        $resourceConfig = $this->hasResourceConfig();
+        if (!$this->hasResourceConfig()) {
             throw new RuntimeException('Resource metadata is not loaded for current request');
         }
 

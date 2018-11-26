@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config;
+namespace App\Bundle\RestBundle\Config\Paginator;
+
+use App\Bundle\RestBundle\Config\ConfigBag;
 
 /**
  * Represents the configuration of  paginator
  */
-class PaginatorConfig implements ConfigBagInterface
+class PaginatorConfig extends ConfigBag
 {
-    public const FILTERS = 'filters';
-    public const MAX_RESULTS = 'max_results';
-    public const PAGE_SIZE = 'page_size';
-    public const DISABLE_SORTING = 'disable_sorting';
-
-    /** @var array */
-    protected $items = [];
+    private $maxResults;
+    private $pageSize;
+    private $disableSorting;
 
     /** @var FilterConfig[] */
     protected $filters = [];
@@ -21,47 +19,63 @@ class PaginatorConfig implements ConfigBagInterface
     protected $sortings =  [];
 
     /**
-     * Gets a native PHP array representation of the configuration.
-     *
-     * @return array
+     * @return mixed
      */
-    public function toArray()
+    public function getMaxResults()
     {
-        $result = ConfigHelper::convertItemsToArray($this->items);
-
-        $filters = ConfigHelper::convertObjectsToArray($this->filters, true);
-        if ($filters) {
-            $result[self::FILTERS] = $filters;
-        }
-
-        $sortings = ConfigHelper::convertObjectsToArray($this->sortings, true);
-        if ($sortings) {
-            $result[self::SORTINGS] = $sortings;
-        }
-
-        return $result;
+        return $this->maxResults;
     }
 
     /**
-     * Indicates whether the entity does not have a configuration.
+     * @param mixed $maxResults
      *
-     * @return bool
+     * @return self
      */
-    public function isEmpty()
+    public function setMaxResults($maxResults)
     {
-        return empty($this->items)
-            && empty($this->filters)
-            && empty($this->sortings)
-            ;
+        $this->maxResults = $maxResults;
+
+        return $this;
     }
 
     /**
-     * Makes a deep copy of the object.
+     * @return mixed
      */
-    public function __clone()
+    public function getPageSize()
     {
-        $this->items = ConfigHelper::cloneItems($this->items);
-        $this->filters = ConfigHelper::cloneObjects($this->filters);
+        return $this->pageSize;
+    }
+
+    /**
+     * @param mixed $pageSize
+     *
+     * @return self
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->pageSize = $pageSize;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisableSorting()
+    {
+        return $this->disableSorting;
+    }
+
+    /**
+     * @param mixed $disableSorting
+     *
+     * @return self
+     */
+    public function setDisableSorting($disableSorting)
+    {
+        $this->disableSorting = $disableSorting;
+
+        return $this;
     }
 
     /**
@@ -216,53 +230,5 @@ class PaginatorConfig implements ConfigBagInterface
     public function removeSorting($sortingName)
     {
         unset($this->sortings[$sortingName]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function has($key)
-    {
-        return \array_key_exists($key, $this->items);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get($key, $defaultValue = null)
-    {
-        if (!\array_key_exists($key, $this->items)) {
-            return $defaultValue;
-        }
-
-        return $this->items[$key];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($key, $value)
-    {
-        if (null !== $value) {
-            $this->items[$key] = $value;
-        } else {
-            unset($this->items[$key]);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($key)
-    {
-        unset($this->items[$key]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function keys()
-    {
-        return \array_keys($this->items);
     }
 }

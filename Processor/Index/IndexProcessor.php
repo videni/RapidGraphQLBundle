@@ -14,6 +14,6 @@ class IndexProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new IndexContext($this->resourceMetadataFatory, $this->paginatorConfigProvider);
+        return new IndexContext($this->resourceConfigProvider);
     }
 }

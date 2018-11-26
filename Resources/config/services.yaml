@@ -6,7 +6,7 @@ imports:
     - { resource: 'controller.yaml'}
     - { resource: 'security.yaml'}
     - { resource: 'filters.yaml'}
-    - { resource: 'paginator.yaml'}
+    - { resource: 'config.yaml'}
     - { resource: 'processor.yaml'}
 
 parameters:

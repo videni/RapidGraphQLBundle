@@ -9,7 +9,7 @@ services:
         arguments:
             - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'view'
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
 
     # initialize
     App\Bundle\RestBundle\Processor\View\LoadResource:

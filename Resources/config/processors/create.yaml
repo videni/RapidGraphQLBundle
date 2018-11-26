@@ -9,7 +9,7 @@ services:
         arguments:
             - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'create'
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
     # intialize
     App\Bundle\RestBundle\Processor\Create\CreateResource:
         arguments: ['@service_container', '@App\Bundle\RestBundle\Factory\ParametersParserInterface']

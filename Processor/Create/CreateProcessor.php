@@ -14,6 +14,6 @@ class CreateProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new CreateContext($this->resourceMetadataFatory);
+        return new CreateContext($this->resourceConfigProvider);
     }
 }

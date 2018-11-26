@@ -4,7 +4,7 @@ namespace App\Bundle\RestBundle\Collection;
 
 use App\Bundle\RestBundle\Collection\QueryVisitorExpression\ComparisonExpressionInterface;
 use App\Bundle\RestBundle\Collection\QueryVisitorExpression\CompositeExpressionInterface;
-use Oro\Bundle\EntityBundle\ORM\EntityClassResolver;
+use App\Bundle\RestBundle\Util\EntityClassResolver;
 
 /**
  * The factory to create a new instance of QueryExpressionVisitor class.

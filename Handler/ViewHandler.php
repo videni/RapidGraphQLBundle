@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Bundle\RestBundle\Processor\Context as ProcessorContext;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface as RestViewHandlerInterface;
-use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 final class ViewHandler implements ViewHandlerInterface
 {
@@ -31,20 +31,18 @@ final class ViewHandler implements ViewHandlerInterface
      */
     public function handle(ProcessorContext $context, View $view): Response
     {
-        $viewContext = $this->createContext($context->getClassName(), $context->getOperationName(), $context->getMetadata());
+        $viewContext = $this->createContext($context->getClassName(), $context->getOperationName(), $context->getResourceConfig());
         $view->setContext($viewContext);
 
         return $this->restViewHandler->handle($view);
     }
 
-    public function createContext($class, $operationName, ResourceMetadata $resourceMetadata)
+    public function createContext($class, $operationName, ResourceConfig $resourceConfig)
     {
         $context = new Context();
         $context->setAttribute('api_operation_name', $operationName);
-
-        $groups = $resourceMetadata->getOperationAttribute($operationName, 'normalization_context', [], true);
-        if (isset($groups['groups'])) {
-            $context->setGroups($groups['groups']);
+        if ($normailzationConfig = $resourceConfig->getOperationAttribute($operationName, 'normalization_context')) {
+            $context->setGroups($normailzationConfig->getGroups());
         }
 
         $context->setAttribute('resource_class', $class);

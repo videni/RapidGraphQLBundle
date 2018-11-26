@@ -8,6 +8,7 @@ use App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
  * Denies access to the current resource if the logged user doesn't have sufficient permissions.
@@ -30,9 +31,11 @@ final class PermissionProcessor implements ProcessorInterface
     public function process(ContextInterface $context)
     {
         $operationName = $context->getOperationName();
-        $resourceMetadata = $context->getMetadata();
+        $resourceConfig = $context->getResourceConfig();
 
-        $isGranted = $resourceMetadata->getOperationAttribute($operationName, 'access_control', null, true);
+        $operationConfig = $resourceConfig->getOperation($operationName);
+
+        $isGranted = $operationConfig->getAccessControll();
         if (null === $isGranted) {
             return;
         }
@@ -44,7 +47,7 @@ final class PermissionProcessor implements ProcessorInterface
         $extraVariables['request'] = $request;
 
         if (!$this->resourceAccessChecker->isGranted($context->getClassName(), $isGranted, $extraVariables)) {
-            throw new AccessDeniedException($resourceMetadata->getOperationAttribute($operationName, 'access_control_message', 'Access Denied.', true));
+            throw new AccessDeniedException($operationConfig->getAccessControllMessage()?? 'Access Denied');
         }
     }
 }

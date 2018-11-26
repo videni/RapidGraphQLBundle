@@ -200,7 +200,7 @@ class ResourceController extends Controller
         $context->setRequestHeaders(new RestRequestHeaders($request));
         $context->setFormat($this->serializerFormat->getFormat($request, $context));
 
-        $context->loadMetadata();
+        $context->loadResourceConfig();
     }
 
          /**

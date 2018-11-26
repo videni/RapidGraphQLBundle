@@ -14,7 +14,8 @@ use App\Bundle\RestBundle\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use App\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
 
 final class LoadResource implements ProcessorInterface
@@ -37,29 +38,20 @@ final class LoadResource implements ProcessorInterface
      */
     public function process(ContextInterface $context)
     {
-        $resource = $this->load($context->getRequest(), $context->getOperationName(), $context->getClassName(), $context->getMetadata());
+        $resource = $this->load($context->getRequest(), $context->getOperationName(), $context->getClassName(), $context->getResourceConfig());
 
         $context->setResult($resource);
     }
 
-    public function load(Request $request, $operationName, $className, ResourceMetadata $resourceMetadata)
+    public function load(Request $request, $operationName, $className, ResourceConfig $resourceConfig)
     {
-        $repositoryConfiguration = $resourceMetadata->getOperationAttribute($operationName, 'repository', [], true);
+        /** @var ServiceConfig */
+        $repositoryConfig = $resourceConfig->getOperationAttribute($operationName, 'repository');
 
-        $repositoryInstance = null;
+        $repositoryInstance = $this->container->get($repositoryConfig['id']);
 
-        if (isset($repositoryConfiguration['id'])) {
-            $repositoryInstance = $this->container->get($repositoryConfiguration['id']);
-        } else {
-            $repositoryServiceId = self::getRepositoryServiceId($resourceMetadata->getShortName());
-
-            $repositoryInstance = $this->container->has($repositoryServiceId)? $this->container->get($repositoryServiceId): $this->registry->getRepository($className);
-        }
-
-        if (isset($repositoryConfiguration['method'])) {
-            $method = $repositoryConfiguration['method'];
-            $arguments = isset($factoryConfigurations['arguments'])? $factoryConfigurations['arguments']: [];
-
+        if ($method = $repositoryConfig->getMethod()) {
+            $arguments = $repositoryConfig->getArguments() ?? [];
             if (!is_array($arguments)) {
                 $arguments = [$arguments];
             }

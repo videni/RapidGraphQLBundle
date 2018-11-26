@@ -14,6 +14,6 @@ class ViewProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new ViewContext($this->resourceMetadataFatory);
+        return new ViewContext($this->resourceConfigProvider);
     }
 }

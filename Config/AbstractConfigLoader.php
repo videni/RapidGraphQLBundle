@@ -17,6 +17,8 @@ abstract class AbstractConfigLoader implements ConfigLoaderInterface
         if (\is_array($method)) {
             $config->{$method[$value ? 0 : 1]}();
         } else {
+                    // var_dump($config); debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,10);
+
             $config->{$method}($value);
         }
     }

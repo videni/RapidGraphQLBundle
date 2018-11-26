@@ -33,7 +33,7 @@ class AppRestExtension extends Extension
         $this->registerActionProcessors($container, $config);
         $this->registerFilterOperators($container, $config);
 
-        $this->loadPaginatorConfiguration($container);
+        $this->loadResourceConfiguration($container);
 
         DependencyInjectionUtil::setConfig($container, $config);
     }
@@ -99,28 +99,29 @@ class AppRestExtension extends Extension
         }
     }
 
+
     /**
      * @param string $fileName
      *
      * @return array
      */
-    private function loadPaginatorConfiguration($container)
+    private function loadResourceConfiguration($container)
     {
         $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
 
         $configLoader = new CumulativeConfigLoader('app_rest', $configFileLoaders);
         $resources = $configLoader->load($container);
         foreach ($resources as $resource) {
-            if (array_key_exists(PaginatorConfiguration::ROOT_NODE, $resource->data)) {
-                $config[] = $resource->data[PaginatorConfiguration::ROOT_NODE];
+            if (array_key_exists(ResourceConfiguration::ROOT_NODE, $resource->data)) {
+                $config[] = $resource->data[ResourceConfiguration::ROOT_NODE];
             }
         }
 
         $configs =  $this->processConfiguration(
-            new PaginatorConfiguration($container->get(FilterOperatorRegistry::class)),
+            new ResourceConfiguration($container->get(FilterOperatorRegistry::class)),
             $config
         );
 
-        $container->setParameter('app_rest.paginators', $configs);
+        $container->setParameter('app_rest.resource_config', $configs);
     }
 }

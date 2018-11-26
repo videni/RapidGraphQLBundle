@@ -26,7 +26,7 @@ final class ValidationProcessor implements ProcessorInterface
      */
     public function process(ContextInterface $context)
     {
-        $validationGroups = $context->getMetadata()->getOperationAttribute($context->getClassName(), 'validation_groups', null, true);
+        $validationGroups = $context->getResourceConfig()->getOperationAttribute($context->getClassName(), 'validation_groups');
 
         $this->validator->validate($context->getResult(), ['groups' => $validationGroups]);
     }

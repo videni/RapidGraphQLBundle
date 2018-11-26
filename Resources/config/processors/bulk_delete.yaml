@@ -9,7 +9,7 @@ services:
         arguments:
             - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'bulk_delete'
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
 
     # intialize
 

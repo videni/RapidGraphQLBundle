@@ -14,6 +14,6 @@ class DeleteProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new DeleteContext($this->resourceMetadataFatory);
+        return new DeleteContext($this->resourceConfigProvider);
     }
 }

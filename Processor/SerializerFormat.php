@@ -29,7 +29,7 @@ class SerializerFormat
      */
     public function getFormat(Request $request, Context $context): string
     {
-        $formats = $this->formatsProvider->getFormats($context->getMetadata(), $context->getOperationName());
+        $formats = $this->formatsProvider->getFormats($context->getResourceConfig(), $context->getOperationName());
 
         /**
          * @var string|null

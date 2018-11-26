@@ -29,3 +29,57 @@ api:
                     options: ~
                     operators: ['=', '!=', '<', '<=', '>']
                     collection: false
+
+    resources:
+        App\Bundle\AppBundle\Entity\Comment:
+            denormalization_context:
+                groups: ['write']
+            normalization_context:
+                groups: [read]
+            route_prefix: /admin
+            validation_groups: [app_rest]
+            factory:  "app_rest.factory.comment"
+            repository:
+                id: "app_rest.factory.repository"
+                method: createQueryBuilder
+                arguments: [$postId]
+            operations:
+                create_comment:
+                    denormalization_context:
+                        groups: [write]
+                    factory:
+                        method: createByPostId
+                        arguments: [$postId]
+                    action: create
+                    methods: ['POST']
+                    normalization_context:
+                        groups: [read]
+                    path: /posts/{postId}/comments
+                    validation_groups: [app_rest]
+                    defaults:
+                        _format: 'json'
+                get_comments:
+                    paginator: comment
+                    action: index
+                    repository:
+                        method: createQueryBuilderByPostId
+                        arguments: [$postId]
+                    methods: ['POST', 'GET']
+                    path: /posts/{postId}/comments
+                delete_comment:
+                    action: delete
+                    path: /comments/{id}
+                update_comment:
+                    denormalization_context:
+                        groups: [write]
+                    action: update
+                    normalization_context:
+                        groups: [read]
+                    validation_groups: [app_rest]
+                view_comment:
+                    action: view
+                    path: /comments/{id}
+                    repository:
+                        arguments: [$id]
+                    normalization_context:
+                        groups: [read]

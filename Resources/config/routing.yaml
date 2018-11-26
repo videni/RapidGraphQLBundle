@@ -6,10 +6,9 @@ services:
 
     App\Bundle\RestBundle\Routing\ResourceRouteLoader:
         arguments:
-            - '@App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactory'
+            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
             - '@App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
             - 'App\Bundle\RestBundle\Controller\ResourceController'
-            - '%app_rest.resource_class_directories%'
         tags: [ 'routing.loader' ]
 
     App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver:

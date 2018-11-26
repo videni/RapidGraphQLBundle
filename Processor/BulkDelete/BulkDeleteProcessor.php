@@ -14,6 +14,6 @@ class BulkDeleteProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new BulkDeleteContext($this->resourceMetadataFatory, $this->paginatorConfigProvider);
+        return new BulkDeleteContext($this->resourceConfigProvider);
     }
 }

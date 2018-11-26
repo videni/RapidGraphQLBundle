@@ -14,6 +14,6 @@ class UpdateProcessor extends RequestActionProcessor
      */
     protected function createContextObject()
     {
-        return new UpdateContext($this->resourceMetadataFatory);
+        return new UpdateContext($this->resourceConfigProvider);
     }
 }

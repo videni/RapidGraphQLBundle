@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Bundle\RestBundle\Routing\PathResolver;
 
-use App\Bundle\RestBundle\Operation\OperationType;
 use App\Bundle\RestBundle\Exception\InvalidArgumentException;
 use App\Bundle\RestBundle\Operation\PathSegmentNameGeneratorInterface;
 use App\Bundle\RestBundle\Operation\ActionTypes;
+use App\Bundle\RestBundle\Config\Resource\OperationConfig;
 
 /**
  * Generates an operation path.
@@ -24,14 +24,14 @@ final class OperationPathResolver implements OperationPathResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveOperationPath(string $resourceShortName, array $operation, string $operationName = null): string
+    public function resolveOperationPath(string $resourceShortName, OperationConfig $operation, string $operationName = null): string
     {
-        if (isset($operation['path'])) {
-            return $operation['path'];
+        if ($path = $operation->getPath()) {
+            return $path;
         }
 
         $path = '/'.$this->pathSegmentNameGenerator->getSegmentName($resourceShortName, true);
-        if (ActionTypes::isSingleItemAction($operation['action'])) {
+        if (ActionTypes::isSingleItemAction($operation->getAction())) {
             $path .= '/{id}';
         }
 

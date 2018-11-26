@@ -5,16 +5,14 @@ namespace App\Bundle\RestBundle\Processor;
 use Oro\Component\ChainProcessor\ProcessorBagInterface;
 use Oro\Component\ChainProcessor\ActionProcessor;
 use Psr\Log\LoggerInterface;
-use App\Bundle\RestBundle\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
-use App\Bundle\RestBundle\Config\PaginatorConfigProvider;
+use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 
 /**
  * The base processor for API actions that works with defined type of a resource.
  */
 class RequestActionProcessor extends ActionProcessor
 {
-    protected $resourceMetadataFatory;
-    protected $paginatorConfigProvider;
+    protected $resourceConfigProvider;
 
     /**
      * @param ProcessorBagInterface $processorBag
@@ -23,13 +21,11 @@ class RequestActionProcessor extends ActionProcessor
     public function __construct(
         ProcessorBagInterface $processorBag,
         $action,
-        ResourceMetadataFactoryInterface $resourceMetadataFatory,
-        PaginatorConfigProvider $paginatorConfigProvider
+        ResourceConfigProvider $resourceConfigProvider
     ) {
         parent::__construct($processorBag, $action);
 
-        $this->resourceMetadataFatory = $resourceMetadataFatory;
-        $this->paginatorConfigProvider = $paginatorConfigProvider;
+        $this->resourceConfigProvider = $resourceConfigProvider;
     }
 
     /** @var LoggerInterface */

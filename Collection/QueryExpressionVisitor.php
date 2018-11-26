@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
 use App\Bundle\RestBundle\Collection\QueryVisitorExpression\ComparisonExpressionInterface;
 use App\Bundle\RestBundle\Collection\QueryVisitorExpression\CompositeExpressionInterface;
-use Oro\Bundle\EntityBundle\ORM\EntityClassResolver;
+use App\Bundle\RestBundle\Util\EntityClassResolver;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**

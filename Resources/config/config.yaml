@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider:
+        public: true
+        arguments:
+            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigLoader'
+            - '%app_rest.resource_config%'
+
+    App\Bundle\RestBundle\Config\Resource\ResourceConfigLoader: ~
+
+    App\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
+
