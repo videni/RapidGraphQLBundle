@@ -14,3 +14,7 @@ services:
 
     App\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
 
+    App\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider:
+        arguments:
+            - '@App\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
+            - '%app_rest.resource_config%'

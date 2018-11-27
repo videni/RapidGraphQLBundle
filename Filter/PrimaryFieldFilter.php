@@ -3,6 +3,7 @@
 namespace App\Bundle\RestBundle\Filter;
 
 use Doctrine\Common\Collections\Criteria;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
  * A filter that can be used to filter data by a value of "primary" field.

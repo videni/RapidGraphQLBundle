@@ -25,8 +25,6 @@ class Context extends BaseContext implements ContextInterface
 
     const CRITERIA = 'criteria';
 
-    const PAGINATOR_CONFIG = 'paginator_config';
-
     /**
      * a value indicates whether errors should just stop processing
      * or an exception should be thrown is any error occurred

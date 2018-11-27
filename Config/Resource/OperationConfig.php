@@ -7,6 +7,7 @@ class OperationConfig
     private $action;
     private $defaults = [];
     private $path;
+    private $paginator = null;
     private $methods =  [];
     private $routeName;
     private $controller;
@@ -283,6 +284,9 @@ class OperationConfig
         if (array_key_exists('formats', $config)) {
             $self->setFormats($config['formats']);
         }
+        if (array_key_exists('paginator', $config)) {
+            $self->setPaginator($config['paginator']);
+        }
         if (array_key_exists('factory', $config)) {
             $self->setFactory(ServiceConfig::fromArray($config['factory']));
         }
@@ -316,5 +320,25 @@ class OperationConfig
         }
 
         return $self;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * @param mixed $paginator
+     *
+     * @return self
+     */
+    public function setPaginator($paginator)
+    {
+        $this->paginator = $paginator;
+
+        return $this;
     }
 }

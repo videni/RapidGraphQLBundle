@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\Common\Collections\Expr\Value;
 use App\Bundle\RestBundle\Exception\InvalidFilterOperatorException;
 use App\Bundle\RestBundle\Model\Range;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
  * A filter that can be used to filter data by a field value.

@@ -4,6 +4,7 @@ namespace App\Bundle\RestBundle\Filter;
 
 use Doctrine\Common\Collections\Criteria;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
+use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
  * A filter that can be used to specify the page number.

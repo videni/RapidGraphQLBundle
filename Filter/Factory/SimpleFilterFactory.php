@@ -3,10 +3,12 @@
 namespace App\Bundle\RestBundle\Filter\Factory;
 
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
 
 class SimpleFilterFactory implements FilterFactoryInterface
 {
     private const SUPPORTED_OPERATORS_OPTION = 'supported_operators';
+    public const TYPE = 'type';
 
     /** @var PropertyAccessorInterface */
     protected $propertyAccessor;
@@ -79,9 +81,9 @@ class SimpleFilterFactory implements FilterFactoryInterface
 
         $options = \array_replace($this->getFilterParameters($filterType), $options);
         $dataType = $filterType;
-        if (\array_key_exists(self::Type, $options)) {
-            $dataType = $options[self::Type];
-            unset($options[self::Type]);
+        if (\array_key_exists(self::TYPE, $options)) {
+            $dataType = $options[self::TYPE];
+            unset($options[self::TYPE]);
         }
 
         if (!empty($options[self::SUPPORTED_OPERATORS_OPTION])) {

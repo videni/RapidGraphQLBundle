@@ -2,16 +2,15 @@
 
 namespace App\Bundle\RestBundle\Config\Paginator;
 
-use App\Bundle\RestBundle\Config\ConfigBag;
-
 /**
  * Represents the configuration of  paginator
  */
-class PaginatorConfig extends ConfigBag
+class PaginatorConfig
 {
     private $maxResults;
     private $pageSize;
     private $disableSorting;
+    private $class;
 
     /** @var FilterConfig[] */
     protected $filters = [];
@@ -230,5 +229,25 @@ class PaginatorConfig extends ConfigBag
     public function removeSorting($sortingName)
     {
         unset($this->sortings[$sortingName]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param mixed $class
+     *
+     * @return self
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+
+        return $this;
     }
 }

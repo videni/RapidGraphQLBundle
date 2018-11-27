@@ -11,7 +11,6 @@ services:
             - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
     # intialize
 
-
     # security
 
     # deserialize

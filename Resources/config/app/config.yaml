@@ -64,11 +64,13 @@ app_rest:
                     initialize:
                         priority: -10
                     security:
-                        priority: -15
-                    index:
+                        priority: - 15
+                    build_query:
                         priority: -20
-                    finalize:
+                    index:
                         priority: -25
+                    finalize:
+                        priority: -30
             view:
                 processor_service_id: App\Bundle\RestBundle\Processor\View\ViewProcessor
                 processing_groups:
@@ -96,10 +98,12 @@ app_rest:
                         priority: -10
                     security:
                         priority: -15
+                    build_query:
+                        priority: -20
                     delete:
-                        priority:  -20
-                    finalize:
                         priority:  -25
+                    finalize:
+                        priority:  -30
             create:
                 processor_service_id: App\Bundle\RestBundle\Processor\Create\CreateProcessor
                 processing_groups:

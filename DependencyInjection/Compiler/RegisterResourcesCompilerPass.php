@@ -45,7 +45,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
             $class =  $factoryConfig->getClass();
         }
 
-        $container->setParameter($factoryDefId, $class);
+        $container->setParameter(sprintf('%s.class', $factoryDefId), $class);
 
         $factoryDef = (new Definition($class))
             ->addArgument($className)
@@ -73,7 +73,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
             $class = $respositoryConfig->getClass();
         }
 
-        $container->setParameter($repositoryDefId, $class);
+        $container->setParameter(sprintf('%s.class', $repositoryDefId), $class);
 
         $repositoryDef = (new Definition($class))
             ->addArgument(new Reference(ManagerRegistry::class))
@@ -88,6 +88,6 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('app_rest.%s.%s.class', $key, $name);
+         return sprintf('app_rest.%s.%s', $key, $name);
     }
 }

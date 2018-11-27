@@ -2,7 +2,7 @@
 
 namespace App\Bundle\RestBundle\Config\Resource;
 
-use App\Bundle\RestBundle\Exception\ResourceConfigNotFoundException;
+use App\Bundle\RestBundle\Exception\ConfigNotFoundException;
 
 class ResourceConfigProvider
 {
@@ -36,7 +36,7 @@ class ResourceConfigProvider
             return $resourceConfig;
         }
 
-        throw new ResourceConfigNotFoundException($resourceClass);
+        throw new ConfigNotFoundException('Resource', $resourceClass);
     }
 
     public function getAll()

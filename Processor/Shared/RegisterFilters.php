@@ -2,11 +2,10 @@
 
 namespace App\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Config\FilterConfig;
+use App\Bundle\RestBundle\Config\Paginator\FilterConfig;
 use App\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\FilterFactoryInterface;
+use App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
 use App\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\RequestAwareFilterInterface;
 use App\Bundle\RestBundle\Filter\StandaloneFilter;
 use App\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ProcessorInterface;

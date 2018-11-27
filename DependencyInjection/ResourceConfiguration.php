@@ -174,7 +174,6 @@ class ResourceConfiguration implements ConfigurationInterface
                                         ->children()
                                             ->scalarNode('id')->end()
                                             ->scalarNode('method')->end()
-                                            ->scalarNode('class')->end()
                                             ->arrayNode('arguments')
                                                 ->prototype('scalar')->end()
                                             ->end()

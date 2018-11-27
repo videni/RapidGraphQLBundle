@@ -49,7 +49,7 @@ class ResourceController extends Controller
     {
         $processor = $this->getProcessor(ActionTypes::INDEX);
 
-        /** @var GetListContext $context */
+        /** @var IndexContext $context */
         $context = $processor->createContext();
         $this->prepareContext($context, $request);
         $context->setFilterValues($this->getRequestFilters($request));

@@ -6,16 +6,17 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use App\Bundle\RestBundle\Config\PaginatorConfig;
 use App\Bundle\RestBundle\Filter\ComparisonFilter;
 use App\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\FilterFactoryInterface;
+use App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
 use App\Bundle\RestBundle\Filter\StandaloneFilter;
 use App\Bundle\RestBundle\Processor\Context;
 use App\Bundle\RestBundle\Util\DoctrineHelper;
 use Oro\Component\ChainProcessor\ContextInterface;
+use App\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider;
 
 /**
  * Registers filters according to the "filters" configuration section.
  */
-class RegisterConfiguredFilters extends RegisterFilters
+class RegisterConfiguredFilter extends RegisterFilters
 {
     private const ASSOCIATION_ALLOWED_OPERATORS = [
         ComparisonFilter::EQ,
@@ -31,17 +32,21 @@ class RegisterConfiguredFilters extends RegisterFilters
     /** @var DoctrineHelper */
     protected $doctrineHelper;
 
+    protected $paginatorConfigProvider;
+
     /**
      * @param FilterFactoryInterface $filterFactory
      * @param DoctrineHelper         $doctrineHelper
      */
     public function __construct(
         FilterFactoryInterface $filterFactory,
-        DoctrineHelper $doctrineHelper
+        DoctrineHelper $doctrineHelper,
+        PaginatorConfigProvider $paginatorConfigProvider
     ) {
         parent::__construct($filterFactory);
 
         $this->doctrineHelper = $doctrineHelper;
+        $this->paginatorConfigProvider = $paginatorConfigProvider;
     }
 
     /**
@@ -50,23 +55,32 @@ class RegisterConfiguredFilters extends RegisterFilters
      */
     public function process(ContextInterface $context)
     {
-        $paginatorConfig = $context->getPaginatorConfig();
-        if (null === $paginatorConfig || $paginatorConfig->isEmpty()) {
-            // a filters' configuration does not contains any data
+        $resourceConfig = $context->getResourceConfig();
+
+        $operationName = $context->getOperationName();
+
+        $paginatorName =  $resourceConfig->getOperation($operationName)->getPaginator();
+        if (null === $paginator) {
             return;
         }
 
-        if (!$this->doctrineHelper->isManageableEntityClass($context->getClassName())) {
+        $entityClass =  $context->getClassName();
+
+        $paginatorConfig = $this->paginatorConfigProvider->get($paginatorName);
+        $context->setPaginatorConfig($paginatorConfig);
+
+        if (!$this->doctrineHelper->isManageableEntityClass($entityClass)) {
             // only manageable entities or resources based on manageable entities can have the metadata
             return ;
         }
 
-        $metadata = $this->doctrineHelper->getEntityMetadataForClass($context->getClassName());
+        $metadata = $this->doctrineHelper->getEntityMetadataForClass($entityClass);
 
         $idFieldName = $this->getSingleIdentifierFieldName($metadata);
         $associationNames = $this->getAssociationNames($metadata);
         $filters = $context->getFilters();
-        $filtersConfig = $$paginatorConfig->getFilters();
+
+        $filtersConfig = $paginatorConfig->getFilters();
         foreach ($filtersConfig as $filterKey => $filter) {
             if ($filters->has($filterKey)) {
                 continue;

@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\Criteria;
 use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
- * A filter that can be used to specify the maximum number of records on one page.
+ * A filter that can be used to specify how a result collection should be sorted.
  */
-class PageSizeFilter extends StandaloneFilterWithDefaultValue
+class SortFilter extends StandaloneFilterWithDefaultValue
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class PageSizeFilter extends StandaloneFilterWithDefaultValue
         $val = null !== $value
             ? $value->getValue()
             : $this->getDefaultValue();
-        if (null !== $val) {
-            $criteria->setMaxResults($val);
+        if (!empty($val)) {
+            $criteria->orderBy($val);
         }
     }
 }

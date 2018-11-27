@@ -6,6 +6,7 @@ namespace App\Bundle\RestBundle\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 class DoctrineHelper
 {
@@ -95,5 +96,63 @@ class DoctrineHelper
         $this->manageableEntityClasses[$entityClass] = $isManageable;
 
         return $isManageable;
+    }
+
+      /**
+     * Gets the repository for the given entity class.
+     *
+     * @param string $entityClass The real class name of an entity
+     *
+     * @return EntityRepository
+     */
+    public function getEntityRepositoryForClass($entityClass)
+    {
+        return $this
+            ->getEntityManagerForClass($entityClass)
+            ->getRepository($entityClass);
+    }
+
+      /**
+     * Gets the ORM metadata descriptor for the given entity class.
+     *
+     * @param string $entityClass    The real class name of an entity
+     * @param bool   $throwException Whether to throw exception in case the entity is not manageable
+     *
+     * @return ClassMetadata|null
+     *
+     * @throws Exception\NotManageableEntityException if the EntityManager was not found and $throwException is TRUE
+     */
+    public function getEntityMetadataForClass($entityClass, $throwException = true)
+    {
+        $manager = $this->registry->getManagerForClass($entityClass);
+        if (null === $manager && $throwException) {
+            throw new Exception\NotManageableEntityException($entityClass);
+        }
+
+        return null !== $manager
+            ? $manager->getClassMetadata($entityClass)
+            : null;
+    }
+
+      /**
+     * Gets a list of all indexed associations
+     *
+     * @param ClassMetadata $metadata
+     *
+     * @return array [field name => target field data-type, ...]
+     */
+    public function getIndexedAssociations(ClassMetadata $metadata)
+    {
+        $relations = [];
+        $fieldNames = $metadata->getAssociationNames();
+        foreach ($fieldNames as $fieldName) {
+            $targetMetadata = $this->getEntityMetadataForClass($metadata->getAssociationTargetClass($fieldName));
+            $targetIdFieldNames = $targetMetadata->getIdentifierFieldNames();
+            if (count($targetIdFieldNames) === 1) {
+                $relations[$fieldName] = $targetMetadata->getTypeOfField(reset($targetIdFieldNames));
+            }
+        }
+
+        return $relations;
     }
 }

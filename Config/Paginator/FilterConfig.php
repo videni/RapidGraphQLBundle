@@ -10,6 +10,8 @@ class FilterConfig
     private $type;
     private $allowArray = false;
     private $allowRange = false;
+    private $collection = false;
+    private $position;
     private $description;
     private $filterOptions;
     private $propertyPath;
@@ -148,7 +150,7 @@ class FilterConfig
     /**
      * @return mixed
      */
-    public function getOperaters()
+    public function getOperators()
     {
         return $this->filterOperators;
     }
@@ -158,7 +160,7 @@ class FilterConfig
      *
      * @return self
      */
-    public function setOperaters($filterOperators)
+    public function setOperators($filterOperators)
     {
         $this->filterOperators = $filterOperators;
 
@@ -194,9 +196,49 @@ class FilterConfig
             $self->setOptions($config['options']);
         }
         if (array_key_exists('operators', $config)) {
-            $self->setOperaters($config['operators']);
+            $self->setOperators($config['operators']);
         }
 
         return $self;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
+     * @param mixed $collection
+     *
+     * @return self
+     */
+    public function setCollection($collection)
+    {
+        $this->collection = $collection;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     *
+     * @return self
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
     }
 }

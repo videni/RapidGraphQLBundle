@@ -23,7 +23,7 @@ class PaginatorConfigLoader
         }
         if (array_key_exists('sortings', $config)) {
             foreach ($config['sortings'] as $sortingName => $sortingConfig) {
-                $paginatorConfig->addSorting($sortingName, SortConfig::fromArray($sortingConfig));
+                $paginatorConfig->addSorting($sortingName, SortingConfig::fromArray($sortingConfig));
             }
         }
         if (array_key_exists('class', $config)) {

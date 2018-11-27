@@ -5,7 +5,7 @@ namespace App\Bundle\RestBundle\Config\Paginator;
 /**
  * Represents the configuration of a field that can be used to filter data.
  */
-class SortConfig
+class SortingConfig
 {
     private $propertyPath;
     private $description;
