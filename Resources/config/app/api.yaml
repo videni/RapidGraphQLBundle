@@ -38,9 +38,8 @@ api:
                 groups: [read]
             route_prefix: /admin
             validation_groups: [app_rest]
-            factory:  "app_rest.factory.comment"
+            factory: 'App\Bundle\AppBundle\Factory\CommentFactory'
             repository:
-                id: "app_rest.factory.repository"
                 method: createQueryBuilder
                 arguments: [$postId]
             operations:

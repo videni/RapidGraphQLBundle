@@ -193,15 +193,34 @@ class ResourceConfig
 
     public function getOperationAttribute(string $operationName, string $key)
     {
+        $operationAttribute = null;
+
         if ($this->hasOperation($operationName)) {
             $operation = $this->getOperation($operationName);
             if ($operation && $getter = $this->getGetter($operation, $key)) {
-                return $operation->$getter();
+                $operationAttribute = $operation->$getter();
             }
         }
 
+        $resourceAttribute = null;
         if ($getter = $this->getGetter($this, $key)) {
-            return $this->$getter();
+            $resourceAttribute = $this->$getter();
+        }
+
+        if (empty($operationAttribute)) {
+            return $resourceAttribute;
+        }
+
+        if ($operationAttribute && $operationAttribute instanceof ServiceConfig) {
+            return ServiceConfig::fromArray(array_merge($resourceAttribute->toArray(), array_filter($operationAttribute->toArray())));
+        }
+
+        if ($operationAttribute && $operationAttribute instanceof SerializationConfig) {
+            return SerializationConfig::fromArray(array_merge($resourceAttribute->toArray(), array_filter($operationAttribute->toArray())));
+        }
+
+        if (!empty($operationAttribute)) {
+            return $operationAttribute;
         }
 
         return null;

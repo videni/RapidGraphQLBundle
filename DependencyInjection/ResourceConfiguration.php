@@ -49,20 +49,39 @@ class ResourceConfiguration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('resources');
 
         $rootNode
-            ->validate()
+            ->beforeNormalization()
                 ->always(function ($v) {
                     foreach ($v as $key => &$value) {
-                        if (!class_exists($key)) {
-                            throw new \InvalidArgumentException(sprintf('Resource %s is supposed to be full quanlified class', $key));
-                        }
                         if (!isset($value['short_name'])) {
                             $value['short_name'] = $this->getClassName($key);
                         }
                         if (!isset($value['repository'])) {
                             $value['repository'] = $this->getServiceId($value['short_name'], 'repository');
+                        } else if (!isset($value['repository']['id'])) {
+                            $value['repository'] = array_merge(
+                                ['id' => $this->getServiceId($value['short_name'], 'repository')],
+                                is_string($value['repository']) ? ['id' => $value['repository']] : $value['repository']
+                            );
                         }
+
                         if (!isset($value['factory'])) {
                             $value['factory'] = $this->getServiceId($value['short_name'], 'factory');
+                        } else if (!isset($value['factory']['id'])) {
+                            $value['factory'] = array_merge(
+                                ['id' => $this->getServiceId($value['short_name'], 'factory')],
+                                is_string($value['factory']) ? ['id' => $value['factory']] : $value['factory']
+                            );
+                        }
+                    }
+
+                    return $v;
+                })
+            ->end()
+            ->validate()
+                ->always(function ($v) {
+                    foreach ($v as $key => &$value) {
+                        if (!class_exists($key)) {
+                            throw new \InvalidArgumentException(sprintf('Resource %s is supposed to be full quanlified class', $key));
                         }
                     }
 
@@ -84,6 +103,7 @@ class ResourceConfiguration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('id')->end()
                             ->scalarNode('method')->end()
+                            ->scalarNode('class')->end()
                             ->arrayNode('arguments')
                                 ->prototype('scalar')->end()
                             ->end()
@@ -116,6 +136,7 @@ class ResourceConfiguration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('id')->end()
                             ->scalarNode('method')->end()
+                            ->scalarNode('class')->end()
                             ->arrayNode('arguments')
                                 ->prototype('scalar')->end()
                             ->end()
@@ -153,6 +174,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                         ->children()
                                             ->scalarNode('id')->end()
                                             ->scalarNode('method')->end()
+                                            ->scalarNode('class')->end()
                                             ->arrayNode('arguments')
                                                 ->prototype('scalar')->end()
                                             ->end()
@@ -285,6 +307,6 @@ class ResourceConfiguration implements ConfigurationInterface
     {
         $name = Inflector::tableize($resourceShortName);
 
-        return sprintf('app_rest.%s.%s.class', $key, $name);
+        return sprintf('app_rest.%s.%s', $key, $name);
     }
 }

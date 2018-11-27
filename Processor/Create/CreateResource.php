@@ -46,16 +46,14 @@ class CreateResource implements ProcessorInterface
     {
         /** @var ServiceConfig  */
         $factoryConfig = $resourceConfig->getOperationAttribute($operationName, 'factory');
-        var_dump($resourceConfig);exit;
         if (null === $factoryConfig) {
             throw new \RuntimeException(sprintf('No resource factory found for class %s', $className));
         }
-
         $factoryInstance = $this->container->get($factoryConfig->getId());
 
-        $method = $factoryConfig->has('method')? $factoryConfig->get('method'): 'createNew';
+        $method = $factoryConfig->getMethod()?? 'createNew';
 
-        $arguments = $factoryConfig->has('arguments')? $factoryConfig->getArguments(): [];
+        $arguments = $factoryConfig->getArguments();
         if (!is_array($arguments)) {
             $arguments = [$arguments];
         }

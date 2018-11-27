@@ -40,11 +40,17 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
 
         $factoryDefId = $factoryConfig ? $factoryConfig->getId(): self::getServiceId($resourceConfig->getShortName(), 'factory');
+        $class = Factory::class;
+        if ($factoryConfig && $factoryConfig->getClass()) {
+            $class =  $factoryConfig->getClass();
+        }
 
-        $container->setParameter($factoryDefId, Factory::class);
+        $container->setParameter($factoryDefId, $class);
 
-        $factoryDef = new Definition(Factory::class);
-        $factoryDef->addArgument($className);
+        $factoryDef = (new Definition($class))
+            ->addArgument($className)
+            ->setPublic(true)
+        ;
 
         $container->setDefinition($factoryDefId, $factoryDef);
     }
@@ -55,18 +61,25 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $respositoryConfig = null;
 
         if ($respositoryConfig = $resourceConfig->getRepository()) {
-            if ($respositoryConfig->has('id') && $container->has($resourceConfig->getId())) {
+            if ($respositoryConfig->getId() && $container->has($respositoryConfig->getId())) {
                 return;
             }
         }
 
         $repositoryDefId = $respositoryConfig? $respositoryConfig->getId(): self::getServiceId($resourceConfig->getShortName(), 'repository');
 
-        $container->setParameter($repositoryDefId, ServiceEntityRepository::class);
+        $class = ServiceEntityRepository::class;
+        if ($respositoryConfig && $respositoryConfig->getClass()) {
+            $class = $respositoryConfig->getClass();
+        }
 
-        $repositoryDef = new Definition(ServiceEntityRepository::class);
-        $repositoryDef->addArgument(new Reference(ManagerRegistry::class));
-        $repositoryDef->addArgument($className);
+        $container->setParameter($repositoryDefId, $class);
+
+        $repositoryDef = (new Definition($class))
+            ->addArgument(new Reference(ManagerRegistry::class))
+            ->addArgument($className)
+            ->setPublic(true)
+        ;
 
         $container->setDefinition($repositoryDefId, $repositoryDef);
     }

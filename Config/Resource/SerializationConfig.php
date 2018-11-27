@@ -2,7 +2,7 @@
 
 namespace App\Bundle\RestBundle\Config\Resource;
 
-class SerializationConfig
+class SerializationConfig extends \ArrayObject
 {
     private $groups;
 
@@ -35,5 +35,12 @@ class SerializationConfig
         }
 
         return $self;
+    }
+
+    public function toArray()
+    {
+        return [
+            'groups' => $this->getGroups()
+        ];
     }
 }

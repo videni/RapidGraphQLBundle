@@ -42,11 +42,6 @@ class SaveResource implements ProcessorInterface
             return;
         }
 
-        $metadata = $context->getMetadata();
-        if (null === $metadata) {
-            // the metadata does not exist
-            return;
-        }
         if (null === $entity->getId()) {
             $context->setResponseStatusCode(Response::HTTP_CREATED);
         }

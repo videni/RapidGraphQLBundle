@@ -32,7 +32,7 @@ class ResourceConfigLoader
             $resourceConfig->setFactory(ServiceConfig::fromArray($config['factory']));
         }
         if (array_key_exists('repository', $config)) {
-            $resourceConfig->setFactory(ServiceConfig::fromArray($config['repository']));
+            $resourceConfig->setRepository(ServiceConfig::fromArray($config['repository']));
         }
 
         if (array_key_exists('route_prefix', $config)) {

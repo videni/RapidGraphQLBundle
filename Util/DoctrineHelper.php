@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Bundle\RestBundle\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Util\ClassUtils;
 
 class DoctrineHelper
 {

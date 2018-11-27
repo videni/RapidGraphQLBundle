@@ -2,7 +2,7 @@
 
 namespace App\Bundle\RestBundle\Config\Resource;
 
-class ServiceConfig
+class ServiceConfig extends \ArrayObject
 {
     private $id;
     private $arguments = [];
@@ -107,5 +107,15 @@ class ServiceConfig
         }
 
         return $self;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'class' => $this->getClass(),
+            'method' => $this->getMethod(),
+            'arguments' => $this->getArguments(),
+        ];
     }
 }
