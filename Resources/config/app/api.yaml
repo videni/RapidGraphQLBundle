@@ -39,9 +39,6 @@ api:
             route_prefix: /admin
             validation_groups: [app_rest]
             factory: 'App\Bundle\AppBundle\Factory\CommentFactory'
-            repository:
-                method: createQueryBuilder
-                arguments: [$postId]
             operations:
                 create_comment:
                     denormalization_context:

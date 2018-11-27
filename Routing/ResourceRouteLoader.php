@@ -103,13 +103,12 @@ final class ResourceRouteLoader extends Loader
                 '_format' => null,
                 '_api_resource_class' => $resourceClass,
                 '_api_operation_name' => $operationName,
-                '_action' => $action,
             ] + $operationConfig->getDefaults(),
             [],
             [],
             '',
             [],
-            $operationConfig->getMethods() ?? array_merge($defaultMethods, $operationConfig->getMethods())
+            empty($operationConfig->getMethods()) ? $defaultMethods: $operationConfig->getMethods()
         );
 
         $routeCollection->add(RouteNameGenerator::generate($operationName, $resourceShortName), $route);

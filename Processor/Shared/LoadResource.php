@@ -48,7 +48,7 @@ final class LoadResource implements ProcessorInterface
         /** @var ServiceConfig */
         $repositoryConfig = $resourceConfig->getOperationAttribute($operationName, 'repository');
 
-        $repositoryInstance = $this->container->get($repositoryConfig['id']);
+        $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
         if ($method = $repositoryConfig->getMethod()) {
             $arguments = $repositoryConfig->getArguments() ?? [];
@@ -60,8 +60,6 @@ final class LoadResource implements ProcessorInterface
 
             return $repositoryInstance->$method(...$arguments);
         }
-
-        $criteria = [];
 
         if ($request->attributes->has('id')) {
             return $repositoryInstance->find($request->attributes->get('id'));
