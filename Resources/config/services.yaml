@@ -1,5 +1,4 @@
 imports:
-    - { resource: 'metadata.yaml'}
     - { resource: 'routing.yaml'}
     - { resource: 'extractor.yaml'}
     - { resource: 'serializer.yaml'}

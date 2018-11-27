@@ -41,7 +41,7 @@ final class RouteNameGenerator
     /**
      * Transforms a given string to a tableized, pluralized string.
      *
-     * @param string $name usually a ResourceMetadata shortname
+     * @param string $name usually a resource shortname
      *
      * @return string A string that is a part of the route name
      */

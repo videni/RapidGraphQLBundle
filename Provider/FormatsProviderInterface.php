@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Bundle\RestBundle\Provider;
 
-use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**

@@ -5,7 +5,6 @@ namespace App\Bundle\RestBundle\Processor\Shared;
 use App\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Metadata\Resource\ResourceMetadata;
 use App\Bundle\RestBundle\Validator\ValidatorInterface;
 
 final class ValidationProcessor implements ProcessorInterface
