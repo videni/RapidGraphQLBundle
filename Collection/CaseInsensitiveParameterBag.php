@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection;
+namespace Videni\Bundle\RestBundle\Collection;
 
 use Oro\Component\ChainProcessor\ParameterBag;
 

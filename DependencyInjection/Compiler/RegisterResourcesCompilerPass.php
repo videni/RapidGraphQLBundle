@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection\Compiler;
+namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
-use App\Bundle\RestBundle\Factory\Factory;
+use Videni\Bundle\RestBundle\Factory\Factory;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -88,6 +88,6 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('app_rest.%s.%s', $key, $name);
+         return sprintf('videni_rest.%s.%s', $key, $name);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter\FilterValue;
+namespace Videni\Bundle\RestBundle\Filter\FilterValue;
 
 /**
  * Provides an interface of a collection of the FilterValue objects.

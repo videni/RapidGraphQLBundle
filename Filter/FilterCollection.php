@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 /**
  * A collection of FilterInterface.

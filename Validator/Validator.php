@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Validator;
+namespace Videni\Bundle\RestBundle\Validator;
 
-use App\Bundle\RestBundle\Validator\Exception\ValidationException;
+use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;

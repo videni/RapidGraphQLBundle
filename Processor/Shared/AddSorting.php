@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\Common\Collections\Criteria;
-use App\Bundle\RestBundle\Filter\FilterCollection;
-use App\Bundle\RestBundle\Filter\SortFilter;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Model\DataType;
+use Videni\Bundle\RestBundle\Filter\FilterCollection;
+use Videni\Bundle\RestBundle\Filter\SortFilter;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Model\DataType;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
-use App\Bundle\RestBundle\Filter\FilterNames;
-use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Filter\FilterNames;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 /**
  * Sets default sorting for different kind of requests.

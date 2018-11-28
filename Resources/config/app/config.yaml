@@ -1,4 +1,4 @@
-app_rest:
+videni_rest:
     filters:
         string: ~
         boolean: ~
@@ -37,11 +37,11 @@ app_rest:
         duration:
             supported_operators: ['=', '!=', '<', '<=', '>', '>=', '*', '!*']
         # composite_identifier:
-        #     factory: ['@app_rest.filter_factory.composite_identifier', 'createFilter']
+        #     factory: ['@videni_rest.filter_factory.composite_identifier', 'createFilter']
         # association:
-        #     factory: ['@app_rest.filter_factory.extended_association', 'createFilter']
+        #     factory: ['@videni_rest.filter_factory.extended_association', 'createFilter']
         primaryField:
-            class: App\Bundle\RestBundle\Filter\PrimaryFieldFilter
+            class: Videni\Bundle\RestBundle\Filter\PrimaryFieldFilter
     filter_operators:
         eq:  '='  # equal to
         neq: '!=' # not equal to
@@ -59,7 +59,7 @@ app_rest:
         not_ends_with:   '!$' # not ends with (NOT LIKE %value)
     actions:
             index:
-                processor_service_id: App\Bundle\RestBundle\Processor\Index\IndexProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\Index\IndexProcessor
                 processing_groups:
                     initialize:
                         priority: -10
@@ -67,12 +67,12 @@ app_rest:
                         priority: - 15
                     build_query:
                         priority: -20
-                    index:
+                    load_resources:
                         priority: -25
                     finalize:
                         priority: -30
             view:
-                processor_service_id: App\Bundle\RestBundle\Processor\View\ViewProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\View\ViewProcessor
                 processing_groups:
                     initialize:
                         priority: -10
@@ -81,7 +81,7 @@ app_rest:
                     finalize:
                         priority: -20
             delete:
-                processor_service_id: App\Bundle\RestBundle\Processor\Delete\DeleteProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\Delete\DeleteProcessor
                 processing_groups:
                     initialize:
                         priority: -10
@@ -92,7 +92,7 @@ app_rest:
                     finalize:
                         priority:  -25
             bulk_delete:
-                processor_service_id: App\Bundle\RestBundle\Processor\BulkDelete\BulkDeleteProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\BulkDelete\BulkDeleteProcessor
                 processing_groups:
                     initialize:
                         priority: -10
@@ -105,7 +105,7 @@ app_rest:
                     finalize:
                         priority:  -30
             create:
-                processor_service_id: App\Bundle\RestBundle\Processor\Create\CreateProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\Create\CreateProcessor
                 processing_groups:
                     initialize:
                         priority: -10
@@ -122,7 +122,7 @@ app_rest:
                     finalize:
                         priority: -60
             update:
-                processor_service_id: App\Bundle\RestBundle\Processor\Update\UpdateProcessor
+                processor_service_id: Videni\Bundle\RestBundle\Processor\Update\UpdateProcessor
                 processing_groups:
                     initialize:
                         priority: -10

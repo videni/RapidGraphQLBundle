@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Handler;
+namespace Videni\Bundle\RestBundle\Handler;
 
 use Doctrine\Common\Persistence\ObjectManager;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Config\SortingConfig;
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Config\SortingConfig;
+use Videni\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Filter\FilterNames;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
-use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Filter\FilterNames;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValue;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 use Doctrine\Common\Collections\Criteria;
 
 /**

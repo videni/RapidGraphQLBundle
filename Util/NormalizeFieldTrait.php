@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
-use App\Bundle\RestBundle\Collection\Criteria;
+use Videni\Bundle\RestBundle\Collection\Criteria;
 
 /**
  * Provides a method to replace a placeholder in a field path with corresponding object names.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter\FilterValue;
+namespace Videni\Bundle\RestBundle\Filter\FilterValue;
 
 use Symfony\Component\HttpFoundation\Request;
 

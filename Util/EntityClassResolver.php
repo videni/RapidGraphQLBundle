@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;

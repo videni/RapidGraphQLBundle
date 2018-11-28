@@ -8,10 +8,10 @@ imports:
     - { resource: 'processor.yaml'}
 
 parameters:
-    app_rest.resource_class_directories:
+    videni_rest.resource_class_directories:
         - "%kernel.project_dir%/config/packages/videni_resources"
 
-    app_rest.formats:
+    videni_rest.formats:
         json:
             mime_types: 'application/json'
 
@@ -24,8 +24,8 @@ services:
     Oro\Component\ChainProcessor\ProcessorBagConfigProvider:
         public: false
         arguments:
-            - [] # groups; they are set by App\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
-            - [] # processors; they are set by App\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
+            - [] # groups; they are set by Videni\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
+            - [] # processors; they are set by Videni\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
 
     Oro\Component\ChainProcessor\Debug\TraceLogger:
         public: false
@@ -33,29 +33,29 @@ services:
             - 'data_api'
             - '@?debug.stopwatch'
 
-    App\Bundle\RestBundle\Faker\EntityProvider:
+    Videni\Bundle\RestBundle\Faker\EntityProvider:
         arguments:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: 'nelmio_alice.faker.provider' }
 
-    App\Bundle\RestBundle\Factory\ResourceFactory: ~
+    Videni\Bundle\RestBundle\Factory\ResourceFactory: ~
 
-    App\Bundle\RestBundle\Factory\ParametersParser:
-        arguments: ['@service_container', '@App\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage']
+    Videni\Bundle\RestBundle\Factory\ParametersParser:
+        arguments: ['@service_container', '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage']
 
-    App\Bundle\RestBundle\Factory\ParametersParserInterface: '@App\Bundle\RestBundle\Factory\ParametersParser'
+    Videni\Bundle\RestBundle\Factory\ParametersParserInterface: '@Videni\Bundle\RestBundle\Factory\ParametersParser'
 
-    App\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
+    Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
 
-    App\Bundle\RestBundle\Processor\OptimizedProcessorBag:
+    Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag:
         arguments:
             - '@Oro\Component\ChainProcessor\ProcessorBagConfigProvider'
             - '@Oro\Component\ChainProcessor\ChainProcessorFactory'
             - '%kernel.debug%'
-            - '@App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory'
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory'
-            - '@App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory'
+            - '@Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory'
+            - '@Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory'
             - '@Oro\Component\ChainProcessor\ProcessorIteratorFactory'
 
     Oro\Component\ChainProcessor\ChainProcessorFactory:
@@ -70,62 +70,65 @@ services:
         arguments:
             - '@service_container'
 
-    App\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory: ~
+    Videni\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory: ~
 
     Oro\Component\ChainProcessor\ProcessorIteratorFactory: ~
 
-    App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory: ~
+    Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory: ~
 
-    App\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory: ~
+    Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory: ~
 
-    App\Bundle\RestBundle\Util\DoctrineHelper: ~
+    Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
 
-    App\Bundle\RestBundle\Validator\Validator:
+    Videni\Bundle\RestBundle\Validator\Validator:
         arguments: ['@validator', '@service_container']
 
-    App\Bundle\RestBundle\Validator\ValidatorInterface: '@App\Bundle\RestBundle\Validator\Validator'
+    Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
 
-    App\Bundle\RestBundle\Handler\DeleteHandler: ~
-    App\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@App\Bundle\RestBundle\Handler\DeleteHandler'
+    Videni\Bundle\RestBundle\Handler\DeleteHandler: ~
+    Videni\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@Videni\Bundle\RestBundle\Handler\DeleteHandler'
 
-    App\Bundle\RestBundle\Util\CriteriaConnector:
+    Videni\Bundle\RestBundle\Util\CriteriaConnector:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Util\CriteriaNormalizer'
-            - '@App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver'
-            - '@App\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory'
-            - '@App\Bundle\RestBundle\Util\EntityClassResolver'
+            - '@Videni\Bundle\RestBundle\Util\CriteriaNormalizer'
+            - '@Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver'
+            - '@Videni\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory'
+            - '@Videni\Bundle\RestBundle\Util\EntityClassResolver'
 
-    App\Bundle\RestBundle\Util\CriteriaNormalizer:
+    Videni\Bundle\RestBundle\Util\CriteriaNormalizer:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Util\DoctrineHelper'
-            - '@App\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory'
-            - '@App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory'
+            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
+            - '@Videni\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory'
+            - '@Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory'
 
-    App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver:
-        class: App\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver
+    Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver:
+        class: Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver
         public: false
 
-    App\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory:
-        public: false
-        arguments:
-            - '@App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker'
-
-    App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker:
-        class: App\Bundle\RestBundle\Util\RequireJoinsDecisionMaker
-        public: false
-
-    App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory:
-        class: App\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory
+    Videni\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker'
+            - '@Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker'
 
-    App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker:
-        class: App\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker
+    Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker:
+        class: Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker
         public: false
 
-    App\Bundle\RestBundle\Util\EntityClassResolver: ~
+    Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory:
+        class: Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory
+        public: false
+        arguments:
+            - '@Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker'
+
+    Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker:
+        class: Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker
+        public: false
+
+    Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
+
+    Hateoas\Representation\Factory\PagerfantaFactory: ~
+
 
 

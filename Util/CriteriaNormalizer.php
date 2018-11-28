@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
-use App\Bundle\RestBundle\Collection\Criteria;
-use App\Bundle\RestBundle\Collection\Join;
+use Videni\Bundle\RestBundle\Collection\Criteria;
+use Videni\Bundle\RestBundle\Collection\Join;
 
 /**
  * Performs the following normalizations of the Criteria object:

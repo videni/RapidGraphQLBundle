@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter\FilterValue;
+namespace Videni\Bundle\RestBundle\Filter\FilterValue;
 
-use App\Bundle\RestBundle\Filter\FilterValueAccessorInterface;
+use Videni\Bundle\RestBundle\Filter\FilterValueAccessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

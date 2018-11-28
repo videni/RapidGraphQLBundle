@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 /**
  * Provides names of predefined filters.
@@ -40,7 +40,7 @@ class FilterNames
 
     /**
      * Gets the name of a filter that can be used to specify how a result collection should be sorted.
-     * @see \App\Bundle\RestBundle\Filter\SortFilter
+     * @see \Videni\Bundle\RestBundle\Filter\SortFilter
      *
      * @return string
      */
@@ -51,7 +51,7 @@ class FilterNames
 
     /**
      * Gets the name of a filter that can be used to specify the page number.
-     * @see \App\Bundle\RestBundle\Filter\PageNumberFilter
+     * @see \Videni\Bundle\RestBundle\Filter\PageNumberFilter
      *
      * @return string
      */

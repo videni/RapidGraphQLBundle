@@ -4,11 +4,11 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\View\ViewProcessor:
+    Videni\Bundle\RestBundle\Processor\View\ViewProcessor:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'view'
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
 
     # initialize

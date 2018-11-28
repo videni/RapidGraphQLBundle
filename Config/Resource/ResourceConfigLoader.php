@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config\Resource;
+namespace Videni\Bundle\RestBundle\Config\Resource;
 
-use App\Bundle\RestBundle\Config\AbstractConfigLoader;
+use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
 
 /**
  * The loader for resource

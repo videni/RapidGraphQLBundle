@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Handler;
+namespace Videni\Bundle\RestBundle\Handler;
 
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Response;
-use App\Bundle\RestBundle\Processor\Context as ProcessorContext;
+use Videni\Bundle\RestBundle\Processor\Context as ProcessorContext;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface as RestViewHandlerInterface;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 final class ViewHandler implements ViewHandlerInterface
 {

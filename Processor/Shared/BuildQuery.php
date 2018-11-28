@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Util\CriteriaConnector;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Util\CriteriaConnector;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\QueryBuilder;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Factory\ParametersParserInterface;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

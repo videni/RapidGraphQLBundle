@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor;
 
 /**
  * A base implementation of the context for actions work with one entity.

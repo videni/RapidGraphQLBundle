@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection\Compiler;
+namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
-use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use App\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory;
+use Videni\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory;
 
 /**
  * Registers all possible ORM expressions that can be used in Criteria object.
- * @see \App\Bundle\RestBundle\Util\CriteriaConnector::applyCriteria
+ * @see \Videni\Bundle\RestBundle\Util\CriteriaConnector::applyCriteria
  */
 class QueryExpressionCompilerPass implements CompilerPassInterface
 {
-    private const COMPOSITE_EXPRESSION_TAG       = 'app_rest.query.composite_expression';
+    private const COMPOSITE_EXPRESSION_TAG       = 'videni_rest.query.composite_expression';
     private const COMPOSITE_EXPRESSION_TYPE      = 'type';
-    private const COMPARISON_EXPRESSION_TAG      = 'app_rest.query.comparison_expression';
+    private const COMPARISON_EXPRESSION_TAG      = 'videni_rest.query.comparison_expression';
     private const COMPARISON_EXPRESSION_OPERATOR = 'operator';
 
     /**

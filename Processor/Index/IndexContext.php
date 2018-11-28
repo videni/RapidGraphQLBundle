@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Index;
+namespace Videni\Bundle\RestBundle\Processor\Index;
 
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 class IndexContext extends Context
 {

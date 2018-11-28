@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config;
+namespace Videni\Bundle\RestBundle\Config;
 
 /**
  * An interface for configuration section loaders.

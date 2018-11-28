@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Exception;
+namespace Videni\Bundle\RestBundle\Exception;
 
 /**
  * This exception is thrown when the requested filtering type is not supported.

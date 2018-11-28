@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection\Compiler;
+namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
 use Oro\Component\ChainProcessor\DependencyInjection\ProcessorsLoader;
 use Oro\Component\ChainProcessor\ProcessorBagConfigBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Oro\Component\ChainProcessor\ProcessorBagConfigProvider;
-use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 
 /**
  * Adds all registered Data API processors to the processor bag service.
  */
 class ProcessorBagCompilerPass implements CompilerPassInterface
 {
-    private const PROCESSOR_TAG  = 'app_rest.processor';
+    private const PROCESSOR_TAG  = 'videni_rest.processor';
 
     /**
      * {@inheritdoc}

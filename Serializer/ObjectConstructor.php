@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Serializer;
+namespace Videni\Bundle\RestBundle\Serializer;
 
 use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\VisitorInterface;

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
-use App\Bundle\RestBundle\Handler\DeleteHandler;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Handler\DeleteHandler;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use App\Bundle\RestBundle\Handler\DeleteHandlerInterface;
+use Videni\Bundle\RestBundle\Handler\DeleteHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

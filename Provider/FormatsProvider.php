@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Provider;
+namespace Videni\Bundle\RestBundle\Provider;
 
-use App\Bundle\RestBundle\Exception\InvalidArgumentException;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
  * {@inheritdoc}

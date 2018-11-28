@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Delete;
+namespace Videni\Bundle\RestBundle\Processor\Delete;
 
-use App\Bundle\RestBundle\Processor\SingleItemContext;
+use Videni\Bundle\RestBundle\Processor\SingleItemContext;
 
 class DeleteContext extends SingleItemContext
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Factory;
+namespace Videni\Bundle\RestBundle\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;

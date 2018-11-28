@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 /**
  * This interface should be implemented by filters that applies to a field.

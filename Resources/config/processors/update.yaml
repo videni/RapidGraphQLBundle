@@ -4,11 +4,11 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Update\UpdateProcessor:
+    Videni\Bundle\RestBundle\Processor\Update\UpdateProcessor:
         arguments:
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'update'
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
 
     # initialize
 

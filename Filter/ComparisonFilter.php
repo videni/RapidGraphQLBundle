@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\Common\Collections\Expr\Value;
-use App\Bundle\RestBundle\Exception\InvalidFilterOperatorException;
-use App\Bundle\RestBundle\Model\Range;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
+use Videni\Bundle\RestBundle\Exception\InvalidFilterOperatorException;
+use Videni\Bundle\RestBundle\Model\Range;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
  * A filter that can be used to filter data by a field value.

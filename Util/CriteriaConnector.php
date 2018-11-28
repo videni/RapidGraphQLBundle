@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
 use Doctrine\ORM\QueryBuilder;
-use App\Bundle\RestBundle\Collection\Criteria;
-use App\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory;
-use App\Bundle\RestBundle\Util\EntityClassResolver;
+use Videni\Bundle\RestBundle\Collection\Criteria;
+use Videni\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory;
+use Videni\Bundle\RestBundle\Util\EntityClassResolver;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**

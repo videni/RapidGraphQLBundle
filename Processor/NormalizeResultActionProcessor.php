@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor;
 
-use App\Bundle\RestBundle\Exception\UnhandledErrorsException;
-use App\Bundle\RestBundle\Exception\ValidationExceptionInterface;
-use App\Bundle\RestBundle\Model\Error;
-use App\Bundle\RestBundle\Model\ErrorSource;
-use App\Bundle\RestBundle\Model\Label;
-use App\Bundle\RestBundle\Util\ExceptionUtil;
+use Videni\Bundle\RestBundle\Exception\UnhandledErrorsException;
+use Videni\Bundle\RestBundle\Exception\ValidationExceptionInterface;
+use Videni\Bundle\RestBundle\Model\Error;
+use Videni\Bundle\RestBundle\Model\ErrorSource;
+use Videni\Bundle\RestBundle\Model\Label;
+use Videni\Bundle\RestBundle\Util\ExceptionUtil;
 use App\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Oro\Component\ChainProcessor\ActionProcessor;
 use Oro\Component\ChainProcessor\ContextInterface as ComponentContextInterface;

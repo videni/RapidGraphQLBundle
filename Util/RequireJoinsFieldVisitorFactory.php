@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
 /**
  * The factory to create a new instance of RequireJoinsFieldVisitor class.

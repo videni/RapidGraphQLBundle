@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Delete;
+namespace Videni\Bundle\RestBundle\Processor\Delete;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Bundle\RestBundle\Processor\Shared\DeleteProcessor;
-use App\Bundle\RestBundle\Handler\DeleteHandlerInterface;
+use Videni\Bundle\RestBundle\Processor\Shared\DeleteProcessor;
+use Videni\Bundle\RestBundle\Handler\DeleteHandlerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Oro\Component\ChainProcessor\ContextInterface;
 

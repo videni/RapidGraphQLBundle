@@ -13,8 +13,8 @@ services:
         autoconfigure: false
         public: false
 
-    App\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilters: ~
+    Videni\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilters: ~
 
-    App\Bundle\RestBundle\Util\EntityClassResolver: ~
+    Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
 
-    App\Bundle\RestBundle\Util\CriteriaConnector: ~
+    Videni\Bundle\RestBundle\Util\CriteriaConnector: ~

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Routing\PathResolver;
+namespace Videni\Bundle\RestBundle\Routing\PathResolver;
 
-use App\Bundle\RestBundle\Exception\InvalidArgumentException;
-use App\Bundle\RestBundle\Operation\PathSegmentNameGeneratorInterface;
-use App\Bundle\RestBundle\Operation\ActionTypes;
-use App\Bundle\RestBundle\Config\Resource\OperationConfig;
+use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
+use Videni\Bundle\RestBundle\Operation\PathSegmentNameGeneratorInterface;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
 
 /**
  * Generates an operation path.

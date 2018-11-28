@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Request;
+namespace Videni\Bundle\RestBundle\Request;
 
 use Oro\Component\ChainProcessor\ToArrayInterface;
 

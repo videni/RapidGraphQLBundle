@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Filter\FilterInterface;
-use App\Bundle\RestBundle\Filter\StandaloneFilterWithDefaultValue;
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Filter\FilterInterface;
+use Videni\Bundle\RestBundle\Filter\StandaloneFilterWithDefaultValue;
+use Videni\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 
@@ -39,7 +39,7 @@ class BuildCriteria implements ProcessorInterface
          * it is important to iterate by $filters, not by $filterValues,
          * because the the order of filters is matter,
          * e.g. "page size" filter should be processed before "page number" filter
-         * @see \App\Bundle\RestBundle\Processor\Shared\SetDefaultPaging::addPageNumberFilter
+         * @see \Videni\Bundle\RestBundle\Processor\Shared\SetDefaultPaging::addPageNumberFilter
          */
         foreach ($filters as $filterKey => $filter) {
             if ($filterValues->has($filterKey)) {

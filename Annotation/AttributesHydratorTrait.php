@@ -4,9 +4,9 @@
 declare(strict_types=1);
 
 
-namespace App\Bundle\RestBundle\Annotation;
+namespace Videni\Bundle\RestBundle\Annotation;
 
-use App\Bundle\RestBundle\Exception\InvalidArgumentException;
+use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
 use Doctrine\Common\Inflector\Inflector;
 
 trait AttributesHydratorTrait

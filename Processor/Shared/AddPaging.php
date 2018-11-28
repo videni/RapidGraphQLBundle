@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Filter\FilterCollection;
-use App\Bundle\RestBundle\Filter\FilterNamesRegistry;
-use App\Bundle\RestBundle\Filter\PageNumberFilter;
-use App\Bundle\RestBundle\Filter\PageSizeFilter;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Model\DataType;
+use Videni\Bundle\RestBundle\Filter\FilterCollection;
+use Videni\Bundle\RestBundle\Filter\FilterNamesRegistry;
+use Videni\Bundle\RestBundle\Filter\PageNumberFilter;
+use Videni\Bundle\RestBundle\Filter\PageSizeFilter;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Model\DataType;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Filter\FilterNames;
-use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Filter\FilterNames;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 /**
  * Sets default paging for different kind of requests.
@@ -66,7 +66,7 @@ class AddPaging implements ProcessorInterface
     {
         /**
          * "page number" filter must be added after "page size" filter because it depends on this filter
-         * @see \App\Bundle\RestBundle\Filter\PageNumberFilter::apply
+         * @see \Videni\Bundle\RestBundle\Filter\PageNumberFilter::apply
          */
         if (!$filters->has($filterName)) {
             $filters->add(

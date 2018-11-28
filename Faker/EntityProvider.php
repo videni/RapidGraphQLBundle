@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Faker;
+namespace Videni\Bundle\RestBundle\Faker;
 
 use Doctrine\Common\Persistence\ObjectManager;
 

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Controller;
+namespace Videni\Bundle\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Processor\ContextFactory;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Processor\ContextFactory;
 use Symfony\Component\HttpFoundation\Request;
-use App\Bundle\RestBundle\Processor\ActionProcessorBagInterface;
-use App\Bundle\RestBundle\Request\RestRequestHeaders;
-use App\Bundle\RestBundle\Operation\ActionTypes;
-use App\Bundle\RestBundle\Processor\SerializerFormat;
+use Videni\Bundle\RestBundle\Processor\ActionProcessorBagInterface;
+use Videni\Bundle\RestBundle\Request\RestRequestHeaders;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Processor\SerializerFormat;
 use FOS\RestBundle\View\View;
-use App\Bundle\RestBundle\Handler\ViewHandlerInterface;
+use Videni\Bundle\RestBundle\Handler\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 
 class ResourceController extends Controller
 {

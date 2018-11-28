@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Security;
+namespace Videni\Bundle\RestBundle\Security;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 

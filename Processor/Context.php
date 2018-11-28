@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor;
 
 use Oro\Component\ChainProcessor\ParameterBag;
 use Oro\Component\ChainProcessor\ParameterBagInterface;
 use Oro\Component\ChainProcessor\Context as BaseContext;
 use Symfony\Component\HttpFoundation\Request;
-use App\Bundle\RestBundle\Filter\FilterCollection;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
+use Videni\Bundle\RestBundle\Filter\FilterCollection;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorInterface;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 
 class Context extends BaseContext implements ContextInterface
 {

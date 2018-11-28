@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Processor\SingleItemContext;
+use Videni\Bundle\RestBundle\Processor\SingleItemContext;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
-use App\Bundle\RestBundle\Exception;
+use Videni\Bundle\RestBundle\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use App\Bundle\RestBundle\Factory\ParametersParserInterface;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
 
 final class LoadResource implements ProcessorInterface
@@ -72,6 +72,6 @@ final class LoadResource implements ProcessorInterface
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('app_rest.repository.%s', $name);
+         return sprintf('videni_rest.repository.%s', $name);
     }
 }

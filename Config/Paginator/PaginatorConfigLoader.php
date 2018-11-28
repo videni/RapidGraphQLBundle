@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Paginator;
 
-use App\Bundle\RestBundle\Config\AbstractConfigLoader;
+use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
 
 /**
  * The loader for paginator

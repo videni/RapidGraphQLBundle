@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Validator\Exception;
+namespace Videni\Bundle\RestBundle\Validator\Exception;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Routing\PathResolver;
+namespace Videni\Bundle\RestBundle\Routing\PathResolver;
 
-use App\Bundle\RestBundle\Config\Resource\OperationConfig;
+use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
 
 /**
  * Resolves the path of a resource operation.

@@ -4,74 +4,75 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Shared\SaveResource:
+    Videni\Bundle\RestBundle\Processor\Shared\SaveResource:
         tags:
-            - { name: app_rest.processor, action: create, group: save, priority: 10 }
-            - { name: app_rest.processor, action: update, group: save, priority: 10 }
+            - { name: videni_rest.processor, action: create, group: save, priority: 10 }
+            - { name: videni_rest.processor, action: update, group: save, priority: 10 }
 
-    App\Bundle\RestBundle\Processor\Shared\LoadResource:
+    Videni\Bundle\RestBundle\Processor\Shared\LoadResource:
         arguments: ['@service_container']
         tags:
-            - { name: app_rest.processor, action: view, group: initialize, priority: 10 }
-            - { name: app_rest.processor, action: update, group: initialize, priority: 10 }
-            - { name: app_rest.processor, action: delete, group: initialize, priority: 10 }
+            - { name: videni_rest.processor, action: view, group: initialize, priority: 10 }
+            - { name: videni_rest.processor, action: update, group: initialize, priority: 10 }
+            - { name: videni_rest.processor, action: delete, group: initialize, priority: 10 }
 
-    App\Bundle\RestBundle\Processor\Shared\ValidationProcessor:
+    Videni\Bundle\RestBundle\Processor\Shared\ValidationProcessor:
         tags:
-            - { name: app_rest.processor, action: create, group: validate, priority: 10 }
-            - { name: app_rest.processor, action: update, group: validate, priority: 10 }
+            - { name: videni_rest.processor, action: create, group: validate, priority: 10 }
+            - { name: videni_rest.processor, action: update, group: validate, priority: 10 }
 
-    App\Bundle\RestBundle\Processor\Shared\PermissionProcessor:
+    Videni\Bundle\RestBundle\Processor\Shared\PermissionProcessor:
         tags:
-            - { name: app_rest.processor, action: create, group: security, priority: 10 }
-            - { name: app_rest.processor, action: update, group: security, priority: 10 }
-            - { name: app_rest.processor, action: view, group: security, priority: 10 }
+            - { name: videni_rest.processor, action: create, group: security, priority: 10 }
+            - { name: videni_rest.processor, action: update, group: security, priority: 10 }
+            - { name: videni_rest.processor, action: view, group: security, priority: 10 }
 
-    App\Bundle\RestBundle\Processor\Shared\DeserializationProcessor:
+    Videni\Bundle\RestBundle\Processor\Shared\DeserializationProcessor:
         arguments: ['@jms_serializer']
         tags:
-            - { name: app_rest.processor, action: create, group: deserialize, priority: 10 }
-            - { name: app_rest.processor, action: update, group: deserialize, priority: 10 }
+            - { name: videni_rest.processor, action: create, group: deserialize, priority: 10 }
+            - { name: videni_rest.processor, action: update, group: deserialize, priority: 10 }
 
 # build query
-    App\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilter:
+    Videni\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilter:
         arguments:
-            - '@App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface'
-            - '@App\Bundle\RestBundle\Util\DoctrineHelper'
-            - '@App\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider'
+            - '@Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface'
+            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
+            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider'
         tags:
-            - { name: app_rest.processor, action: index, group: initialize, priority: -50 }
-            - { name: app_rest.processor, action: bulk_delete, group: initialize, priority: 50 }
+            - { name: videni_rest.processor, action: index, group: initialize, priority: -50 }
+            - { name: videni_rest.processor, action: bulk_delete, group: initialize, priority: 50 }
 
-    App\Bundle\RestBundle\Processor\Shared\InitializeCriteria:
+    Videni\Bundle\RestBundle\Processor\Shared\InitializeCriteria:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 100 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 100 }
 
-    App\Bundle\RestBundle\Processor\Shared\AddSorting:
+    Videni\Bundle\RestBundle\Processor\Shared\AddSorting:
         arguments:
-            - '@App\Bundle\RestBundle\Util\DoctrineHelper'
+            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 80 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 80 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 80 }
 
-    App\Bundle\RestBundle\Processor\Shared\AddPaging:
+    Videni\Bundle\RestBundle\Processor\Shared\AddPaging:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 80 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 80 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 80 }
 
-    App\Bundle\RestBundle\Processor\Shared\ValidateSorting:
+    Videni\Bundle\RestBundle\Processor\Shared\ValidateSorting:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 60 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 60 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 60 }
 
-    App\Bundle\RestBundle\Processor\Shared\BuildCriteria:
+    Videni\Bundle\RestBundle\Processor\Shared\BuildCriteria:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 50 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 50 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 50 }
+            - { name: videni_rest.processor, action: bulk_delete, group: build_query, priority: 50 }
 
-
-    App\Bundle\RestBundle\Processor\Shared\BuildQuery:
+    Videni\Bundle\RestBundle\Processor\Shared\BuildQuery:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 40 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 40 }
+            - { name: videni_rest.processor, action: index, group: build_query, priority: 40 }
+            - { name: videni_rest.processor, action: bulk_delete, group: build_query, priority: 40 }
+
+    Videni\Bundle\RestBundle\Processor\Shared\LoadResources:
+        tags:
+            - { name: videni_rest.processor, action: index, group: load_resources, priority: 40 }
+
 

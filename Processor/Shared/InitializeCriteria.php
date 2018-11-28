@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Collection\Criteria;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
-use App\Bundle\RestBundle\Util\EntityClassResolver;
+use Videni\Bundle\RestBundle\Collection\Criteria;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Util\EntityClassResolver;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 

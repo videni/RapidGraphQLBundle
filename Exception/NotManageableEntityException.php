@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Exception;
+namespace Videni\Bundle\RestBundle\Exception;
 
 /**
  * Invalid resource exception.

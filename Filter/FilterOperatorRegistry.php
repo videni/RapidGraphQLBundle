@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 /**
  * The container for all registered operators for Data API filters.

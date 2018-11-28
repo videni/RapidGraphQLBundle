@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor;
 
 use Oro\Component\ChainProcessor\ProcessorBagInterface;
 use Oro\Component\ChainProcessor\ActionProcessor;
 use Psr\Log\LoggerInterface;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 
 /**
  * The base processor for API actions that works with defined type of a resource.

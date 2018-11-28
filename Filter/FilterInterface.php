@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 use Doctrine\Common\Collections\Criteria;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValue;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValue;
 
 /**
  * Provides an interface for different kind of data filters.

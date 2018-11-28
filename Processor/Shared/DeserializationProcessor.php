@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Exception\InvalidArgumentException;
+use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\DeserializationContext;
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 final class DeserializationProcessor implements ProcessorInterface
 {

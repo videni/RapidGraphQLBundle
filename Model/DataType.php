@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Bundle\RestBundle\Model;
+namespace Videni\Bundle\RestBundle\Model;
 
 /**
  * Provides a list of all the supported data-types of an incoming values which are implemented "out of the box".
  * New data-types can be added by implementing a value normalization processors.
- * @see \App\Bundle\RestBundle\Request\ValueNormalizer
+ * @see \Videni\Bundle\RestBundle\Request\ValueNormalizer
  * Also provides a set of methods to simplify work with definition of complex data-types,
  * like nested and extended associations.
  */

@@ -4,17 +4,17 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider:
+    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider:
         public: true
         arguments:
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigLoader'
-            - '%app_rest.resource_config%'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader'
+            - '%videni_rest.resource_config%'
 
-    App\Bundle\RestBundle\Config\Resource\ResourceConfigLoader: ~
+    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader: ~
 
-    App\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
+    Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
 
-    App\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider:
+    Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider:
         arguments:
-            - '@App\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
-            - '%app_rest.resource_config%'
+            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
+            - '%videni_rest.resource_config%'

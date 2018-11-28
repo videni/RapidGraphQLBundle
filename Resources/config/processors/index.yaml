@@ -4,11 +4,11 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Index\IndexProcessor:
+    Videni\Bundle\RestBundle\Processor\Index\IndexProcessor:
         arguments:
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'index'
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
     # intialize
 
     # security

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection;
+namespace Videni\Bundle\RestBundle\Collection;
 
-use App\Bundle\RestBundle\Metadata\EntityMetadata;
+use Videni\Bundle\RestBundle\Metadata\EntityMetadata;
 use Symfony\Component\Form\FormInterface;
 
 class IncludedEntityData

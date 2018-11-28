@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Cache;
+namespace Videni\Bundle\RestBundle\Cache;
 
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemPoolInterface;

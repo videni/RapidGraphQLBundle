@@ -3,9 +3,9 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Validator;
+namespace Videni\Bundle\RestBundle\Validator;
 
-use App\Bundle\RestBundle\Validator\Exception\ValidationException;
+use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 
 /**
  * Validates an item using the Symfony validator component.

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Paginator;
 
-use App\Bundle\RestBundle\Exception\ConfigNotFoundException;
+use Videni\Bundle\RestBundle\Exception\ConfigNotFoundException;
 
 class PaginatorConfigProvider
 {

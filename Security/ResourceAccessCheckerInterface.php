@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Security;
+namespace Videni\Bundle\RestBundle\Security;
 
 /**
  * Checks if the logged user has sufficient permissions to access the given resource.

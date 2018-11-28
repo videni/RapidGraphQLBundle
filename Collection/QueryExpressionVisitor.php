@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection;
+namespace Videni\Bundle\RestBundle\Collection;
 
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
@@ -11,9 +11,9 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
-use App\Bundle\RestBundle\Collection\QueryVisitorExpression\ComparisonExpressionInterface;
-use App\Bundle\RestBundle\Collection\QueryVisitorExpression\CompositeExpressionInterface;
-use App\Bundle\RestBundle\Util\EntityClassResolver;
+use Videni\Bundle\RestBundle\Collection\QueryVisitorExpression\ComparisonExpressionInterface;
+use Videni\Bundle\RestBundle\Collection\QueryVisitorExpression\CompositeExpressionInterface;
+use Videni\Bundle\RestBundle\Util\EntityClassResolver;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**

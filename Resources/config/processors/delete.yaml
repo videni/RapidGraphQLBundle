@@ -4,18 +4,18 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Delete\DeleteProcessor:
+    Videni\Bundle\RestBundle\Processor\Delete\DeleteProcessor:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'delete'
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
 
     # intialize
 
     # security
 
     # delete
-    App\Bundle\RestBundle\Processor\Delete\DeleteResource:
+    Videni\Bundle\RestBundle\Processor\Delete\DeleteResource:
         tags:
-            - { name: app_rest.processor, action: delete, group: delete, priority: 10 }
+            - { name: videni_rest.processor, action: delete, group: delete, priority: 10 }

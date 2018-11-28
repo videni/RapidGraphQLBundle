@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection\Compiler;
+namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
-use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use App\Bundle\RestBundle\Filter\Factory\ChainFilterFactory;
-use App\Bundle\RestBundle\Filter\Factory\SimpleFilterFactory;
+use Videni\Bundle\RestBundle\Filter\Factory\ChainFilterFactory;
+use Videni\Bundle\RestBundle\Filter\Factory\SimpleFilterFactory;
 
 /**
  * Configures factories responsible to create instances of filters that can be used in Data API.
@@ -47,7 +47,7 @@ class FilterFactoryCompilerPass implements CompilerPassInterface
         DependencyInjectionUtil::registerTaggedServices(
             $container,
             ChainFilterFactory::class,
-            'app_rest.filter_factory',
+            'videni_rest.filter_factory',
             'addFilterFactory'
         );
     }

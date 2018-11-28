@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter\Factory;
+namespace Videni\Bundle\RestBundle\Filter\Factory;
 
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
+use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
 
 class SimpleFilterFactory implements FilterFactoryInterface
 {

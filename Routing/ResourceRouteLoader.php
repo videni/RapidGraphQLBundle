@@ -3,9 +3,9 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Routing;
+namespace Videni\Bundle\RestBundle\Routing;
 
-use App\Bundle\RestBundle\Exception\InvalidResourceException;
+use Videni\Bundle\RestBundle\Exception\InvalidResourceException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
@@ -14,11 +14,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolverInterface;
-use App\Bundle\RestBundle\Operation\ActionTypes;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Config\Resource\OperationConfig;
+use Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolverInterface;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
 
 /**
  * Loads Resources.

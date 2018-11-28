@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter;
+namespace Videni\Bundle\RestBundle\Filter;
 
 /**
  * The base class for filters that can be used independently from other filters

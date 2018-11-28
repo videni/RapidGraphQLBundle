@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection;
+namespace Videni\Bundle\RestBundle\Collection;
 
 /**
  * The collection that allows associate objects with its scalar keys.

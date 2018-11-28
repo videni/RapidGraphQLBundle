@@ -4,17 +4,17 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Processor\Create\CreateProcessor:
+    Videni\Bundle\RestBundle\Processor\Create\CreateProcessor:
         public: false
         arguments:
-            - '@App\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
             - 'create'
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
     # intialize
-    App\Bundle\RestBundle\Processor\Create\CreateResource:
-        arguments: ['@service_container', '@App\Bundle\RestBundle\Factory\ParametersParserInterface']
+    Videni\Bundle\RestBundle\Processor\Create\CreateResource:
+        arguments: ['@service_container', '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface']
         tags:
-            - { name: app_rest.processor, action: create, group: initialize, priority: 10 }
+            - { name: videni_rest.processor, action: create, group: initialize, priority: 10 }
 
     # security
 

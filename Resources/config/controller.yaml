@@ -4,20 +4,20 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Controller\ResourceController: ~
+    Videni\Bundle\RestBundle\Controller\ResourceController: ~
 
-    App\Bundle\RestBundle\Processor\ActionProcessorBag: ~
+    Videni\Bundle\RestBundle\Processor\ActionProcessorBag: ~
 
-    App\Bundle\RestBundle\Processor\ActionProcessorBagInterface: '@App\Bundle\RestBundle\Processor\ActionProcessorBag'
+    Videni\Bundle\RestBundle\Processor\ActionProcessorBagInterface: '@Videni\Bundle\RestBundle\Processor\ActionProcessorBag'
 
-    App\Bundle\RestBundle\Processor\SerializerFormat: ~
+    Videni\Bundle\RestBundle\Processor\SerializerFormat: ~
 
-    App\Bundle\RestBundle\Provider\FormatsProvider:
+    Videni\Bundle\RestBundle\Provider\FormatsProvider:
         arguments:
-            - '%app_rest.formats%'
+            - '%videni_rest.formats%'
 
-    App\Bundle\RestBundle\Provider\FormatsProviderInterface: '@App\Bundle\RestBundle\Provider\FormatsProvider'
+    Videni\Bundle\RestBundle\Provider\FormatsProviderInterface: '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
 
-    App\Bundle\RestBundle\Handler\ViewHandler: ~
+    Videni\Bundle\RestBundle\Handler\ViewHandler: ~
 
-    App\Bundle\RestBundle\Handler\ViewHandlerInterface:  '@App\Bundle\RestBundle\Handler\ViewHandler'
+    Videni\Bundle\RestBundle\Handler\ViewHandlerInterface:  '@Videni\Bundle\RestBundle\Handler\ViewHandler'

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RestBundle\DependencyInjection;
 
-use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
+use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use App\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Doctrine\Common\Inflector\Inflector;
 
 class ResourceConfiguration implements ConfigurationInterface
@@ -306,6 +306,6 @@ class ResourceConfiguration implements ConfigurationInterface
     {
         $name = Inflector::tableize($resourceShortName);
 
-        return sprintf('app_rest.%s.%s', $key, $name);
+        return sprintf('videni_rest.%s.%s', $key, $name);
     }
 }

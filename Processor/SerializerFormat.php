@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor;
 
-use App\Bundle\RestBundle\Provider\FormatsProviderInterface;
+use Videni\Bundle\RestBundle\Provider\FormatsProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 

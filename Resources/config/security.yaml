@@ -4,14 +4,14 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Security\ResourceAccessChecker:
+    Videni\Bundle\RestBundle\Security\ResourceAccessChecker:
         arguments:
-            - '@App\Bundle\RestBundle\Security\ExpressionLanguage'
+            - '@Videni\Bundle\RestBundle\Security\ExpressionLanguage'
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@security.authentication.trust_resolver'
             - '@?security.role_hierarchy'
 
-    App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@App\Bundle\RestBundle\Security\ResourceAccessChecker'
+    Videni\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@Videni\Bundle\RestBundle\Security\ResourceAccessChecker'
 
-    App\Bundle\RestBundle\Security\ExpressionLanguage: ~
+    Videni\Bundle\RestBundle\Security\ExpressionLanguage: ~

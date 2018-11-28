@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection\QueryVisitorExpression;
+namespace Videni\Bundle\RestBundle\Collection\QueryVisitorExpression;
 
 use Doctrine\ORM\Query\Expr;
 

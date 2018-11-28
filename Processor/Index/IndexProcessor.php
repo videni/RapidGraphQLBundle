@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Index;
+namespace Videni\Bundle\RestBundle\Processor\Index;
 
-use App\Bundle\RestBundle\Processor\RequestActionProcessor;
+use Videni\Bundle\RestBundle\Processor\RequestActionProcessor;
 
 /**
  * The main processor for "get_list" action.

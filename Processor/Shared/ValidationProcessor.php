@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Validator\ValidatorInterface;
+use Videni\Bundle\RestBundle\Validator\ValidatorInterface;
 
 final class ValidationProcessor implements ProcessorInterface
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use App\Bundle\RestBundle\Config\PaginatorConfig;
-use App\Bundle\RestBundle\Filter\ComparisonFilter;
-use App\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
-use App\Bundle\RestBundle\Filter\StandaloneFilter;
-use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Config\PaginatorConfig;
+use Videni\Bundle\RestBundle\Filter\ComparisonFilter;
+use Videni\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
+use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
+use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
+use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Oro\Component\ChainProcessor\ContextInterface;
-use App\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider;
 
 /**
  * Registers filters according to the "filters" configuration section.
@@ -95,7 +95,7 @@ class RegisterConfiguredFilter extends RegisterFilters
                         );
                     }
                     // @todo BAP-11881. Update this code when NEQ operator for to-many collection
-                    // will be implemented in App\Bundle\RestBundle\Filter\ComparisonFilter
+                    // will be implemented in Videni\Bundle\RestBundle\Filter\ComparisonFilter
                     if (null !== $metadata && $this->isCollection($metadata, $propertyPath)) {
                         $filter->setSupportedOperators([StandaloneFilter::EQ]);
                     }

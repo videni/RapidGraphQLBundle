@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -16,7 +16,7 @@ class DependencyInjectionUtil
      * @internal never use this constant outside of ApiBundle,
      *           to recive and update the configuration use getConfig and setConfig methods.
      */
-    public const API_BUNDLE_CONFIG_PARAMETER_NAME = 'app_rest.bundle_config';
+    public const API_BUNDLE_CONFIG_PARAMETER_NAME = 'videni_rest.bundle_config';
 
     /**
      * Returns the loaded and processed configuration of ApiBundle.

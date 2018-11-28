@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Create;
+namespace Videni\Bundle\RestBundle\Processor\Create;
 
-use App\Bundle\RestBundle\Processor\SingleItemContext;
+use Videni\Bundle\RestBundle\Processor\SingleItemContext;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
-use App\Bundle\RestBundle\Exception;
+use Videni\Bundle\RestBundle\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use App\Bundle\RestBundle\Factory\ParametersParserInterface;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Inflector\Inflector;
-use App\Bundle\RestBundle\Factory\Factory;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use App\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Factory\Factory;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 
 class CreateResource implements ProcessorInterface
 {

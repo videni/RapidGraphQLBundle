@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Filter\Factory;
+namespace Videni\Bundle\RestBundle\Filter\Factory;
 
 class ChainFilterFactory implements FilterFactoryInterface
 {

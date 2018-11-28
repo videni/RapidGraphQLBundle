@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Security\ResourceAccessCheckerInterface;
+use Videni\Bundle\RestBundle\Security\ResourceAccessCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
-use App\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
  * Denies access to the current resource if the logged user doesn't have sufficient permissions.

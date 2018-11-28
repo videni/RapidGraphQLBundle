@@ -4,16 +4,16 @@ services:
         autoconfigure: true
         public: false
 
-    App\Bundle\RestBundle\Routing\ResourceRouteLoader:
+    Videni\Bundle\RestBundle\Routing\ResourceRouteLoader:
         arguments:
-            - '@App\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
-            - '@App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
-            - 'App\Bundle\RestBundle\Controller\ResourceController'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
+            - '@Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
+            - 'Videni\Bundle\RestBundle\Controller\ResourceController'
         tags: [ 'routing.loader' ]
 
-    App\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver:
+    Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver:
         arguments:
-            - '@App\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator'
+            - '@Videni\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator'
 
-    App\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator: ~
+    Videni\Bundle\RestBundle\Operation\UnderscorePathSegmentNameGenerator: ~
 

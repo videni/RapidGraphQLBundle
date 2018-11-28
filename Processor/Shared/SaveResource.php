@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use App\Bundle\RestBundle\Processor\SingleItemContext;
+use Videni\Bundle\RestBundle\Processor\SingleItemContext;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
-use App\Bundle\RestBundle\Exception;
+use Videni\Bundle\RestBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
-use App\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 
 /**
  * Saves new ORM entity to the database and save its identifier into the context.

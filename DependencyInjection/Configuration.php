@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('app_rest');
+        $rootNode = $treeBuilder->root('videni_rest');
 
         $node = $rootNode->children();
 
@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                 ->example(
                     [
                         'get' => [
-                            'processor_service_id' => 'app_rest.get.processor',
+                            'processor_service_id' => 'videni_rest.get.processor',
                             'processing_groups' => [
                                 'intialize' => [
                                     'priority' => -10
@@ -124,10 +124,10 @@ class Configuration implements ConfigurationInterface
                             'supported_operators' => ['=', '!=', '<', '<=', '>', '>=', '*', '!*']
                         ],
                         'primaryField' => [
-                            'class' => 'App\Bundle\RestBundle\Filter\PrimaryFieldFilter'
+                            'class' => 'Videni\Bundle\RestBundle\Filter\PrimaryFieldFilter'
                         ],
                         'association' => [
-                            'factory' => ['@app_rest.filter_factory.association', 'createFilter']
+                            'factory' => ['@videni_rest.filter_factory.association', 'createFilter']
                         ]
                     ]
                 )
@@ -138,7 +138,7 @@ class Configuration implements ConfigurationInterface
                             if (empty($value['factory'])) {
                                 unset($value['factory']);
                                 if (empty($value['class'])) {
-                                    $value['class'] = 'App\Bundle\RestBundle\Filter\ComparisonFilter';
+                                    $value['class'] = 'Videni\Bundle\RestBundle\Filter\ComparisonFilter';
                                 }
                             }
 

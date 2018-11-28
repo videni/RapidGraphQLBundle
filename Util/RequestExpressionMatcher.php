@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RestBundle\Util;
 
-use App\Bundle\RestBundle\Request\RequestType;
+use Videni\Bundle\RestBundle\Request\RequestType;
 use Oro\Component\ChainProcessor\AbstractMatcher;
 use Oro\Component\ChainProcessor\ExpressionParser;
 

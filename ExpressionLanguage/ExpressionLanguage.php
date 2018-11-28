@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\ExpressionLanguage;
+namespace Videni\Bundle\RestBundle\ExpressionLanguage;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\DependencyInjection\ExpressionLanguage as BaseExpressionLanguage;

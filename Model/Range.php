@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Model;
+namespace Videni\Bundle\RestBundle\Model;
 
 /**
  * This class represents a pair of "from" and "to" values.

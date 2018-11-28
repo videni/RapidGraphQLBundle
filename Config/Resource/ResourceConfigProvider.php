@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config\Resource;
+namespace Videni\Bundle\RestBundle\Config\Resource;
 
-use App\Bundle\RestBundle\Exception\ConfigNotFoundException;
+use Videni\Bundle\RestBundle\Exception\ConfigNotFoundException;
 
 class ResourceConfigProvider
 {

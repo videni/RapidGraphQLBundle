@@ -4,7 +4,7 @@ services:
         autoconfigure: true
         public: false
 
-    jms_serializer.object_constructor: '@App\Bundle\RestBundle\Serializer\ObjectConstructor'
+    jms_serializer.object_constructor: '@Videni\Bundle\RestBundle\Serializer\ObjectConstructor'
 
-    App\Bundle\RestBundle\Serializer\ObjectConstructor:
+    Videni\Bundle\RestBundle\Serializer\ObjectConstructor:
         arguments: ['@jms_serializer.doctrine_object_constructor']

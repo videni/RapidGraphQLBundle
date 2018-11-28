@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection\QueryVisitorExpression;
+namespace Videni\Bundle\RestBundle\Collection\QueryVisitorExpression;
 
-use App\Bundle\RestBundle\Collection\QueryExpressionVisitor;
+use Videni\Bundle\RestBundle\Collection\QueryExpressionVisitor;
 
 /**
  * Represents GREATER THAN comparison expression.

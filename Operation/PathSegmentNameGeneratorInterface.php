@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Operation;
+namespace Videni\Bundle\RestBundle\Operation;
 
 /**
  * Generates a path name according to a string and whether it's a collection or not.

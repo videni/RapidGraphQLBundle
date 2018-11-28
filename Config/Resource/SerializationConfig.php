@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Config\Resource;
+namespace Videni\Bundle\RestBundle\Config\Resource;
 
 class SerializationConfig extends \ArrayObject
 {

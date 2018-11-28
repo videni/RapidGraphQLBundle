@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\BulkDelete;
+namespace Videni\Bundle\RestBundle\Processor\BulkDelete;
 
-use App\Bundle\RestBundle\Processor\RequestActionProcessor;
+use Videni\Bundle\RestBundle\Processor\RequestActionProcessor;
 
 /**
  * The main processor for "create" action.

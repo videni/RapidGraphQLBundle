@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Update;
+namespace Videni\Bundle\RestBundle\Processor\Update;
 
-use App\Bundle\RestBundle\Processor\RequestActionProcessor;
+use Videni\Bundle\RestBundle\Processor\RequestActionProcessor;
 
 /**
  * The main processor for "update" action.

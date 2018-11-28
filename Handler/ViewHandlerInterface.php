@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\RestBundle\Handler;
+namespace Videni\Bundle\RestBundle\Handler;
 
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Response;
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Processor\Context;
 
 interface ViewHandlerInterface
 {

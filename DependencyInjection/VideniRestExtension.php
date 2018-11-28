@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RestBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use App\Bundle\RestBundle\Processor\ActionProcessorBag;
+use Videni\Bundle\RestBundle\Processor\ActionProcessorBag;
 use Oro\Component\ChainProcessor\Debug\TraceLogger;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
-use App\Bundle\RestBundle\Filter\FilterOperatorRegistry;
-use App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
+use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
+use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
-use App\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Symfony\Component\Config\Loader\GlobFileLoader;
 
-class AppRestExtension extends Extension
+class VideniRestExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -109,7 +110,9 @@ class AppRestExtension extends Extension
     {
         $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
 
-        $configLoader = new CumulativeConfigLoader('app_rest', $configFileLoaders);
+        $config = [];
+
+        $configLoader = new CumulativeConfigLoader('videni_rest', $configFileLoaders);
         $resources = $configLoader->load($container);
         foreach ($resources as $resource) {
             if (array_key_exists(ResourceConfiguration::ROOT_NODE, $resource->data)) {
@@ -122,6 +125,6 @@ class AppRestExtension extends Extension
             $config
         );
 
-        $container->setParameter('app_rest.resource_config', $configs);
+        $container->setParameter('videni_rest.resource_config', $configs);
     }
 }

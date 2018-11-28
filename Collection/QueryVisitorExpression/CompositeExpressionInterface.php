@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection\QueryVisitorExpression;
+namespace Videni\Bundle\RestBundle\Collection\QueryVisitorExpression;
 
 /**
  * Provides an interface for different kind of composite expressions.

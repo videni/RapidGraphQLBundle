@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use App\Bundle\RestBundle\Config\Paginator\FilterConfig;
-use App\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
-use App\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
-use App\Bundle\RestBundle\Filter\StandaloneFilter;
-use App\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Config\Paginator\FilterConfig;
+use Videni\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
+use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
+use Videni\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
+use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
+use Videni\Bundle\RestBundle\Processor\Context;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 
 /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\RestBundle\Processor\View;
+namespace Videni\Bundle\RestBundle\Processor\View;
 
-use App\Bundle\RestBundle\Processor\RequestActionProcessor;
+use Videni\Bundle\RestBundle\Processor\RequestActionProcessor;
 
 /**
  * The main processor for "view" action.

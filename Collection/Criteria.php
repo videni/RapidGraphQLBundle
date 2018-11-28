@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection;
+namespace Videni\Bundle\RestBundle\Collection;
 
 use Doctrine\Common\Collections\Criteria as BaseCriteria;
 use Doctrine\ORM\ORMException;
-use App\Bundle\RestBundle\Util\EntityClassResolver;
+use Videni\Bundle\RestBundle\Util\EntityClassResolver;
 
 /**
  * Criteria for filtering data returned by ORM queries.

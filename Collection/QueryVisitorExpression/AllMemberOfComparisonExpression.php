@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Bundle\RestBundle\Collection\QueryVisitorExpression;
+namespace Videni\Bundle\RestBundle\Collection\QueryVisitorExpression;
 
 use Doctrine\ORM\Query\QueryException;
-use App\Bundle\RestBundle\Collection\QueryExpressionVisitor;
-use App\Bundle\RestBundle\Model\Range;
+use Videni\Bundle\RestBundle\Collection\QueryExpressionVisitor;
+use Videni\Bundle\RestBundle\Model\Range;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**
