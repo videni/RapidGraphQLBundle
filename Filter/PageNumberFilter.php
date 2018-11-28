@@ -19,6 +19,7 @@ class PageNumberFilter extends StandaloneFilterWithDefaultValue
         $val = null !== $value
             ? $value->getValue()
             : $this->getDefaultValue();
+
         if (null !== $val) {
             $pageSize = $criteria->getMaxResults();
             if (null !== $pageSize) {

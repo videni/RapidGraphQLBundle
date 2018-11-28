@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\RestBundle\Request;
+namespace App\Bundle\RestBundle\Model;
 
 /**
  * Provides a list of all the supported data-types of an incoming values which are implemented "out of the box".

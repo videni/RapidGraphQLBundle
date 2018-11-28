@@ -10,6 +10,8 @@ use App\Bundle\RestBundle\Processor\Context;
 use App\Bundle\RestBundle\Model\DataType;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
+use App\Bundle\RestBundle\Filter\FilterNames;
+use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 /**
  * Sets default paging for different kind of requests.
@@ -19,17 +21,14 @@ class AddPaging implements ProcessorInterface
 {
     private const DEFAULT_PAGE_SIZE = 15;
 
-    /** @var FilterNamesRegistry */
-    private $pageSizeFilterName;
-    private $pageNumberFilterName;
+    private $filterNames;
 
     /**
      * @param FilterNamesRegistry $filterNamesRegistry
      */
-    public function __construct($pageSizeFilterName = 'size', $pageNumberFilterName = 'page')
+    public function __construct(FilterNames $filterNames)
     {
-        $this->pageSizeFilterName = $pageSizeFilterName;
-        $this->$pageNumberFilterName = $pageNumberFilterName;
+        $this->filterNames = $filterNames;
     }
 
     /**
@@ -55,8 +54,8 @@ class AddPaging implements ProcessorInterface
         }
 
         $filters = $context->getFilters();
-        $this->addPageSizeFilter($this->pageSizeFilterName, $filters, $pageSize);
-        $this->addPageNumberFilter($this->pageNumberFilterName, $filters);
+        $this->addPageSizeFilter($this->filterNames->getPageSizeFilterName(), $filters, $pageSize);
+        $this->addPageNumberFilter($this->filterNames->getPageNumberFilterName(), $filters);
     }
 
     /**
@@ -67,7 +66,7 @@ class AddPaging implements ProcessorInterface
     {
         /**
          * "page number" filter must be added after "page size" filter because it depends on this filter
-         * @see \Oro\Bundle\RestBundle\Filter\PageNumberFilter::apply
+         * @see \App\Bundle\RestBundle\Filter\PageNumberFilter::apply
          */
         if (!$filters->has($filterName)) {
             $filters->add(

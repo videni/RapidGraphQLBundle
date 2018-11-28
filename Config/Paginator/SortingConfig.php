@@ -83,5 +83,7 @@ class SortingConfig
         if (array_key_exists('property_path', $config)) {
             $self->setPropertyPath($config['property_path']);
         }
+
+        return $self;
     }
 }

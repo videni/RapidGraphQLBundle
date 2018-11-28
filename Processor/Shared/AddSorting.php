@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\Criteria;
 use App\Bundle\RestBundle\Filter\FilterCollection;
 use App\Bundle\RestBundle\Filter\SortFilter;
 use App\Bundle\RestBundle\Processor\Context;
-use App\Bundle\RestBundle\Request\DataType;
+use App\Bundle\RestBundle\Model\DataType;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
+use App\Bundle\RestBundle\Util\DoctrineHelper;
+use App\Bundle\RestBundle\Filter\FilterNames;
+use App\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 /**
  * Sets default sorting for different kind of requests.
@@ -18,16 +21,16 @@ class AddSorting implements ProcessorInterface
 {
     private $doctrineHelper;
 
-    private $sortFilterName;
+    private $filterNames;
     /**
      * @param FilterNamesRegistry $filterNamesRegistry
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
-        $sortFilterName = 'sort'
+        FilterNames $filterNames
     ) {
         $this->doctrineHelper = $doctrineHelper;
-        $this->sortFilterName = $sortFilterName;
+        $this->filterNames = $filterNames;
     }
 
     /**
@@ -36,7 +39,6 @@ class AddSorting implements ProcessorInterface
     public function process(ContextInterface $context)
     {
         /** @var Context $context */
-
         if ($context->hasQuery()) {
             // a query is already built
             return;
@@ -55,33 +57,41 @@ class AddSorting implements ProcessorInterface
         if (null === $paginatorConfig) {
             return;
         }
-        if (empty($paginatorConfig->getSorings())) {
-            $this->addSortFilter(
-                $this->sortFilterName,
+
+        $filters = $context->getFilters();
+
+        if (empty($paginatorConfig->getSortings())) {
+            $this->addDefaultSortFilter(
+                $this->filterNames->getSortFilterName(),
                 $context->getFilters(),
                 $paginatorConfig
             );
         } else {
-            $filters->add(
-                $this->sortFilterName,
-                new SortFilter(
-                    DataType::ORDER_BY,
-                    $this->getSortFilterDescription(),
-                    function () use ($paginatorConfig) {
-                        $orderBy = [];
-                        foreach ($paginatorConfig->getSortings() as $sortingName => $sortingConfig) {
-                            $fieldName = $sortingConfig->getPropertyPath();
-                            $orderBy[$fieldName] = $sortingConfig->getOrder();
-                        }
-
-                        return $orderBy;
-                    },
-                    function ($value) {
-                        return $this->convertDefaultValueToString($value);
-                    }
-                )
-            );
+            $this->addConfiguredSortFilter($filters, $paginatorConfig);
         }
+    }
+
+    protected function addConfiguredSortFilter(FilterCollection $filters, PaginatorConfig $paginatorConfig)
+    {
+        $filters->add(
+            $this->filterNames->getSortFilterName(),
+            new SortFilter(
+                DataType::ORDER_BY,
+                $this->getSortFilterDescription(),
+                function () use ($paginatorConfig) {
+                    $orderBy = [];
+                    foreach ($paginatorConfig->getSortings() as $sortingName => $sortingConfig) {
+                        $fieldName = $sortingConfig->getPropertyPath();
+                        $orderBy[$fieldName] = $sortingConfig->getOrder();
+                    }
+
+                    return $orderBy;
+                },
+                function ($value) {
+                    return $this->convertDefaultValueToString($value);
+                }
+            )
+        );
     }
 
     /**
@@ -89,7 +99,7 @@ class AddSorting implements ProcessorInterface
      * @param FilterCollection       $filters
      * @param EntityDefinitionConfig $config
      */
-    protected function addSortFilter(
+    protected function addDefaultSortFilter(
         string $filterName,
         FilterCollection $filters,
         ClassMetadata  $metadata,

@@ -34,15 +34,6 @@ services:
             - { name: app_rest.processor, action: update, group: deserialize, priority: 10 }
 
 # build query
-    App\Bundle\RestBundle\Processor\Shared\InitializeCriteria:
-        tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 100 }
-
-    App\Bundle\RestBundle\Processor\Shared\BuildQuery:
-        tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: 50 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 50 }
-
     App\Bundle\RestBundle\Processor\Shared\RegisterConfiguredFilter:
         arguments:
             - '@App\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface'
@@ -52,18 +43,35 @@ services:
             - { name: app_rest.processor, action: index, group: initialize, priority: -50 }
             - { name: app_rest.processor, action: bulk_delete, group: initialize, priority: 50 }
 
-    App\Bundle\RestBundle\Processor\Shared\BuildCriteria:
+    App\Bundle\RestBundle\Processor\Shared\InitializeCriteria:
+        tags:
+            - { name: app_rest.processor, action: index, group: build_query, priority: 100 }
+
+    App\Bundle\RestBundle\Processor\Shared\AddSorting:
+        arguments:
+            - '@App\Bundle\RestBundle\Util\DoctrineHelper'
         tags:
             - { name: app_rest.processor, action: index, group: build_query, priority: 80 }
             - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 80 }
 
-    App\Bundle\RestBundle\Processor\Shared\AddSorting:
-        tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: -40 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: -40 }
-
     App\Bundle\RestBundle\Processor\Shared\AddPaging:
         tags:
-            - { name: app_rest.processor, action: index, group: build_query, priority: -40 }
-            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: -40 }
+            - { name: app_rest.processor, action: index, group: build_query, priority: 80 }
+            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 80 }
+
+    App\Bundle\RestBundle\Processor\Shared\ValidateSorting:
+        tags:
+            - { name: app_rest.processor, action: index, group: build_query, priority: 60 }
+            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 60 }
+
+    App\Bundle\RestBundle\Processor\Shared\BuildCriteria:
+        tags:
+            - { name: app_rest.processor, action: index, group: build_query, priority: 50 }
+            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 50 }
+
+
+    App\Bundle\RestBundle\Processor\Shared\BuildQuery:
+        tags:
+            - { name: app_rest.processor, action: index, group: build_query, priority: 40 }
+            - { name: app_rest.processor, action: bulk_delete, group: build_query, priority: 40 }
 

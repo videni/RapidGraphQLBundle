@@ -60,7 +60,7 @@ class RegisterConfiguredFilter extends RegisterFilters
         $operationName = $context->getOperationName();
 
         $paginatorName =  $resourceConfig->getOperation($operationName)->getPaginator();
-        if (null === $paginator) {
+        if (null === $paginatorName) {
             return;
         }
 

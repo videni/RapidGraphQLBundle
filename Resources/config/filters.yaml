@@ -9,6 +9,12 @@ services:
         arguments:
             - [] # The operators. They are set by App\Bundle\RestBundle\DependencyInjection\AppRestExtension
 
+    App\Bundle\RestBundle\Filter\FilterNames:
+        arguments:
+            - 'sort'
+            - 'page'
+            - 'size'
+
     App\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory:
         arguments:
             # regex pattern to match the following operators: =, !=, <>, >, <, >=, <=, *, !*, ~, !~, ^, !^, $, !$

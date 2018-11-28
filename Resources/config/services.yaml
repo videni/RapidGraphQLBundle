@@ -1,6 +1,5 @@
 imports:
     - { resource: 'routing.yaml'}
-    - { resource: 'extractor.yaml'}
     - { resource: 'serializer.yaml'}
     - { resource: 'controller.yaml'}
     - { resource: 'security.yaml'}
