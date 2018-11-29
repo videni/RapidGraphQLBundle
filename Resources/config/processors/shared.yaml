@@ -53,10 +53,6 @@ services:
         tags:
             - { name: videni_rest.processor, action: index, group: build_query, priority: 80 }
 
-    Videni\Bundle\RestBundle\Processor\Shared\AddPaging:
-        tags:
-            - { name: videni_rest.processor, action: index, group: build_query, priority: 80 }
-
     Videni\Bundle\RestBundle\Processor\Shared\ValidateSorting:
         tags:
             - { name: videni_rest.processor, action: index, group: build_query, priority: 60 }

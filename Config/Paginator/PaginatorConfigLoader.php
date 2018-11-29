@@ -32,9 +32,6 @@ class PaginatorConfigLoader
         if (array_key_exists('max_results', $config)) {
             $paginatorConfig->setMaxResults($config['max_results']);
         }
-        if (array_key_exists('page_size', $config)) {
-            $paginatorConfig->setPageSize($config['page_size']);
-        }
         if (array_key_exists('disable_sorting', $config)) {
             $paginatorConfig->setDisableSorting($config['disable_sorting']);
         }

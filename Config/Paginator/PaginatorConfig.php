@@ -8,7 +8,6 @@ namespace Videni\Bundle\RestBundle\Config\Paginator;
 class PaginatorConfig
 {
     private $maxResults;
-    private $pageSize;
     private $disableSorting;
     private $class;
 
@@ -33,26 +32,6 @@ class PaginatorConfig
     public function setMaxResults($maxResults)
     {
         $this->maxResults = $maxResults;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPageSize()
-    {
-        return $this->pageSize;
-    }
-
-    /**
-     * @param mixed $pageSize
-     *
-     * @return self
-     */
-    public function setPageSize($pageSize)
-    {
-        $this->pageSize = $pageSize;
 
         return $this;
     }

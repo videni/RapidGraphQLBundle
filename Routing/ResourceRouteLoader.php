@@ -89,7 +89,7 @@ final class ResourceRouteLoader extends Loader
             throw new \RuntimeException(sprintf('%s is not a valid action', $action));
         }
 
-        $controller = $operationConfig->getController() ?? sprintf('%s:%s', $this->resourceControllerId, $action);
+        $controller = $operationConfig->getController() ?? sprintf('%s::%s', $this->resourceControllerId, $action);
 
         $path = trim(trim($resourceConfig->getRoutePrefix()), '/');
         $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operationConfig, $operationName);

@@ -232,7 +232,6 @@ class ResourceConfiguration implements ConfigurationInterface
             ->arrayPrototype()
                 ->children()
                     ->scalarNode('class')->cannotBeEmpty()->end()
-                    ->scalarNode('page_size')->defaultValue(15)->end()
                     ->scalarNode('max_results')->defaultValue(50)->end()
                     ->scalarNode('disable_sorting')->defaultValue(false)->end()
                     ->arrayNode('sortings')
