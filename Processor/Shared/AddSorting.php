@@ -12,6 +12,7 @@ use Oro\Component\ChainProcessor\ProcessorInterface;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Videni\Bundle\RestBundle\Filter\FilterNames;
 use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Sets default sorting for different kind of requests.
@@ -63,7 +64,8 @@ class AddSorting implements ProcessorInterface
         if (empty($paginatorConfig->getSortings())) {
             $this->addDefaultSortFilter(
                 $this->filterNames->getSortFilterName(),
-                $context->getFilters(),
+                $filters,
+                $metadata,
                 $paginatorConfig
             );
         } else {

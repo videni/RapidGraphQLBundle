@@ -8,3 +8,7 @@ services:
 
     Videni\Bundle\RestBundle\Serializer\ObjectConstructor:
         arguments: ['@jms_serializer.doctrine_object_constructor']
+
+    Videni\Bundle\RestBundle\Serializer\Handler\ConstraintViolationListHandler:
+        tags:
+            - { name: 'jms_serializer.subscribing_handler' }

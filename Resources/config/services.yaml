@@ -21,18 +21,6 @@ services:
         autoconfigure: true
         public: false
 
-    Oro\Component\ChainProcessor\ProcessorBagConfigProvider:
-        public: false
-        arguments:
-            - [] # groups; they are set by Videni\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
-            - [] # processors; they are set by Videni\Bundle\RestBundle\DependencyInjection\Compiler\ProcessorBagCompilerPass
-
-    Oro\Component\ChainProcessor\Debug\TraceLogger:
-        public: false
-        arguments:
-            - 'data_api'
-            - '@?debug.stopwatch'
-
     Videni\Bundle\RestBundle\Faker\EntityProvider:
         arguments:
             - '@doctrine.orm.entity_manager'
@@ -48,35 +36,6 @@ services:
 
     Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
 
-    Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag:
-        arguments:
-            - '@Oro\Component\ChainProcessor\ProcessorBagConfigProvider'
-            - '@Oro\Component\ChainProcessor\ChainProcessorFactory'
-            - '%kernel.debug%'
-            - '@Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory'
-            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory'
-            - '@Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory'
-            - '@Oro\Component\ChainProcessor\ProcessorIteratorFactory'
-
-    Oro\Component\ChainProcessor\ChainProcessorFactory:
-        public: false
-        calls:
-            - [addFactory,  ['@Oro\Component\ChainProcessor\SimpleProcessorFactory', 10]]
-            - [addFactory,  ['@Oro\Component\ChainProcessor\DependencyInjection\ProcessorFactory']]
-
-    Oro\Component\ChainProcessor\SimpleProcessorFactory: ~
-
-    Oro\Component\ChainProcessor\DependencyInjection\ProcessorFactory:
-        arguments:
-            - '@service_container'
-
-    Videni\Bundle\RestBundle\Processor\OptimizedProcessorIteratorFactory: ~
-
-    Oro\Component\ChainProcessor\ProcessorIteratorFactory: ~
-
-    Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerFactory: ~
-
-    Videni\Bundle\RestBundle\Processor\ProcessorApplicableCheckerWithoutGroupsFactory: ~
 
     Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
 
@@ -86,49 +45,15 @@ services:
     Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
 
     Videni\Bundle\RestBundle\Handler\DeleteHandler: ~
+
     Videni\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@Videni\Bundle\RestBundle\Handler\DeleteHandler'
-
-    Videni\Bundle\RestBundle\Util\CriteriaConnector:
-        public: false
-        arguments:
-            - '@Videni\Bundle\RestBundle\Util\CriteriaNormalizer'
-            - '@Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver'
-            - '@Videni\Bundle\RestBundle\Collection\QueryExpressionVisitorFactory'
-            - '@Videni\Bundle\RestBundle\Util\EntityClassResolver'
-
-    Videni\Bundle\RestBundle\Util\CriteriaNormalizer:
-        public: false
-        arguments:
-            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
-            - '@Videni\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory'
-            - '@Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory'
-
-    Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver:
-        class: Videni\Bundle\RestBundle\Util\CriteriaPlaceholdersResolver
-        public: false
-
-    Videni\Bundle\RestBundle\Util\RequireJoinsFieldVisitorFactory:
-        public: false
-        arguments:
-            - '@Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker'
-
-    Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker:
-        class: Videni\Bundle\RestBundle\Util\RequireJoinsDecisionMaker
-        public: false
-
-    Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory:
-        class: Videni\Bundle\RestBundle\Util\OptimizeJoinsFieldVisitorFactory
-        public: false
-        arguments:
-            - '@Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker'
-
-    Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker:
-        class: Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker
-        public: false
 
     Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
 
     Hateoas\Representation\Factory\PagerfantaFactory: ~
 
+    Videni\Bundle\RestBundle\Validator\EventListener\ValidationExceptionListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException'}
 
 
