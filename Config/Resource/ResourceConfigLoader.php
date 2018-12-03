@@ -20,7 +20,7 @@ class ResourceConfigLoader
             $resourceConfig->setDenormalizationContext(SerializationConfig::fromArray($config['denormalization_context']));
         }
         if (array_key_exists('normalization_context', $config)) {
-            $resourceConfig->setDenormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
+            $resourceConfig->setNormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
         }
         if (array_key_exists('validation_groups', $config)) {
             $resourceConfig->setValidationGroups($config['validation_groups']);

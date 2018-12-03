@@ -381,61 +381,6 @@ class Context extends BaseContext implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function hasPaginatorConfig()
-    {
-        return $this->has(self::PAGINATOR_CONFIG);
-    }
-
-    public function getPaginatorConfig()
-    {
-        if (!$this->has($key)) {
-            $this->loadPaginatorConfig();
-        }
-
-        return $this->get(self::PAGINATOR_CONFIG);
-    }
-
-     /**
-     * Load paginator config
-     */
-    protected function loadPaginatorConfig()
-    {
-        $entityClass = $this->getClassName();
-        if (empty($entityClass)) {
-            throw new RuntimeException(
-                'A class name must be set in the context before a paginator config is loaded.'
-            );
-        }
-
-        $resourceConfig = $this->hasResourceConfig();
-        if (!$this->hasResourceConfig()) {
-            throw new RuntimeException('Resource metadata is not loaded for current request');
-        }
-
-        $operationName = $this->getOperationName();
-        if (!$operationName) {
-            throw new RuntimeException('Make sure operation name is set for current request');
-        }
-
-        try {
-            $paginatorKey = $this->metadata->getOperationAttribute($operationName, 'paginator', null, true);
-            if (null === $paginatorKey) {
-                return;
-            }
-
-            $config = $this->paginatorConfigProvider->get($paginatorKey);
-
-            $this->set(self::PAGINATOR_CONFIG, $config);
-        } catch (\Exception $e) {
-            $this->processLoadedConfig(null);
-
-            throw $e;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getCriteria()
     {
         return $this->get(self::CRITERIA);
@@ -447,5 +392,37 @@ class Context extends BaseContext implements ContextInterface
     public function setCriteria($criteria)
     {
         $this->set(self::CRITERIA, $criteria);
+    }
+
+      /**
+     * {@inheritdoc}
+     */
+    public function hasFormConfig()
+    {
+        return $this->has(self::FORM_CONFIG);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormConfig()
+    {
+        if (!$this->has(self::FORM_CONFIG)) {
+            $this->loadFormConfig();
+        }
+
+        return $this->get(self::FORM_CONFIG);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFormConfig(?FormConfig $formConfig)
+    {
+        if ($formConfig) {
+            $this->set(self::FORM_CONFIG, $formConfig);
+        } else {
+            $this->remove(self::FORM_CONFIG);
+        }
     }
 }

@@ -18,3 +18,10 @@ services:
         arguments:
             - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
             - '%videni_rest.resource_config%'
+
+    Videni\Bundle\RestBundle\Config\Form\FormConfigLoader: ~
+
+    Videni\Bundle\RestBundle\Config\Form\FormConfigProvider:
+        arguments:
+            - '@Videni\Bundle\RestBundle\Config\Form\FormConfigLoader'
+            - '%videni_rest.resource_config%'

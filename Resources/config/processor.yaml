@@ -93,3 +93,10 @@ services:
         class: Videni\Bundle\RestBundle\Util\OptimizeJoinsDecisionMaker
         public: false
 
+
+    Videni\Bundle\RestBundle\Processor\CustomizeFormDataProcessor:
+        public: false
+        arguments:
+            - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'
+            - customize_form_data
+

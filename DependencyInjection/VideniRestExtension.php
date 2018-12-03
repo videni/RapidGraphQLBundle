@@ -17,6 +17,7 @@ use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Symfony\Component\Config\Loader\GlobFileLoader;
+use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
 
 class VideniRestExtension extends Extension
 {
@@ -34,7 +35,7 @@ class VideniRestExtension extends Extension
         $this->registerActionProcessors($container, $config);
         $this->registerFilterOperators($container, $config);
 
-        $this->loadResourceConfiguration($container);
+        $this->loadResourceConfiguration($container, $config['max_nesting_level']);
 
         DependencyInjectionUtil::setConfig($container, $config);
     }
@@ -106,7 +107,7 @@ class VideniRestExtension extends Extension
      *
      * @return array
      */
-    private function loadResourceConfiguration($container)
+    private function loadResourceConfiguration($container, $maxNestingLevel = 0)
     {
         $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
 
@@ -121,7 +122,7 @@ class VideniRestExtension extends Extension
         }
 
         $configs =  $this->processConfiguration(
-            new ResourceConfiguration($container->get(FilterOperatorRegistry::class)),
+            new ResourceConfiguration($container->get(FilterOperatorRegistry::class), $maxNestingLevel),
             $config
         );
 

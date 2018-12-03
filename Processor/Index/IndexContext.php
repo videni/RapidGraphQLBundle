@@ -40,4 +40,43 @@ class IndexContext extends Context
             $this->remove(self::PAGINATOR_CONFIG);
         }
     }
+
+     /**
+     * Load paginator config
+     */
+    protected function loadPaginatorConfig()
+    {
+        $entityClass = $this->getClassName();
+        if (empty($entityClass)) {
+            throw new RuntimeException(
+                'A class name must be set in the context before a paginator config is loaded.'
+            );
+        }
+
+        if (!$this->hasResourceConfig()) {
+            throw new RuntimeException('Resource metadata is not loaded for current request');
+        }
+
+        $resourceConfig = $this->getResourceConfig();
+
+        $operationName = $this->getOperationName();
+        if (!$operationName) {
+            throw new RuntimeException('Make sure operation name is set for current request');
+        }
+
+        try {
+            $paginatorKey = $this->resourceConfig->getOperationAttribute($operationName, 'paginator', null, true);
+            if (null === $paginatorKey) {
+                return;
+            }
+
+            $config = $this->paginatorConfigProvider->get($paginatorKey);
+
+            $this->set(self::PAGINATOR_CONFIG, $config);
+        } catch (\Exception $e) {
+            $this->processLoadedConfig(null);
+
+            throw $e;
+        }
+    }
 }

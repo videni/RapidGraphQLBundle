@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RestBundle\DependencyInjection\Configuration;
 
 use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -9,6 +9,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Doctrine\Common\Inflector\Inflector;
+use Videni\Bundle\RestBundle\Config\Definition\EntityDefinitionConfiguration;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
@@ -17,12 +18,15 @@ class ResourceConfiguration implements ConfigurationInterface
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
 
+    private $maxNestingLevel;
+
     /**
      * @param FilterOperatorRegistry $filterOperatorRegistry
      */
-    public function __construct(FilterOperatorRegistry $filterOperatorRegistry)
+    public function __construct(FilterOperatorRegistry $filterOperatorRegistry, $maxNestingLevel)
     {
         $this->filterOperatorRegistry = $filterOperatorRegistry;
+        $this->maxNestingLevel = $maxNestingLevel;
     }
 
     /**
@@ -31,17 +35,17 @@ class ResourceConfiguration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder
-            ->root(self::ROOT_NODE)
-                ->children()
-                    ->append($this->addPaginatorConfigurationSection())
-                    ->append($this->addResourceConfigurationSection())
-                ->end()
+        $rootNode = $treeBuilder->root(self::ROOT_NODE);
+        $children = $rootNode->children();
+
+        $children
+            ->append($this->addPaginatorConfigurationSection())
+            ->append($this->addResourceConfigurationSection())
+            ->append($this->addFormConfigurationSection())
         ;
 
         return $treeBuilder;
     }
-
 
     private function addResourceConfigurationSection()
     {
@@ -88,11 +92,12 @@ class ResourceConfiguration implements ConfigurationInterface
                     return $v;
                 })
             ->end()
-            ->useAttributeAsKey('class')
+            ->useAttributeAsKey('entity_class')
             ->arrayPrototype()
                 ->children()
                     ->scalarNode('route_prefix')->end()
                     ->scalarNode('short_name')->end()
+                    ->scalarNode('form')->end()
                     ->arrayNode('repository')
                         ->beforeNormalization()
                             ->ifString()
@@ -155,6 +160,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->scalarNode('path')->end()
                                 ->scalarNode('paginator')->end()
                                 ->scalarNode('access_control')->end()
+                                ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
                                 ->scalarNode('action')->isRequired()->cannotBeEmpty()->end()
                                 ->arrayNode('methods')
@@ -228,7 +234,7 @@ class ResourceConfiguration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('paginators');
 
         $rootNode
-            ->useAttributeAsKey('code')
+            ->useAttributeAsKey('entity_class')
             ->arrayPrototype()
                 ->children()
                     ->scalarNode('class')->cannotBeEmpty()->end()
@@ -290,6 +296,13 @@ class ResourceConfiguration implements ConfigurationInterface
         ;
 
         return $rootNode;
+    }
+
+    private function addFormConfigurationSection()
+    {
+        $formConfiguration = new FormConfiguration($this->maxNestingLevel);
+
+        return $formConfiguration->configure();
     }
 
     private function getClassName($fqcn)

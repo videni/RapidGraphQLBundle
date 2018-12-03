@@ -111,12 +111,12 @@ videni_rest:
                         priority: -10
                     security:
                         priority: -15
-                    deserialize:
+                    transform:
                         priority: -20
+                    # deserialize:
+                    #     priority: -20
                     validate:
                         priority: -30
-                    transform:
-                        priority: -40
                     save:
                         priority: -50
                     finalize:
@@ -138,3 +138,91 @@ videni_rest:
                         priority: -50
                     finalize:
                         priority: -60
+    form_types:
+        - Symfony\Component\Form\Extension\Core\Type\FormType
+        - Symfony\Component\Form\Extension\Core\Type\CollectionType
+        - Symfony\Component\Form\Extension\Core\Type\ChoiceType
+        - Symfony\Component\Form\Extension\Core\Type\IntegerType
+        - Symfony\Component\Form\Extension\Core\Type\NumberType
+        - Symfony\Component\Form\Extension\Core\Type\MoneyType
+        - Symfony\Component\Form\Extension\Core\Type\DateType
+        - Symfony\Component\Form\Extension\Core\Type\TimeType
+        - Symfony\Component\Form\Extension\Core\Type\DateTimeType
+        - Symfony\Component\Form\Extension\Core\Type\TimezoneType
+        - Symfony\Component\Form\Extension\Core\Type\BirthdayType
+        - Symfony\Component\Form\Extension\Core\Type\TextType
+        - Symfony\Component\Form\Extension\Core\Type\TextareaType
+        - Symfony\Component\Form\Extension\Core\Type\EmailType
+        - Symfony\Component\Form\Extension\Core\Type\PasswordType
+        - Symfony\Component\Form\Extension\Core\Type\RepeatedType
+        - Videni\Bundle\RestBundle\Form\Type\BooleanType
+        - Videni\Bundle\RestBundle\Form\Type\NumberType
+        - Videni\Bundle\RestBundle\Form\Type\CollectionType
+        - Videni\Bundle\RestBundle\Form\Type\EntityCollectionType
+        - Videni\Bundle\RestBundle\Form\Type\ScalarCollectionType
+        - Videni\Bundle\RestBundle\Form\Type\EntityScalarCollectionType
+
+    form_type_extensions:
+        - form.type_extension.form.http_foundation
+        - form.type_extension.repeated.validator
+        - form.type_extension.form.data_collector
+
+    form_type_guesses:
+        boolean:
+            form_type: Videni\Bundle\RestBundle\Form\Type\BooleanType
+        integer:
+            form_type: Symfony\Component\Form\Extension\Core\Type\IntegerType
+        smallint:
+            form_type: Symfony\Component\Form\Extension\Core\Type\IntegerType
+        bigint:
+            form_type: Videni\Bundle\RestBundle\Form\Type\NumberType
+            options:
+                scale: 0
+        decimal:
+            form_type: Videni\Bundle\RestBundle\Form\Type\NumberType
+        float:
+            form_type: Symfony\Component\Form\Extension\Core\Type\NumberType
+        date:
+            form_type: Symfony\Component\Form\Extension\Core\Type\DateType
+            options:
+                model_timezone: UTC
+                view_timezone: UTC
+                widget: single_text
+                format: "yyyy-MM-dd" # HTML5
+        time:
+            form_type: Symfony\Component\Form\Extension\Core\Type\TimeType
+            options:
+                model_timezone: UTC
+                view_timezone: UTC
+                with_seconds: true
+                widget: single_text
+        datetime:
+            form_type: Symfony\Component\Form\Extension\Core\Type\DateTimeType
+            options:
+                model_timezone: UTC
+                view_timezone: UTC
+                with_seconds: true
+                widget: single_text
+                format: "yyyy-MM-dd'T'HH:mm:ssZZZZZ" # HTML5
+        datetimetz:
+            form_type: Symfony\Component\Form\Extension\Core\Type\DateTimeType
+            options:
+                model_timezone: UTC
+                view_timezone: UTC
+                with_seconds: true
+                widget: single_text
+                format: "yyyy-MM-dd'T'HH:mm:ssZZZZZ" # HTML5
+        text:
+            form_type: Symfony\Component\Form\Extension\Core\Type\TextareaType
+        percent:
+            form_type: Symfony\Component\Form\Extension\Core\Type\NumberType
+        money:
+            form_type: Videni\Bundle\RestBundle\Form\Type\NumberType
+            options:
+                scale: 4
+        money_value:
+            form_type: Videni\Bundle\RestBundle\Form\Type\NumberType
+            options:
+                scale: 4
+        duration:
+            form_type: Oro\Bundle\FormBundle\Form\Type\OroDurationType

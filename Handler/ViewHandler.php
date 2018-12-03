@@ -41,6 +41,7 @@ final class ViewHandler implements ViewHandlerInterface
     {
         $context = new Context();
         $context->setAttribute('api_operation_name', $operationName);
+
         if ($normailzationConfig = $resourceConfig->getOperationAttribute($operationName, 'normalization_context')) {
             $context->setGroups($normailzationConfig->getGroups());
         }

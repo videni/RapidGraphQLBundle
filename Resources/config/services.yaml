@@ -6,6 +6,7 @@ imports:
     - { resource: 'filters.yaml'}
     - { resource: 'config.yaml'}
     - { resource: 'processor.yaml'}
+    - { resource: 'form.yaml'}
 
 parameters:
     videni_rest.resource_class_directories:
