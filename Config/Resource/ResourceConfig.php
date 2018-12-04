@@ -2,6 +2,9 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormConfig;
+
 class ResourceConfig
 {
     private $routePrefix;
@@ -13,7 +16,27 @@ class ResourceConfig
     private $repository = null;
     private $normalizationContext = null;
     private $denormalizationContext = null;
+    private $parentResourceClass;
+
     private $operations = [];
+    private $paginators = [];
+    private $forms = [];
+
+    private $formFields = [];
+
+
+     /**
+     * A string that unique identify this instance of entity definition config.
+     * This value is set by config providers and is used by a metadata provider
+     * to build a metadata cache key. It allows to avoid loading the same metadata
+     * several times and as result it improves a performance.
+     *
+     * @var string|null
+     */
+    private $key;
+
+    /** @var string[] */
+    private $identifierFieldNames = [];
 
     /**
      * @return mixed
@@ -191,6 +214,35 @@ class ResourceConfig
         return $this->operations[$operationName];
     }
 
+     /**
+     * Adds the configuration of the operation.
+     *
+     * @param string                 $operationName
+     * @param OperationConfig|null $operation
+     *
+     * @return OperationConfig
+     */
+    public function addOperation($operationName, $operation = null)
+    {
+        if (null === $operation) {
+            $operation = new OperationConfig();
+        }
+
+        $this->operations[$operationName] = $operation;
+
+        return $operation;
+    }
+
+    /**
+     * Removes the configuration of the operation.
+     *
+     * @param string $operationName
+     */
+    public function removeOperation($operationName)
+    {
+        unset($this->operations[$operationName]);
+    }
+
     public function getOperationAttribute(string $operationName, string $key)
     {
         $operationAttribute = null;
@@ -227,40 +279,157 @@ class ResourceConfig
     }
 
     /**
-     * Adds the configuration of the operation.
+     * Checks whether the configuration of at least one operation exists.
      *
-     * @param string                 $operationName
-     * @param OperationConfig|null $operation
-     *
-     * @return OperationConfig
+     * @return bool
      */
-    public function addOperation($operationName, $operation = null)
+    public function hasPaginators()
     {
-        if (null === $operation) {
-            $operation = new OperationConfig();
+        return !empty($this->paginators);
+    }
+
+    /**
+     * Gets the configuration for all paginators.
+     *
+     * @return PaginatorConfig[] [paginator name => config, ...]
+     */
+    public function getPaginators()
+    {
+        return $this->paginators;
+    }
+
+    /**
+     * Checks whether the configuration of the paginator exists.
+     *
+     * @param string $paginatorName
+     *
+     * @return bool
+     */
+    public function hasPaginator($paginatorName)
+    {
+        return isset($this->paginators[$paginatorName]);
+    }
+
+    /**
+     * Gets the configuration of the paginator.
+     *
+     * @param string $paginatorName
+     *
+     * @return PaginatorConfig|null
+     */
+    public function getPaginator($paginatorName)
+    {
+        if (!isset($this->paginators[$paginatorName])) {
+            return null;
         }
 
-        $this->operations[$operationName] = $operation;
-
-        return $operation;
+        return $this->paginators[$paginatorName];
     }
 
-    /**
-     * Removes the configuration of the operation.
+     /**
+     * Adds the configuration of the paginator.
      *
-     * @param string $operationName
+     * @param string                 $paginatorName
+     * @param PaginatorConfig|null $paginator
+     *
+     * @return PaginatorConfig
      */
-    public function removeOperation($operationName)
+    public function addPaginator($paginatorName, $paginator = null)
     {
-        unset($this->operations[$operationName]);
+        if (null === $paginator) {
+            $paginator = new PaginatorConfig();
+        }
+
+        $this->paginators[$paginatorName] = $paginator;
+
+        return $paginator;
     }
 
     /**
-     * @return mixed
+     * Removes the configuration of the paginator.
+     *
+     * @param string $paginatorName
      */
-    public function getValidationGroups()
+    public function removePaginator($paginatorName)
     {
-        return $this->validationGroups;
+        unset($this->paginators[$paginatorName]);
+    }
+
+    /**
+     * Checks whether the configuration of at least one paginator exists.
+     *
+     * @return bool
+     */
+    public function hasForms()
+    {
+        return !empty($this->forms);
+    }
+
+    /**
+     * Gets the configuration for all forms.
+     *
+     * @return FormConfig[] [form name => config, ...]
+     */
+    public function getForms()
+    {
+        return $this->forms;
+    }
+
+    /**
+     * Checks whether the configuration of the form exists.
+     *
+     * @param string $formName
+     *
+     * @return bool
+     */
+    public function hasForm($formName)
+    {
+        return isset($this->forms[$formName]);
+    }
+
+    /**
+     * Gets the configuration of the form.
+     *
+     * @param string $formName
+     *
+     * @return FormConfig|null
+     */
+    public function getForm($formName)
+    {
+        if (!isset($this->forms[$formName])) {
+            return null;
+        }
+
+        return $this->forms[$formName];
+    }
+
+     /**
+     * Adds the configuration of the form.
+     *
+     * @param string                 $formName
+     * @param FormConfig|null $form
+     *
+     * @return FormConfig
+     */
+    public function addForm($formName, $form = null)
+    {
+        if (null === $form) {
+            $form = new FormConfig();
+        }
+
+        $this->forms[$formName] = $form;
+
+        return $form;
+    }
+
+    /**
+     * Removes the configuration of the form.
+     *
+     * @param string $formName
+     */
+    public function removeForm($formName)
+    {
+        unset($this->forms[$formName]);
     }
 
     /**
@@ -273,6 +442,14 @@ class ResourceConfig
         $this->validationGroups = $validationGroups;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidationGroups()
+    {
+        return $this->validationGroups;
     }
 
      /**
@@ -298,5 +475,143 @@ class ResourceConfig
     protected function camelize($string)
     {
         return strtr(\ucwords(strtr($string, ['_' => ' '])), [' ' => '']);
+    }
+
+     /**
+     * Gets a string that unique identify this instance of entity definition config.
+     *
+     * @return string|null
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Sets a string that unique identify this instance of entity definition config.
+     * Do not set this value in your code.
+     *
+     * @param string|null $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * Gets the names of identifier fields of the entity.
+     *
+     * @return string[]
+     */
+    public function getIdentifierFieldNames()
+    {
+        return $this->identifierFieldNames;
+    }
+
+    /**
+     * Sets the names of identifier fields of the entity.
+     *
+     * @param string[] $fields
+     */
+    public function setIdentifierFieldNames(array $fields)
+    {
+        $this->identifierFieldNames = $fields;
+    }
+
+      /**
+     * @return mixed
+     */
+    public function getParentResourceClass()
+    {
+        return $this->parentResourceClass;
+    }
+
+    /**
+     * @param mixed $parentResourceClass
+     *
+     * @return self
+     */
+    public function setParentResourceClass($parentResourceClass)
+    {
+        $this->parentResourceClass = $parentResourceClass;
+
+        return $this;
+    }
+
+      /**
+     * Checks whether the configuration of at least one form field exists.
+     *
+     * @return bool
+     */
+    public function hasFormFields()
+    {
+        return !empty($this->formFields);
+    }
+
+    /**
+     * Gets the configuration for all formFields.
+     *
+     * @return FormFieldConfig[] [formField name => config, ...]
+     */
+    public function getFormFields()
+    {
+        return $this->formFields;
+    }
+
+    /**
+     * Checks whether the configuration of the formField exists.
+     *
+     * @param string $formFieldName
+     *
+     * @return bool
+     */
+    public function hasFormField($formFieldName)
+    {
+        return isset($this->formFields[$formFieldName]);
+    }
+
+    /**
+     * Gets the configuration of the formField.
+     *
+     * @param string $formFieldName
+     *
+     * @return FormFieldConfig|null
+     */
+    public function getFormField($formFieldName)
+    {
+        if (!isset($this->formFields[$formFieldName])) {
+            return null;
+        }
+
+        return $this->formFields[$formFieldName];
+    }
+
+     /**
+     * Adds the configuration of the formField.
+     *
+     * @param string                 $formFieldName
+     * @param FormFieldConfig|null $formField
+     *
+     * @return FormFieldConfig
+     */
+    public function addFormField($formFieldName, $formField = null)
+    {
+        if (null === $formField) {
+            $formField = new FormFieldConfig();
+        }
+
+        $this->formFields[$formFieldName] = $formField;
+
+        return $formField;
+    }
+
+    /**
+     * Removes the configuration of the formField.
+     *
+     * @param string $formFieldName
+     */
+    public function removeFormField($formFieldName)
+    {
+        unset($this->formFields[$formFieldName]);
     }
 }

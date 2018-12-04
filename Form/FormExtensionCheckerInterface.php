@@ -7,5 +7,5 @@ interface FormExtensionCheckerInterface
     /**
      * Checks whether Data API form extension is activated.
      */
-    public function isApiFormExtensionActivated();
+    public function isFormExtensionActivated();
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Doctrine\Common\Util\ClassUtils;
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Videni\Bundle\RestBundle\Form\Extension\ValidationExtension;
 use Videni\Bundle\RestBundle\Form\FormHelper;
 use Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataHandler;
@@ -31,10 +31,9 @@ class BuildFormBuilder implements ProcessorInterface
      * @param FormHelper $formHelper
      * @param bool       $enableFullValidation
      */
-    public function __construct(FormHelper $formHelper, FormConfigProvider $formConfigProvider, bool $enableFullValidation = false)
+    public function __construct(FormHelper $formHelper, bool $enableFullValidation = false)
     {
         $this->formHelper = $formHelper;
-        $this->formConfigProvider = $formConfigProvider;
         $this->enableFullValidation = $enableFullValidation;
     }
 
@@ -43,6 +42,7 @@ class BuildFormBuilder implements ProcessorInterface
      */
     public function process(ContextInterface $context)
     {
+
         /** @var FormContext $context */
 
         if ($context->hasFormBuilder()) {
@@ -71,9 +71,8 @@ class BuildFormBuilder implements ProcessorInterface
     {
         $resourceConfig = $context->getResourceConfig();
 
-        $formName = $resourceConfig->getOperationAttribute($context->getOperationName(), 'form');
-
-        return $this->formConfigProvider->get($context->getClassName(), $formName);
+        $formName = $resourceConfig->getOperation($context->getOperationName())->getForm();
+        return $formName && $resourceConfig->hasForm($formName) ? $resourceConfig->getForm($formName): null;
     }
 
     /**
@@ -108,11 +107,11 @@ class BuildFormBuilder implements ProcessorInterface
 
     /**
      * @param FormContext            $context
-     * @param FormConfig $config
+     * @param FormFieldConfig $config
      *
      * @return array
      */
-    protected function getFormOptions(FormContext $context, FormConfig $config)
+    protected function getFormOptions(FormContext $context, FormFieldConfig $config)
     {
         $options = $config->getFormOptions();
         if (null === $options) {
@@ -129,21 +128,18 @@ class BuildFormBuilder implements ProcessorInterface
 
     /**
      * @param FormContext            $context
-     * @param FormConfig $config
+     * @param FormFieldConfig $config
      *
      * @return string
      */
-    protected function getFormDataClass(FormContext $context, FormConfig $config)
+    protected function getFormDataClass(FormContext $context, FormFieldConfig $config)
     {
         $dataClass = $context->getClassName();
         $entity = $context->getResult();
         if (\is_object($entity)) {
-            $parentResourceClass = $config->getParentResourceClass();
-            if ($parentResourceClass) {
-                $entityClass = ClassUtils::getClass($entity);
-                if ($entityClass !== $dataClass && $entityClass === $parentResourceClass) {
-                    $dataClass = $parentResourceClass;
-                }
+            $entityClass = ClassUtils::getClass($entity);
+            if ($entityClass !== $dataClass) {
+                $dataClass = $entityClass;
             }
         }
 

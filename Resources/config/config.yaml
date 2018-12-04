@@ -10,18 +10,11 @@ services:
             - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader'
             - '%videni_rest.resource_config%'
 
-    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader: ~
-
     Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
-
-    Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider:
-        arguments:
-            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
-            - '%videni_rest.resource_config%'
 
     Videni\Bundle\RestBundle\Config\Form\FormConfigLoader: ~
 
-    Videni\Bundle\RestBundle\Config\Form\FormConfigProvider:
+    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader:
         arguments:
             - '@Videni\Bundle\RestBundle\Config\Form\FormConfigLoader'
-            - '%videni_rest.resource_config%'
+            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'

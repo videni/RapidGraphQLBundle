@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor\Shared;
 
 use Videni\Bundle\RestBundle\Processor\FormContext;
 use Oro\Component\ChainProcessor\ContextInterface;
@@ -17,7 +17,6 @@ class BuildForm implements ProcessorInterface
     public function process(ContextInterface $context)
     {
         /** @var FormContext $context */
-
         if ($context->hasForm()) {
             // the form is already built
             return;
@@ -28,6 +27,7 @@ class BuildForm implements ProcessorInterface
         }
 
         // build the form and add it to the context
+        var_dump(get_class($context->getFormBuilder()->getForm()));exit;
         $context->setForm($context->getFormBuilder()->getForm());
         // remove the form builder from the context
         $context->setFormBuilder();

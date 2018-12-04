@@ -10,6 +10,7 @@ class OperationConfig
     private $paginator = null;
     private $methods =  [];
     private $routeName;
+    private $form;
     private $controller;
     private $accessControll;
     private $accessControlMessage;
@@ -303,6 +304,9 @@ class OperationConfig
         if (array_key_exists('path', $config)) {
             $self->setPath($config['path']);
         }
+        if (array_key_exists('form', $config)) {
+            $self->setForm($config['form']);
+        }
         if (array_key_exists('methods', $config)) {
             $self->setMethods($config['methods']);
         }
@@ -338,6 +342,26 @@ class OperationConfig
     public function setPaginator($paginator)
     {
         $this->paginator = $paginator;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
+     * @param mixed $form
+     *
+     * @return self
+     */
+    public function setForm($form)
+    {
+        $this->form = $form;
 
         return $this;
     }

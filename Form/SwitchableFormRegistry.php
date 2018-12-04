@@ -99,7 +99,7 @@ class SwitchableFormRegistry extends FormRegistry implements FormExtensionSwitch
     public function getType($name)
     {
         // prevent using of not registered in API form types
-        if ($this->extensionState->isApiFormExtensionActivated()) {
+        if ($this->extensionState->isFormExtensionActivated()) {
             $isKnownType = false;
             $extensions = $this->getExtensions();
             foreach ($extensions as $extension) {

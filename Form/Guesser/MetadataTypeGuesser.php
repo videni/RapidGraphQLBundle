@@ -2,10 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Form\Guesser;
 
-use Videni\Bundle\RestBundle\Collection\IncludedEntityCollection;
-use Videni\Bundle\RestBundle\Config\ConfigAccessorInterface;
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
-use Videni\Bundle\RestBundle\Config\EntityDefinitionFieldConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Videni\Bundle\RestBundle\Form\Type\CollectionType;
 use Videni\Bundle\RestBundle\Form\Type\CompoundObjectType;
 use Videni\Bundle\RestBundle\Form\Type\EntityCollectionType;
@@ -13,9 +10,6 @@ use Videni\Bundle\RestBundle\Form\Type\EntityScalarCollectionType;
 use Videni\Bundle\RestBundle\Form\Type\EntityType;
 use Videni\Bundle\RestBundle\Form\Type\NestedAssociationType;
 use Videni\Bundle\RestBundle\Form\Type\ScalarCollectionType;
-use Videni\Bundle\RestBundle\Metadata\AssociationMetadata;
-use Videni\Bundle\RestBundle\Metadata\EntityMetadata;
-use Videni\Bundle\RestBundle\Metadata\MetadataAccessorInterface;
 use Videni\Bundle\RestBundle\Request\DataType;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Videni\Bundle\RestBundle\Util\EntityMapper;
@@ -24,7 +18,7 @@ use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\TypeGuess;
 
 /**
- * Guesses form types based on "form_type_guesses" configuration and Data API metadata.
+ * Guesses form types based on "form_type_guesses" configuration .
  */
 class MetadataTypeGuesser implements FormTypeGuesserInterface
 {
@@ -34,17 +28,8 @@ class MetadataTypeGuesser implements FormTypeGuesserInterface
     /** @var DoctrineHelper */
     protected $doctrineHelper;
 
-    /** @var MetadataAccessorInterface|null */
-    protected $metadataAccessor;
-
-    /** @var ConfigAccessorInterface|null */
-    protected $configAccessor;
-
     /** @var EntityMapper|null */
     protected $entityMapper;
-
-    /** @var IncludedEntityCollection|null */
-    protected $includedEntities;
 
     /**
      * @param array          $dataTypeMappings [data type => [form type, options], ...]
@@ -54,80 +39,6 @@ class MetadataTypeGuesser implements FormTypeGuesserInterface
     {
         $this->dataTypeMappings = $dataTypeMappings;
         $this->doctrineHelper = $doctrineHelper;
-    }
-
-    /**
-     * @return MetadataAccessorInterface|null
-     */
-    public function getMetadataAccessor()
-    {
-        return $this->metadataAccessor;
-    }
-
-    /**
-     * @param MetadataAccessorInterface|null $metadataAccessor
-     */
-    public function setMetadataAccessor(MetadataAccessorInterface $metadataAccessor = null)
-    {
-        $this->metadataAccessor = $metadataAccessor;
-    }
-
-    /**
-     * @return ConfigAccessorInterface|null
-     */
-    public function getConfigAccessor()
-    {
-        return $this->configAccessor;
-    }
-
-    /**
-     * @param ConfigAccessorInterface|null $configAccessor
-     */
-    public function setConfigAccessor(ConfigAccessorInterface $configAccessor = null)
-    {
-        $this->configAccessor = $configAccessor;
-    }
-
-    /**
-     * @return EntityMapper|null
-     */
-    public function getEntityMapper()
-    {
-        return $this->entityMapper;
-    }
-
-    /**
-     * @param EntityMapper|null $entityMapper
-     */
-    public function setEntityMapper(EntityMapper $entityMapper = null)
-    {
-        $this->entityMapper = $entityMapper;
-    }
-
-    /**
-     * @return IncludedEntityCollection|null
-     */
-    public function getIncludedEntities()
-    {
-        return $this->includedEntities;
-    }
-
-    /**
-     * @param IncludedEntityCollection|null $includedEntities
-     */
-    public function setIncludedEntities(IncludedEntityCollection $includedEntities = null)
-    {
-        $this->includedEntities = $includedEntities;
-    }
-
-    /**
-     * @param string $dataType
-     * @param string $formType
-     * @param array  $formOptions
-     */
-    public function addDataTypeMapping($dataType, $formType, array $formOptions = [])
-    {
-        $this->dataTypeMappings[$dataType] = [$formType, $formOptions];
     }
 
     /**
@@ -192,6 +103,32 @@ class MetadataTypeGuesser implements FormTypeGuesserInterface
     public function guessPattern($class, $property)
     {
         return null;
+    }
+
+     /**
+     * @return EntityMapper|null
+     */
+    public function getEntityMapper()
+    {
+        return $this->entityMapper;
+    }
+
+    /**
+     * @param EntityMapper|null $entityMapper
+     */
+    public function setEntityMapper(EntityMapper $entityMapper = null)
+    {
+        $this->entityMapper = $entityMapper;
+    }
+
+    /**
+     * @param string $dataType
+     * @param string $formType
+     * @param array  $formOptions
+     */
+    public function addDataTypeMapping($dataType, $formType, array $formOptions = [])
+    {
+        $this->dataTypeMappings[$dataType] = [$formType, $formOptions];
     }
 
     /**
@@ -281,7 +218,6 @@ class MetadataTypeGuesser implements FormTypeGuesserInterface
             [
                 'metadata'          => $metadata,
                 'entity_mapper'     => $this->entityMapper,
-                'included_entities' => $this->includedEntities
             ],
             TypeGuess::HIGH_CONFIDENCE
         );

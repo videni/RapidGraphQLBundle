@@ -417,7 +417,7 @@ class Context extends BaseContext implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setFormConfig(?FormConfig $formConfig)
+    public function setFormConfig(?FormFieldConfig $formConfig)
     {
         if ($formConfig) {
             $this->set(self::FORM_CONFIG, $formConfig);

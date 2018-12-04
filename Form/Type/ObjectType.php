@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Form\Type;
 
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Videni\Bundle\RestBundle\Form\FormHelper;
 use Videni\Bundle\RestBundle\Metadata\EntityMetadata;
 use Symfony\Component\Form\AbstractType;
@@ -47,6 +47,6 @@ class ObjectType extends AbstractType
         $resolver
             ->setRequired(['metadata', 'config'])
             ->setAllowedTypes('metadata', ['Videni\Bundle\RestBundle\Metadata\EntityMetadata'])
-            ->setAllowedTypes('config', ['Videni\Bundle\RestBundle\Config\Entity\FormConfig']);
+            ->setAllowedTypes('config', ['Videni\Bundle\RestBundle\Config\Form\FormFieldConfig']);
     }
 }

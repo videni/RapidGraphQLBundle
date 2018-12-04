@@ -9,7 +9,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Doctrine\Common\Inflector\Inflector;
-use Videni\Bundle\RestBundle\Config\Definition\EntityDefinitionConfiguration;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
@@ -39,9 +38,7 @@ class ResourceConfiguration implements ConfigurationInterface
         $children = $rootNode->children();
 
         $children
-            ->append($this->addPaginatorConfigurationSection())
             ->append($this->addResourceConfigurationSection())
-            ->append($this->addFormConfigurationSection())
         ;
 
         return $treeBuilder;
@@ -92,7 +89,7 @@ class ResourceConfiguration implements ConfigurationInterface
                     return $v;
                 })
             ->end()
-            ->useAttributeAsKey('entity_class')
+            ->useAttributeAsKey('resource_class')
             ->arrayPrototype()
                 ->children()
                     ->scalarNode('route_prefix')->end()
@@ -220,6 +217,9 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+                    ->append($this->addPaginatorConfigurationSection())
+                    ->append($this->addFormConfigurationSection())
+                    ->append($this->addFormFieldsConfigurationSection())
                 ->end()
             ->end()
         ->end()
@@ -234,7 +234,7 @@ class ResourceConfiguration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('paginators');
 
         $rootNode
-            ->useAttributeAsKey('entity_class')
+            ->useAttributeAsKey('paginator_name')
             ->arrayPrototype()
                 ->children()
                     ->scalarNode('class')->cannotBeEmpty()->end()
@@ -298,9 +298,46 @@ class ResourceConfiguration implements ConfigurationInterface
         return $rootNode;
     }
 
-    private function addFormConfigurationSection()
+    public function addFormConfigurationSection()
     {
-        $formConfiguration = new FormConfiguration($this->maxNestingLevel);
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder
+            ->root('forms')
+            ->useAttributeAsKey('name')
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('form_type')->end()
+                    ->arrayNode('form_options')
+                        ->useAttributeAsKey('name')
+                        ->performNoDeepMerging()
+                        ->prototype('variable')->end()
+                    ->end()
+                    ->variableNode('fields')
+                        ->validate()
+                            ->always(function ($v) {
+                                if (\is_string($v)) {
+                                    return [$v];
+                                }
+                                if (\is_array($v)) {
+                                    return $v;
+                                }
+                                throw new \InvalidArgumentException(
+                                    'The value must be a string or an array.'
+                                );
+                            })
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+
+        return $rootNode;
+    }
+
+    private function addFormFieldsConfigurationSection()
+    {
+        $formConfiguration = new FieldConfiguration($this->maxNestingLevel);
 
         return $formConfiguration->configure();
     }

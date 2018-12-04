@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Form\EventListener;
 
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Videni\Bundle\RestBundle\Config\EntityDefinitionFieldConfig;
 use Videni\Bundle\RestBundle\Model\EntityIdentifier;
 use Videni\Bundle\RestBundle\Util\ConfigUtil;

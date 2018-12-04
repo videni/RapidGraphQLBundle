@@ -9,10 +9,10 @@ services:
         tags:
             - { name: videni_rest.processor, action: create, group: transform, priority: 100 }
 
-    Videni\Bundle\ApiBundle\Processor\Shared\BuildForm:
+    Videni\Bundle\RestBundle\Processor\Shared\BuildForm:
         tags:
-            - { name: oro.api.processor, action: create, group: transform, priority: -10 }
-            - { name: oro.api.processor, action: update, group: transform, priority: -10 }
+            - { name: videni_rest.processor, action: create, group: transform, priority: -10 }
+            - { name: videni_rest.processor, action: update, group: transform, priority: -10 }
 
     Videni\Bundle\RestBundle\Processor\Shared\SaveResource:
         tags:
@@ -48,7 +48,6 @@ services:
         arguments:
             - '@Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface'
             - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
-            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider'
         tags:
             - { name: videni_rest.processor, action: index, group: initialize, priority: -50 }
             - { name: videni_rest.processor, action: bulk_delete, group: initialize, priority: 50 }

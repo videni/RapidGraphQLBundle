@@ -23,6 +23,7 @@ class VideniRestBundle extends Bundle
         $container->addCompilerPass(new Compiler\FilterFactoryCompilerPass());
         $container->addCompilerPass(new Compiler\QueryExpressionCompilerPass());
         $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
+        $container->addCompilerPass(new Compiler\FormCompilerPass());
 
         $container->addCompilerPass(
             new LoadApplicableCheckersCompilerPass('videni_rest.processor_bag', 'videni_rest.processor.applicable_checker')

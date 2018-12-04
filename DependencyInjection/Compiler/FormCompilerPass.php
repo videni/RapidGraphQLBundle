@@ -23,6 +23,7 @@ class FormCompilerPass implements CompilerPassInterface
     private const FORM_TYPE_EXTENSION_TAG                  = 'form.type_extension';
     private const FORM_TYPE_GUESSER_TAG                    = 'form.type_guesser';
     private const FORM_TYPE_FACTORY_SERVICE_ID             = 'form.resolved_type_factory';
+
     private const VIDENI_FORM_TYPE_FACTORY_SERVICE_ID         = 'videni_rest.form.resolved_type_factory';
     private const VIDENI_FORM_EXTENSION_STATE_SERVICE_ID      = 'videni_rest.form.state';
     private const VIDENI_FORM_SWITCHABLE_EXTENSION_SERVICE_ID = 'videni_rest.form.switchable_extension';

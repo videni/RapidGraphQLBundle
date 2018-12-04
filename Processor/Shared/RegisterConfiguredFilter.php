@@ -11,7 +11,6 @@ use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
 use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Oro\Component\ChainProcessor\ContextInterface;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigProvider;
 
 /**
  * Registers filters according to the "filters" configuration section.
@@ -40,13 +39,11 @@ class RegisterConfiguredFilter extends RegisterFilters
      */
     public function __construct(
         FilterFactoryInterface $filterFactory,
-        DoctrineHelper $doctrineHelper,
-        PaginatorConfigProvider $paginatorConfigProvider
+        DoctrineHelper $doctrineHelper
     ) {
         parent::__construct($filterFactory);
 
         $this->doctrineHelper = $doctrineHelper;
-        $this->paginatorConfigProvider = $paginatorConfigProvider;
     }
 
     /**
@@ -59,14 +56,15 @@ class RegisterConfiguredFilter extends RegisterFilters
 
         $operationName = $context->getOperationName();
 
-        $paginatorName =  $resourceConfig->getOperation($operationName)->getPaginator();
-        if (null === $paginatorName) {
+        $resourceConfig->loadPaginatorConfig();
+
+        $paginatorConifig = $paginatorConfig->getPaginatorConfig();
+        if (null === $paginatorConifig) {
             return;
         }
 
-        $entityClass =  $context->getClassName();
+        $entityClass = $context->getClassName();
 
-        $paginatorConfig = $this->paginatorConfigProvider->get($paginatorName);
         $context->setPaginatorConfig($paginatorConfig);
 
         if (!$this->doctrineHelper->isManageableEntityClass($entityClass)) {

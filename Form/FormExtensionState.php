@@ -5,14 +5,14 @@ namespace Videni\Bundle\RestBundle\Form;
 class FormExtensionState implements FormExtensionCheckerInterface
 {
     /** @var bool */
-    private $isApiFormExtensionActivated = false;
+    private $isFormExtensionActivated = false;
 
     /**
      * {@inheritdoc}
      */
-    public function isApiFormExtensionActivated()
+    public function isFormExtensionActivated()
     {
-        return $this->isApiFormExtensionActivated;
+        return $this->isFormExtensionActivated;
     }
 
     /**
@@ -20,7 +20,7 @@ class FormExtensionState implements FormExtensionCheckerInterface
      */
     public function switchToDefaultFormExtension()
     {
-        $this->isApiFormExtensionActivated = false;
+        $this->isFormExtensionActivated = false;
     }
 
     /**
@@ -28,6 +28,6 @@ class FormExtensionState implements FormExtensionCheckerInterface
      */
     public function switchToApiFormExtension()
     {
-        $this->isApiFormExtensionActivated = true;
+        $this->isFormExtensionActivated = true;
     }
 }

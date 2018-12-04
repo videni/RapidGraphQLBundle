@@ -70,9 +70,9 @@ class IndexContext extends Context
                 return;
             }
 
-            $config = $this->paginatorConfigProvider->get($paginatorKey);
+            $config = $resourceConfig->hasPaginator($paginatorKey) ? $resourceConfig->getPaginatorConfig($paginatorKey): null;
 
-            $this->set(self::PAGINATOR_CONFIG, $config);
+            $this->setPaginatorConfig(self::PAGINATOR_CONFIG, $config);
         } catch (\Exception $e) {
             $this->processLoadedConfig(null);
 

@@ -3,7 +3,7 @@
 namespace Videni\Bundle\RestBundle\Processor\CustomizeFormData;
 
 use Doctrine\Common\Collections\Collection;
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Videni\Bundle\RestBundle\Processor\FormContext;
 use Videni\Bundle\RestBundle\Util\ConfigUtil;
 use Oro\Component\ChainProcessor\ActionProcessorInterface;
@@ -117,15 +117,15 @@ class CustomizeFormDataHandler
     }
 
     /**
-     * @param FormConfig $config
+     * @param FormFieldConfig $config
      * @param string                 $propertyPath
      *
-     * @return FormConfig|null
+     * @return FormFieldConfig|null
      */
     private function getAssociationConfig(
-        FormConfig $config,
+        FormFieldConfig $config,
         string $propertyPath
-    ): ?FormConfig {
+    ): ?FormFieldConfig {
         $currentConfig = $config;
         $path = ConfigUtil::explodePropertyPath($propertyPath);
         foreach ($path as $fieldName) {

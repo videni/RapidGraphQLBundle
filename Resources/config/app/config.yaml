@@ -224,5 +224,3 @@ videni_rest:
             form_type: Videni\Bundle\RestBundle\Form\Type\NumberType
             options:
                 scale: 4
-        duration:
-            form_type: Oro\Bundle\FormBundle\Form\Type\OroDurationType

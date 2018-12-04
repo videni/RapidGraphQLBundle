@@ -2,8 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Form;
 
-use Videni\Bundle\RestBundle\Config\Entity\FormConfig;
-use Videni\Bundle\RestBundle\Config\FieldConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -76,11 +75,11 @@ class FormHelper
      * Adds all entity fields to the given form.
      *
      * @param FormBuilderInterface   $formBuilder
-     * @param FormConfig $formConfig
+     * @param FormFieldConfig $formConfig
      */
     public function addFormFields(
         FormBuilderInterface $formBuilder,
-        FormConfig $formConfig
+        FormFieldConfig $formConfig
     ) {
         $fields = $formConfig->getFields();
         foreach ($fields as $name => $field) {
@@ -93,7 +92,7 @@ class FormHelper
      *
      * @param FormBuilderInterface        $formBuilder
      * @param string                      $fieldName
-     * @param FieldConfig $fieldConfig
+     * @param FormFieldConfig $fieldConfig
      * @param array                       $options
      *
      * @return FormBuilderInterface
@@ -101,7 +100,7 @@ class FormHelper
     public function addFormField(
         FormBuilderInterface $formBuilder,
         $fieldName,
-        FieldConfig $fieldConfig,
+        FormFieldConfig $fieldConfig,
         array $options = []
     ) {
         $fieldFormBuilder = $formBuilder->add(

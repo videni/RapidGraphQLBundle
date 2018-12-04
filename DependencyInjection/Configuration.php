@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
 
         $node = $rootNode
            ->children()
-                ->integerNode('max_nesting_level')->defaultValue(0)->end()
+                ->integerNode('max_nesting_level')->defaultValue(3)->end()
         ;
 
         $this->addActionsNode($node);
