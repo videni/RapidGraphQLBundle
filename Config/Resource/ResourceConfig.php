@@ -22,9 +22,6 @@ class ResourceConfig
     private $paginators = [];
     private $forms = [];
 
-    private $formFields = [];
-
-
      /**
      * A string that unique identify this instance of entity definition config.
      * This value is set by config providers and is used by a metadata provider
@@ -536,82 +533,5 @@ class ResourceConfig
         $this->parentResourceClass = $parentResourceClass;
 
         return $this;
-    }
-
-      /**
-     * Checks whether the configuration of at least one form field exists.
-     *
-     * @return bool
-     */
-    public function hasFormFields()
-    {
-        return !empty($this->formFields);
-    }
-
-    /**
-     * Gets the configuration for all formFields.
-     *
-     * @return FormFieldConfig[] [formField name => config, ...]
-     */
-    public function getFormFields()
-    {
-        return $this->formFields;
-    }
-
-    /**
-     * Checks whether the configuration of the formField exists.
-     *
-     * @param string $formFieldName
-     *
-     * @return bool
-     */
-    public function hasFormField($formFieldName)
-    {
-        return isset($this->formFields[$formFieldName]);
-    }
-
-    /**
-     * Gets the configuration of the formField.
-     *
-     * @param string $formFieldName
-     *
-     * @return FormFieldConfig|null
-     */
-    public function getFormField($formFieldName)
-    {
-        if (!isset($this->formFields[$formFieldName])) {
-            return null;
-        }
-
-        return $this->formFields[$formFieldName];
-    }
-
-     /**
-     * Adds the configuration of the formField.
-     *
-     * @param string                 $formFieldName
-     * @param FormFieldConfig|null $formField
-     *
-     * @return FormFieldConfig
-     */
-    public function addFormField($formFieldName, $formField = null)
-    {
-        if (null === $formField) {
-            $formField = new FormFieldConfig();
-        }
-
-        $this->formFields[$formFieldName] = $formField;
-
-        return $formField;
-    }
-
-    /**
-     * Removes the configuration of the formField.
-     *
-     * @param string $formFieldName
-     */
-    public function removeFormField($formFieldName)
-    {
-        unset($this->formFields[$formFieldName]);
     }
 }

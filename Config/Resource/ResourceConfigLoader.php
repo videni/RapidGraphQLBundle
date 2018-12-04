@@ -61,9 +61,6 @@ class ResourceConfigLoader
         if (array_key_exists('operations', $config)) {
             $this->loadOperation($resourceConfig, $config['operations']);
         }
-        if (array_key_exists('fields', $config)) {
-            $this->loadFormFields($resourceConfig, $config['fields']);
-        }
         if (array_key_exists('paginators', $config)) {
             $this->loadPaginator($resourceConfig, $config['paginators']);
         }
@@ -81,7 +78,7 @@ class ResourceConfigLoader
         }
     }
 
-    private function loadFormFields(ResourceConfig $resourceConfig, array $config = [])
+    private function loadForms(ResourceConfig $resourceConfig, array $config = [])
     {
         foreach ($config as $configName => $configValue) {
             $resourceConfig->addForm($configName, $this->formConfigLoader->load($configValue));
@@ -92,12 +89,6 @@ class ResourceConfigLoader
     {
         foreach ($config as $configName => $configValue) {
             $resourceConfig->addPaginator($configName, $this->paginatorConfigLoader->load($configValue));
-        }
-    }
-    private function loadForms(ResourceConfig $resourceConfig, array $config = [])
-    {
-        foreach ($config as $configName => $configValue) {
-            $resourceConfig->addForm($configName, FormConfig::fromArray($configValue));
         }
     }
 }
