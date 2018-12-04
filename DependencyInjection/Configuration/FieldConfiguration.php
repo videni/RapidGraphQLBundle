@@ -20,7 +20,7 @@ class FieldConfiguration
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder
-            ->root('forms')
+            ->root('fields')
         ;
 
         $fieldsNode = $this->configureFormNode($rootNode);

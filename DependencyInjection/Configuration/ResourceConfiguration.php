@@ -218,6 +218,7 @@ class ResourceConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->append($this->addPaginatorConfigurationSection())
+                    ->append($this->addFormConfigurationSection())
                     ->append($this->addFormFieldsConfigurationSection())
                 ->end()
             ->end()
@@ -293,6 +294,43 @@ class ResourceConfiguration implements ConfigurationInterface
             ->end()
         ->end()
         ;
+
+        return $rootNode;
+    }
+
+    public function addFormConfigurationSection()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder
+            ->root('forms')
+            ->useAttributeAsKey('name')
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('form_type')->end()
+                    ->arrayNode('form_options')
+                        ->useAttributeAsKey('name')
+                        ->performNoDeepMerging()
+                        ->prototype('variable')->end()
+                    ->end()
+                    ->variableNode('fields')
+                        ->validate()
+                            ->always(function ($v) {
+                                if (\is_string($v)) {
+                                    return [$v];
+                                }
+                                if (\is_array($v)) {
+                                    return $v;
+                                }
+                                throw new \InvalidArgumentException(
+                                    'The value must be a string or an array.'
+                                );
+                            })
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
 
         return $rootNode;
     }
