@@ -12,7 +12,6 @@ use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Videni\Bundle\RestBundle\Config\Form\FormConfig;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
@@ -74,7 +73,7 @@ class BuildFormBuilder implements ProcessorInterface
         $resourceConfig = $context->getResourceConfig();
 
         $formName = $resourceConfig->getOperation($context->getOperationName())->getForm();
-        return $formName && $resourceConfig->hasForm($formName) ? $resourceConfig->getForm($formName): null;
+        return $formName && $resourceConfig->hasFormField($formName) ? $resourceConfig->getFormField($formName): null;
     }
 
     /**
@@ -99,7 +98,7 @@ class BuildFormBuilder implements ProcessorInterface
         );
 
         if (FormType::class === $formType) {
-            $this->formHelper->addFormFields($formBuilder, $formConfig, $context->getResourceConfig());
+            $this->formHelper->addFormFields($formBuilder, $formConfig);
         }
 
         return $formBuilder;
@@ -111,7 +110,7 @@ class BuildFormBuilder implements ProcessorInterface
      *
      * @return array
      */
-    protected function getFormOptions(FormContext $context, FormConfig $config)
+    protected function getFormOptions(FormContext $context, FormFieldConfig $config)
     {
         $options = $config->getFormOptions();
         if (null === $options) {

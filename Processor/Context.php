@@ -393,36 +393,4 @@ class Context extends BaseContext implements ContextInterface
     {
         $this->set(self::CRITERIA, $criteria);
     }
-
-      /**
-     * {@inheritdoc}
-     */
-    public function hasFormConfig()
-    {
-        return $this->has(self::FORM_CONFIG);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormConfig()
-    {
-        if (!$this->has(self::FORM_CONFIG)) {
-            $this->loadFormConfig();
-        }
-
-        return $this->get(self::FORM_CONFIG);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormConfig(?FormFieldConfig $formConfig)
-    {
-        if ($formConfig) {
-            $this->set(self::FORM_CONFIG, $formConfig);
-        } else {
-            $this->remove(self::FORM_CONFIG);
-        }
-    }
 }

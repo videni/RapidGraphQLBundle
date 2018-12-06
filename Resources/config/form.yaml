@@ -10,6 +10,8 @@ services:
             - '@form.factory'
             - '@Videni\Bundle\RestBundle\Form\FormPropertyAccessor'
             - '@service_container'
+            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
+            - []
 
     Videni\Bundle\RestBundle\Form\FormPropertyAccessor:
         public: false
@@ -54,23 +56,13 @@ services:
     Videni\Bundle\RestBundle\Form\FormValidationHandler: ~
 
 
-    Videni\Bundle\RestBundle\Form\Guesser\MetadataTypeGuesser:
-        arguments:
-            - [] # Data type mappings are inserted here by Videni\Bundle\RestBundle\DependencyInjection\Compiler\FormCompilerPass
-            - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
-            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
-        tags:
-            - { name: videni_rest.form.type_guesser, priority: 10 }
-
-    # Videni\Bundle\RestBundle\Form\Type\NestedAssociationType:
-    #     arguments:
-    #         - '@oro_api.entity_loader'
-    #     tags:
-    #         - { name: videni_rest.form.type, alias: Videni\Bundle\RestBundle\Form\Type\NestedAssociationType }
-
     Videni\Bundle\RestBundle\Form\Type\ObjectType:
         tags:
             - { name: videni_rest.form.type, alias: Videni\Bundle\RestBundle\Form\Type\ObjectType }
+
+    Videni\Bundle\RestBundle\Form\Type\EntityIdType:
+        tags:
+            - { name: videni_rest.form.type, alias: Videni\Bundle\RestBundle\Form\Type\EntityIdType }
 
     Videni\Bundle\RestBundle\Form\Type\CompoundObjectType:
         tags:

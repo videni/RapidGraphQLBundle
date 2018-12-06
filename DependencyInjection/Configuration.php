@@ -231,7 +231,7 @@ class Configuration implements ConfigurationInterface
     private function appendFormTypeGuessesNode(NodeBuilder $node)
     {
         $node
-            ->arrayNode('form_type_guesses')
+            ->arrayNode('form_type_alias')
                 ->info('A definition of data type to form type guesses')
                 ->example(
                     [

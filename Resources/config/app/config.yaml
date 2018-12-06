@@ -167,7 +167,7 @@ videni_rest:
         - form.type_extension.repeated.validator
         - form.type_extension.form.data_collector
 
-    form_type_guesses:
+    form_type_alias:
         boolean:
             form_type: Videni\Bundle\RestBundle\Form\Type\BooleanType
         integer:
@@ -214,6 +214,8 @@ videni_rest:
                 format: "yyyy-MM-dd'T'HH:mm:ssZZZZZ" # HTML5
         text:
             form_type: Symfony\Component\Form\Extension\Core\Type\TextType
+        entity_id:
+            form_type: Videni\Bundle\RestBundle\Form\Type\EntityIdType
         textarea:
             form_type: Symfony\Component\Form\Extension\Core\Type\TextareaType
         percent:

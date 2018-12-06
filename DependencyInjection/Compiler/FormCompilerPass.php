@@ -14,9 +14,9 @@ use Symfony\Component\Form\FormRegistry;
 use Videni\Bundle\RestBundle\Form\FormExtension;
 use Videni\Bundle\RestBundle\Form\FormExtensionState;
 use Videni\Bundle\RestBundle\Form\Extension\SwitchableDependencyInjectionExtension;
-use Videni\Bundle\RestBundle\Form\Guesser\MetadataTypeGuesser;
-use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
+use Videni\Bundle\RestBundle\Form\FormHelper;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 
 /**
  * Configures all services required for Data API forms.
@@ -60,14 +60,14 @@ class FormCompilerPass implements CompilerPassInterface
 
         $this->buildSwitchableDependencyInjectionExtensionService($container, $config);
 
-        if ($container->hasDefinition(MetadataTypeGuesser::class)) {
-            $dataTypeMappings = [];
-            foreach ($config['form_type_guesses'] as $dataType => $value) {
-                $dataTypeMappings[$dataType] = [$value['form_type'], $value['options']];
-            }
-            $container->getDefinition(MetadataTypeGuesser::class)
-                ->replaceArgument(0, $dataTypeMappings);
+        $dataTypeMappings = [];
+        foreach ($config['form_type_alias'] as $dataType => $value) {
+            $dataTypeMappings[$dataType] = [$value['form_type'], $value['options']];
         }
+        $container
+            ->getDefinition(FormHelper::class)
+            ->addArgument($dataTypeMappings)
+        ;
     }
 
     private function buildSwitchableDependencyInjectionExtensionService($container, $config)

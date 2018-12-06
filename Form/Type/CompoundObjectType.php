@@ -37,7 +37,7 @@ class CompoundObjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var FormFieldConfig $config */
-        $config = $options['config'];
+        $config = $options['field_config'];
         $fields = $config->getFields();
 
         foreach ($fields as $name => $field) {
@@ -53,8 +53,8 @@ class CompoundObjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([ 'config'])
-            ->setAllowedTypes('config', [FormFieldConfig::class]);
+            ->setRequired([ 'field_config'])
+            ->setAllowedTypes('field_config', [FormFieldConfig::class]);
     }
 
     /**

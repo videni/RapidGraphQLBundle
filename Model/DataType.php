@@ -46,7 +46,7 @@ final class DataType
         return self::NESTED_OBJECT === $dataType;
     }
 
-    public static function isArrayAssociation($dataType)
+    public static function isCollectionAssociation($dataType)
     {
         return self::COLLECTION_ASSOCIATION === $dataType;
     }

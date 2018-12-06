@@ -3,7 +3,7 @@
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
 use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
-use Videni\Bundle\RestBundle\Config\Form\FormConfig;
+use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 
 class ResourceConfig
 {
@@ -20,7 +20,6 @@ class ResourceConfig
 
     private $operations = [];
     private $paginators = [];
-    private $forms = [];
 
     private $formFields = [];
 
@@ -353,83 +352,6 @@ class ResourceConfig
     public function removePaginator($paginatorName)
     {
         unset($this->paginators[$paginatorName]);
-    }
-
-    /**
-     * Checks whether the configuration of at least one paginator exists.
-     *
-     * @return bool
-     */
-    public function hasForms()
-    {
-        return !empty($this->forms);
-    }
-
-    /**
-     * Gets the configuration for all forms.
-     *
-     * @return FormConfig[] [form name => config, ...]
-     */
-    public function getForms()
-    {
-        return $this->forms;
-    }
-
-    /**
-     * Checks whether the configuration of the form exists.
-     *
-     * @param string $formName
-     *
-     * @return bool
-     */
-    public function hasForm($formName)
-    {
-        return isset($this->forms[$formName]);
-    }
-
-    /**
-     * Gets the configuration of the form.
-     *
-     * @param string $formName
-     *
-     * @return FormConfig|null
-     */
-    public function getForm($formName)
-    {
-        if (!isset($this->forms[$formName])) {
-            return null;
-        }
-
-        return $this->forms[$formName];
-    }
-
-     /**
-     * Adds the configuration of the form.
-     *
-     * @param string                 $formName
-     * @param FormConfig|null $form
-     *
-     * @return FormConfig
-     */
-    public function addForm($formName, $form = null)
-    {
-        if (null === $form) {
-            $form = new FormConfig();
-        }
-
-        $this->forms[$formName] = $form;
-
-        return $form;
-    }
-
-    /**
-     * Removes the configuration of the form.
-     *
-     * @param string $formName
-     */
-    public function removeForm($formName)
-    {
-        unset($this->forms[$formName]);
     }
 
     /**
