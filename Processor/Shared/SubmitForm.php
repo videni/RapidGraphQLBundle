@@ -20,6 +20,8 @@ class SubmitForm implements ProcessorInterface
 
         if (!$context->hasForm()) {
             // no form
+                    breakhere();
+
             return;
         }
 
@@ -29,7 +31,6 @@ class SubmitForm implements ProcessorInterface
             return;
         }
 
-var_dump(get_class($form), count($form));
         /**
          * always use $clearMissing = false, more details in:
          * @see \VideniBundleRestBundle\Form\FormValidationHandler::validate

@@ -17,18 +17,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('videni_rest');
 
-        $node = $rootNode
-           ->children()
-                ->integerNode('max_nesting_level')->defaultValue(3)->end()
+        $node = $rootNode->children()
         ;
 
         $this->addActionsNode($node);
         $this->addFilterOperatorsNode($node);
         $this->addFiltersNode($node);
-        $this->addFormTypesNode($node);
-        $this->appendFormTypeExtensionsNode($node);
-        $this->appendFormTypeGuessersNode($node);
-        $this->appendFormTypeGuessesNode($node);
 
         return $treeBuilder;
     }
@@ -175,85 +169,6 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                             ->cannotBeEmpty()
                             ->defaultValue(['=', '!=', '*', '!*'])
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
-    }
-      /**
-     * @param NodeBuilder $node
-     */
-    private function addFormTypesNode(NodeBuilder $node)
-    {
-        $node
-            ->arrayNode('form_types')
-                ->info('The form types that can be reused in Data API')
-                ->example([
-                    'Symfony\Component\Form\Extension\Core\Type\FormType',
-                    'videni_rest.form.type.entity'
-                ])
-                ->prototype('scalar')
-                ->end()
-            ->end();
-    }
-
-     /**
-     * @param NodeBuilder $node
-     */
-    private function appendFormTypeExtensionsNode(NodeBuilder $node)
-    {
-        $node
-            ->arrayNode('form_type_extensions')
-                ->info('The form type extensions that can be reused in Data API')
-                ->example(['form.type_extension.form.http_foundation'])
-                ->prototype('scalar')
-                ->end()
-            ->end();
-    }
-
-    /**
-     * @param NodeBuilder $node
-     */
-    private function appendFormTypeGuessersNode(NodeBuilder $node)
-    {
-        $node
-            ->arrayNode('form_type_guessers')
-                ->info('The form type guessers that can be reused in Data API')
-                ->example(['form.type_guesser.validator'])
-                ->prototype('scalar')
-                ->end()
-            ->end();
-    }
-
-     /**
-     * @param NodeBuilder $node
-     */
-    private function appendFormTypeGuessesNode(NodeBuilder $node)
-    {
-        $node
-            ->arrayNode('form_type_alias')
-                ->info('A definition of data type to form type guesses')
-                ->example(
-                    [
-                        'integer' => [
-                            'form_type' => IntegerType::class,
-                        ],
-                        'datetime' => [
-                            'form_type' => DateTimeType::class,
-                            'options'   => ['model_timezone' => 'UTC', 'view_timezone' => 'UTC']
-                        ],
-                    ]
-                )
-                ->useAttributeAsKey('name')
-                ->prototype('array')
-                    ->performNoDeepMerging()
-                    ->children()
-                        ->scalarNode('form_type')
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->arrayNode('options')
-                            ->useAttributeAsKey('name')
-                            ->prototype('variable')->end()
                         ->end()
                     ->end()
                 ->end()

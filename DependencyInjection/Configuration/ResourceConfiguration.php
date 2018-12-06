@@ -17,15 +17,12 @@ class ResourceConfiguration implements ConfigurationInterface
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
 
-    private $maxNestingLevel;
-
     /**
      * @param FilterOperatorRegistry $filterOperatorRegistry
      */
-    public function __construct(FilterOperatorRegistry $filterOperatorRegistry, $maxNestingLevel)
+    public function __construct(FilterOperatorRegistry $filterOperatorRegistry)
     {
         $this->filterOperatorRegistry = $filterOperatorRegistry;
-        $this->maxNestingLevel = $maxNestingLevel;
     }
 
     /**
@@ -218,7 +215,6 @@ class ResourceConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->append($this->addPaginatorConfigurationSection())
-                    ->append($this->addFormFieldsConfigurationSection())
                 ->end()
             ->end()
         ->end()
@@ -295,13 +291,6 @@ class ResourceConfiguration implements ConfigurationInterface
         ;
 
         return $rootNode;
-    }
-
-    private function addFormFieldsConfigurationSection()
-    {
-        $formConfiguration = new FieldConfiguration($this->maxNestingLevel);
-
-        return $formConfiguration->configure();
     }
 
     private function getClassName($fqcn)

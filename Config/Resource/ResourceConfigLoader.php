@@ -3,21 +3,17 @@
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
 use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
-use Videni\Bundle\RestBundle\Config\Form\FormConfigLoader;
 use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader;
-use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 
 /**
  * The loader for resource
  */
 class ResourceConfigLoader
 {
-    private $formConfigLoader;
     private $paginatorConfigLoader;
 
-    public function __construct(FormConfigLoader $formConfigLoader, PaginatorConfigLoader $paginatorConfigLoader)
+    public function __construct(PaginatorConfigLoader $paginatorConfigLoader)
     {
-        $this->formConfigLoader = $formConfigLoader;
         $this->paginatorConfigLoader = $paginatorConfigLoader;
     }
 
@@ -61,9 +57,6 @@ class ResourceConfigLoader
         if (array_key_exists('operations', $config)) {
             $this->loadOperation($resourceConfig, $config['operations']);
         }
-        if (array_key_exists('forms', $config)) {
-            $this->loadFormFields($resourceConfig, $config['forms']);
-        }
         if (array_key_exists('paginators', $config)) {
             $this->loadPaginator($resourceConfig, $config['paginators']);
         }
@@ -75,13 +68,6 @@ class ResourceConfigLoader
     {
         foreach ($config as $configName => $configValue) {
             $resourceConfig->addOperation($configName, OperationConfig::fromArray($configValue));
-        }
-    }
-
-    private function loadFormFields(ResourceConfig $resourceConfig, array $config = [])
-    {
-        foreach ($config as $configName => $configValue) {
-            $resourceConfig->addFormField($configName, $this->formConfigLoader->load($configValue));
         }
     }
 

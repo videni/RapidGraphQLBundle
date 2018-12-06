@@ -35,7 +35,7 @@ class VideniRestExtension extends Extension
         $this->registerActionProcessors($container, $config);
         $this->registerFilterOperators($container, $config);
 
-        $this->loadResourceConfiguration($container, $config['max_nesting_level']);
+        $this->loadResourceConfiguration($container);
 
         DependencyInjectionUtil::setConfig($container, $config);
     }
@@ -122,7 +122,7 @@ class VideniRestExtension extends Extension
         }
 
         $configs =  $this->processConfiguration(
-            new ResourceConfiguration($container->get(FilterOperatorRegistry::class), $maxNestingLevel),
+            new ResourceConfiguration($container->get(FilterOperatorRegistry::class)),
             $config
         );
 

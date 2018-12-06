@@ -4,11 +4,6 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Processor\Shared\BuildFormBuilder:
-        class: Videni\Bundle\RestBundle\Processor\Shared\BuildFormBuilder
-        tags:
-            - { name: videni_rest.processor, action: create, group: transform, priority: 100 }
-
     Videni\Bundle\RestBundle\Processor\Shared\BuildForm:
         tags:
             - { name: videni_rest.processor, action: create, group: transform, priority: -10 }
@@ -31,7 +26,7 @@ services:
             - { name: videni_rest.processor, action: update, group: initialize, priority: 10 }
             - { name: videni_rest.processor, action: delete, group: initialize, priority: 10 }
 
-    Videni\Bundle\RestBundle\Processor\Shared\ValidationProcessor:
+    Videni\Bundle\RestBundle\Processor\Shared\ValidateForm:
         tags:
             - { name: videni_rest.processor, action: create, group: validate, priority: 10 }
             - { name: videni_rest.processor, action: update, group: validate, priority: 10 }
@@ -84,10 +79,3 @@ services:
     Videni\Bundle\RestBundle\Processor\Shared\LoadResources:
         tags:
             - { name: videni_rest.processor, action: index, group: load_resources, priority: 40 }
-
-    Videni\Bundle\RestBundle\Processor\Shared\InitializeApiFormExtension:
-        arguments:
-            - '@form.registry'
-        tags:
-            - { name:  videni_rest.processor, action: create, group: transform, priority: 250 }
-            - { name:  videni_rest.processor, action: update, group: transform, priority: 250 }
