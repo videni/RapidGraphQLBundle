@@ -35,7 +35,7 @@ class BuildForm implements ProcessorInterface
         if (!$context->hasResult()) {
             // the entity is not defined
             throw new \RuntimeException(
-                'The entity object must be added to the context before creation of the form builder.'
+                'The entity object must be added to the context before creation of the form.'
             );
         }
 
@@ -49,9 +49,11 @@ class BuildForm implements ProcessorInterface
     {
         $resourceConfig = $context->getResourceConfig();
 
-        $formType = $resourceConfig->getOperation($context->getOperationName())->getForm();
+        $formType = $resourceConfig->getOperationAttribute($context->getOperationName(), 'form');
         if (null === $formType) {
-            return null;
+             throw new \RuntimeException(
+                 sprintf('A form type must be existed for entity %s.', $context->getClassName())
+             );
         }
 
         $options = [

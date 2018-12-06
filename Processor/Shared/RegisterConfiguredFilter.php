@@ -56,16 +56,15 @@ class RegisterConfiguredFilter extends RegisterFilters
 
         $operationName = $context->getOperationName();
 
-        $resourceConfig->loadPaginatorConfig();
-
-        $paginatorConifig = $paginatorConfig->getPaginatorConfig();
-        if (null === $paginatorConifig) {
+        $paginator = $resourceConfig->getOperation($operationName)->getPaginator();
+        if (!$paginator || !$resourceConfig->hasPaginator($paginator)) {
             return;
         }
 
-        $entityClass = $context->getClassName();
-
+        $paginatorConfig = $resourceConfig->getPaginator($paginator);
         $context->setPaginatorConfig($paginatorConfig);
+
+        $entityClass = $context->getClassName();
 
         if (!$this->doctrineHelper->isManageableEntityClass($entityClass)) {
             // only manageable entities or resources based on manageable entities can have the metadata

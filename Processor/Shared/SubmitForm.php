@@ -20,8 +20,6 @@ class SubmitForm implements ProcessorInterface
 
         if (!$context->hasForm()) {
             // no form
-                    breakhere();
-
             return;
         }
 

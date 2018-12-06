@@ -48,6 +48,9 @@ class ResourceConfigLoader
         if (array_key_exists('short_name', $config)) {
             $resourceConfig->setShortName($config['short_name']);
         }
+        if (array_key_exists('form', $config)) {
+            $resourceConfig->setForm($config['form']);
+        }
         if (array_key_exists('identifierFieldNames', $config)) {
             $formConfig->setDisableSorting($config['identifier_field_names']);
         }

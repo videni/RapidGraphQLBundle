@@ -277,7 +277,7 @@ class OperationConfig
             $self->setDenormalizationContext(SerializationConfig::fromArray($config['denormalization_context']));
         }
         if (array_key_exists('normalization_context', $config)) {
-            $self->setDenormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
+            $self->setNormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
         }
         if (array_key_exists('validation_groups', $config)) {
             $self->setValidationGroups($config['validation_groups']);

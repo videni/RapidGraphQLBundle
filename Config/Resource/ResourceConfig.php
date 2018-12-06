@@ -9,6 +9,7 @@ class ResourceConfig
 {
     private $routePrefix;
     private $shortName;
+    private $form;
     private $description;
     private $formats = [];
 
@@ -535,5 +536,25 @@ class ResourceConfig
     public function removeFormField($formFieldName)
     {
         unset($this->formFields[$formFieldName]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
+     * @param mixed $form
+     *
+     * @return self
+     */
+    public function setForm($form)
+    {
+        $this->form = $form;
+
+        return $this;
     }
 }
