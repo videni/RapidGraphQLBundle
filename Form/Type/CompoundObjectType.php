@@ -36,20 +36,12 @@ class CompoundObjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var EntityMetadata $metadata */
-        $metadata = $options['metadata'];
-        /** @var EntityDefinitionConfig $config */
+        /** @var FormFieldConfig $config */
         $config = $options['config'];
+        $fields = $config->getFields();
 
-        $fields = $metadata->getFields();
         foreach ($fields as $name => $field) {
-            $this->addFormField($builder, $config, $name, $field);
-        }
-        $associations = $metadata->getAssociations();
-        foreach ($associations as $name => $association) {
-            if (DataType::isAssociationAsField($association->getDataType())) {
-                $this->addFormField($builder, $config, $name, $association);
-            }
+            $this->addFormField($builder, $name, $field);
         }
 
         $builder->addEventSubscriber(new CompoundObjectListener());
@@ -61,28 +53,24 @@ class CompoundObjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired(['metadata', 'config'])
-            ->setAllowedTypes('metadata', [EntityMetadata::class])
-            ->setAllowedTypes('config', [EntityDefinitionConfig::class]);
+            ->setRequired([ 'config'])
+            ->setAllowedTypes('config', [FormFieldConfig::class]);
     }
 
     /**
      * @param FormBuilderInterface   $formBuilder
-     * @param EntityDefinitionConfig $config
      * @param string                 $fieldName
-     * @param PropertyMetadata       $fieldMetadata
+     * @param FormFieldConfig $formFieldConfig
      */
     private function addFormField(
         FormBuilderInterface $formBuilder,
-        EntityDefinitionConfig $config,
         $fieldName,
-        PropertyMetadata $fieldMetadata
+        FormFieldConfig $formFieldConfig
     ) {
         $this->formHelper->addFormField(
             $formBuilder,
             $fieldName,
-            $config->getField($fieldName),
-            $fieldMetadata,
+            $formFieldConfig,
             ['required' => false]
         );
     }

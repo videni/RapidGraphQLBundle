@@ -12,7 +12,7 @@ class FormFieldConfig
     private $dataType;
     private $targetClass;
     private $targetType;
-    private $collapse;
+    private $collapsed;
     private $formType;
     private $formOptions;
     private $dependsOn;
@@ -145,21 +145,26 @@ class FormFieldConfig
     /**
      * @return mixed
      */
-    public function getCollapse()
+    public function getCollapsed()
     {
-        return $this->collapse;
+        return $this->collapsed;
     }
 
     /**
-     * @param mixed $collapse
+     * @param mixed $collapsed
      *
      * @return self
      */
-    public function setCollapse($collapse)
+    public function setCollapsed($collapsed)
     {
-        $this->collapse = $collapse;
+        $this->collapsed = $collapsed;
 
         return $this;
+    }
+
+    public function isCollapsed()
+    {
+        return $this->collapsed;
     }
 
     /**
@@ -330,7 +335,7 @@ class FormFieldConfig
      */
     public function addFormEventSubscriber($eventSubscriber)
     {
-       $this->formEventSubscribers[] = $eventSubscriber;
+        $this->formEventSubscribers[] = $eventSubscriber;
     }
 
      /**

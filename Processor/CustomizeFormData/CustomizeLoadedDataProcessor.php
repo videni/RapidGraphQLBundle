@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor\CustomizeFormData;
 
 use Oro\Component\ChainProcessor\ActionProcessor;
 

@@ -84,7 +84,7 @@ class ResourceConfigLoader
     private function loadFormFields(ResourceConfig $resourceConfig, array $config = [])
     {
         foreach ($config as $configName => $configValue) {
-            $resourceConfig->addForm($configName, $this->formConfigLoader->load($configValue));
+            $resourceConfig->addFormField($configName, $this->formConfigLoader->load($configValue));
         }
     }
 

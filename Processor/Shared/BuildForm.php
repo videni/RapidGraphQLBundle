@@ -27,7 +27,6 @@ class BuildForm implements ProcessorInterface
         }
 
         // build the form and add it to the context
-        var_dump(get_class($context->getFormBuilder()->getForm()));exit;
         $context->setForm($context->getFormBuilder()->getForm());
         // remove the form builder from the context
         $context->setFormBuilder();

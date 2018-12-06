@@ -41,7 +41,7 @@ services:
 
     Videni\Bundle\RestBundle\Form\Extension\CustomizeFormDataExtension:
         arguments:
-            - '@Videni\Bundle\RestBundle\Processor\CustomizeFormDataProcessor'
+            - '@Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataProcessor'
             - '@Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataHandler'
         tags:
             - { name: videni_rest.form.type_extension, alias: form, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
@@ -49,7 +49,7 @@ services:
     Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataHandler:
         public: false
         arguments:
-            - '@Videni\Bundle\RestBundle\Processor\CustomizeFormDataProcessor'
+            - '@Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataProcessor'
 
     Videni\Bundle\RestBundle\Form\FormValidationHandler: ~
 
@@ -58,6 +58,7 @@ services:
         arguments:
             - [] # Data type mappings are inserted here by Videni\Bundle\RestBundle\DependencyInjection\Compiler\FormCompilerPass
             - '@Videni\Bundle\RestBundle\Util\DoctrineHelper'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
         tags:
             - { name: videni_rest.form.type_guesser, priority: 10 }
 

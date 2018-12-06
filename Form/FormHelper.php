@@ -2,7 +2,9 @@
 
 namespace Videni\Bundle\RestBundle\Form;
 
+use Videni\Bundle\RestBundle\Config\Form\FormConfig;
 use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -79,11 +81,14 @@ class FormHelper
      */
     public function addFormFields(
         FormBuilderInterface $formBuilder,
-        FormFieldConfig $formConfig
+        FormConfig $formConfig,
+        ResourceConfig $resourceConifig
     ) {
         $fields = $formConfig->getFields();
-        foreach ($fields as $name => $field) {
-            $this->addFormField($formBuilder, $name, $field);
+        foreach ($fields as $name) {
+            if ($resourceConifig->hasFormField($name)) {
+                $this->addFormField($formBuilder, $name, $resourceConifig->getFormField($name));
+            }
         }
     }
 
@@ -109,12 +114,9 @@ class FormHelper
             \array_replace($options, $fieldConfig->getFormOptions())
         );
 
-        $targetConfig = $fieldConfig->getTargetEntity();
-        if (null !== $targetConfig) {
-            $eventSubscribers = $targetConfig->getFormEventSubscribers();
-            if (!empty($eventSubscribers)) {
-                $this->addFormEventSubscribers($fieldFormBuilder, $eventSubscribers);
-            }
+        $eventSubscribers = $fieldConfig->getFormEventSubscribers();
+        if (!empty($eventSubscribers)) {
+            $this->addFormEventSubscribers($fieldFormBuilder, $eventSubscribers);
         }
 
         return $fieldFormBuilder;

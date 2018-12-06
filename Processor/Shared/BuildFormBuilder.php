@@ -12,6 +12,8 @@ use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Videni\Bundle\RestBundle\Config\Form\FormConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
  * Builds the form builder based on the entity metadata and configuration
@@ -97,9 +99,7 @@ class BuildFormBuilder implements ProcessorInterface
         );
 
         if (FormType::class === $formType) {
-            if (null !== $metadata) {
-                $this->formHelper->addFormFields($formBuilder, $formConfig);
-            }
+            $this->formHelper->addFormFields($formBuilder, $formConfig, $context->getResourceConfig());
         }
 
         return $formBuilder;
@@ -107,18 +107,18 @@ class BuildFormBuilder implements ProcessorInterface
 
     /**
      * @param FormContext            $context
-     * @param FormFieldConfig $config
+     * @param FormConfig $config
      *
      * @return array
      */
-    protected function getFormOptions(FormContext $context, FormFieldConfig $config)
+    protected function getFormOptions(FormContext $context, FormConfig $config)
     {
         $options = $config->getFormOptions();
         if (null === $options) {
             $options = [];
         }
         if (!\array_key_exists('data_class', $options)) {
-            $options['data_class'] = $this->getFormDataClass($context, $config);
+            $options['data_class'] = $this->getFormDataClass($context);
         }
         $options[CustomizeFormDataHandler::API_CONTEXT] = $context;
         $options[ValidationExtension::ENABLE_FULL_VALIDATION] = $this->enableFullValidation;
@@ -128,11 +128,10 @@ class BuildFormBuilder implements ProcessorInterface
 
     /**
      * @param FormContext            $context
-     * @param FormFieldConfig $config
      *
      * @return string
      */
-    protected function getFormDataClass(FormContext $context, FormFieldConfig $config)
+    protected function getFormDataClass(FormContext $context)
     {
         $dataClass = $context->getClassName();
         $entity = $context->getResult();

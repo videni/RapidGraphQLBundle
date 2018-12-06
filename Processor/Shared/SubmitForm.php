@@ -29,12 +29,13 @@ class SubmitForm implements ProcessorInterface
             return;
         }
 
+var_dump(get_class($form), count($form));
         /**
          * always use $clearMissing = false, more details in:
          * @see \VideniBundleRestBundle\Form\FormValidationHandler::validate
          * @see \VideniBundleRestBundle\Processor\Shared\BuildFormBuilder::$enableFullValidation
          */
-        $form->submit($this->prepareRequestData($context->getRequestData()), false);
+        $form->submit($this->prepareRequestData($context->getRequest()->request->all()), false);
     }
 
     /**

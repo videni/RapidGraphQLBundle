@@ -213,6 +213,8 @@ videni_rest:
                 widget: single_text
                 format: "yyyy-MM-dd'T'HH:mm:ssZZZZZ" # HTML5
         text:
+            form_type: Symfony\Component\Form\Extension\Core\Type\TextType
+        textarea:
             form_type: Symfony\Component\Form\Extension\Core\Type\TextareaType
         percent:
             form_type: Symfony\Component\Form\Extension\Core\Type\NumberType

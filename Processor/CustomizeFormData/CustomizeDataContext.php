@@ -1,9 +1,9 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor;
+namespace Videni\Bundle\RestBundle\Processor\CustomizeFormData;
 
-use Videni\Bundle\RestBundle\Config\EntityDefinitionConfig;
-use Videni\Bundle\RestBundle\Processor\Context;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Oro\Component\ChainProcessor\Context;
 
 /**
  * The base execution context for processors for "customize_loaded_data" and "customize_form_data" actions.
@@ -19,11 +19,34 @@ abstract class CustomizeDataContext extends Context
     /** FQCN of a customizing entity */
     const CLASS_NAME = 'class';
 
-    /** @var EntityDefinitionConfig|null */
+    /** API version */
+    const VERSION = 'version';
+
+    /** @var ResourceConfig|null */
     private $rootConfig;
 
-    /** @var EntityDefinitionConfig|null */
+    /** @var ResourceConfig|null */
     private $config;
+
+  /**
+     * Gets API version
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->get(self::VERSION);
+    }
+
+    /**
+     * Sets API version
+     *
+     * @param string $version
+     */
+    public function setVersion($version)
+    {
+        $this->set(self::VERSION, $version);
+    }
 
     /**
      * Gets FQCN of a root entity.
@@ -88,7 +111,7 @@ abstract class CustomizeDataContext extends Context
     /**
      * Gets a configuration of a root entity.
      *
-     * @return EntityDefinitionConfig|null
+     * @return ResourceConfig|null
      */
     public function getRootConfig()
     {
@@ -98,9 +121,9 @@ abstract class CustomizeDataContext extends Context
     /**
      * Sets a configuration of a root entity.
      *
-     * @param EntityDefinitionConfig|null $config
+     * @param ResourceConfig|null $config
      */
-    public function setRootConfig(EntityDefinitionConfig $config = null)
+    public function setRootConfig(ResourceConfig $config = null)
     {
         $this->rootConfig = $config;
     }
@@ -108,7 +131,7 @@ abstract class CustomizeDataContext extends Context
     /**
      * Gets a configuration of a customizing entity.
      *
-     * @return EntityDefinitionConfig|null
+     * @return ResourceConfig|null
      */
     public function getConfig()
     {
@@ -118,9 +141,9 @@ abstract class CustomizeDataContext extends Context
     /**
      * Sets a configuration of a customizing entity.
      *
-     * @param EntityDefinitionConfig|null $config
+     * @param ResourceConfig|null $config
      */
-    public function setConfig(EntityDefinitionConfig $config = null)
+    public function setConfig(ResourceConfig $config = null)
     {
         $this->config = $config;
     }

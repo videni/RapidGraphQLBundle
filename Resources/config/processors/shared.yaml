@@ -14,6 +14,11 @@ services:
             - { name: videni_rest.processor, action: create, group: transform, priority: -10 }
             - { name: videni_rest.processor, action: update, group: transform, priority: -10 }
 
+    Videni\Bundle\RestBundle\Processor\Shared\SubmitForm:
+        tags:
+            - { name: videni_rest.processor, action: create, group: transform, priority: -50 }
+            - { name: videni_rest.processor, action: update, group: transform, priority: -50 }
+
     Videni\Bundle\RestBundle\Processor\Shared\SaveResource:
         tags:
             - { name: videni_rest.processor, action: create, group: save, priority: 10 }
@@ -80,4 +85,9 @@ services:
         tags:
             - { name: videni_rest.processor, action: index, group: load_resources, priority: 40 }
 
-
+    Videni\Bundle\RestBundle\Processor\Shared\InitializeApiFormExtension:
+        arguments:
+            - '@form.registry'
+        tags:
+            - { name:  videni_rest.processor, action: create, group: transform, priority: 250 }
+            - { name:  videni_rest.processor, action: update, group: transform, priority: 250 }

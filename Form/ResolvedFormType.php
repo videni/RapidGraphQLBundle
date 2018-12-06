@@ -86,7 +86,7 @@ class ResolvedFormType implements ResolvedFormTypeInterface
         $options = $this->getOptionsResolver()->resolve($options);
         $dataClass = isset($options['data_class']) ? $options['data_class'] : null;
 
-        $builder = new ApiFormBuilder($name, $dataClass, new EventDispatcher(), $factory, $options);
+        $builder = new FormBuilder($name, $dataClass, new EventDispatcher(), $factory, $options);
         $builder->setType($this);
 
         return $builder;
@@ -145,6 +145,6 @@ class ResolvedFormType implements ResolvedFormTypeInterface
             throw new UnexpectedTypeException($this->innerType, FormTypeInterface::class);
         }
 
-        return new ApiFormBuilder($name, $dataClass, new EventDispatcher(), $factory, $options);
+        return new FormBuilder($name, $dataClass, new EventDispatcher(), $factory, $options);
     }
 }

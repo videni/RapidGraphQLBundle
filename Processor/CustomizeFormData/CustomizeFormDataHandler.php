@@ -70,75 +70,18 @@ class CustomizeFormDataHandler
         /** @var FormContext $formContext */
         $formContext = $rootFormConfig->getAttribute(self::API_CONTEXT);
         $context->setVersion($formContext->getVersion());
-        $context->getRequestType()->set($formContext->getRequestType());
         $context->setClassName($form->getConfig()->getDataClass());
         $context->setParentAction($formContext->getAction());
         $context->setForm($form);
-        $config = $formContext->getConfig();
+        $config = $formContext->getResourceConfig();
         if (null === $form->getParent()) {
             $context->setConfig($config);
         } else {
             $context->setRootClassName($rootFormConfig->getDataClass());
-            $propertyPath = $this->getPropertyPath($form);
             $context->setPropertyPath($propertyPath);
             $context->setRootConfig($config);
-            if (null !== $config) {
-                $context->setConfig($this->getAssociationConfig($config, $propertyPath));
-            }
-        }
-        $includedEntities = $formContext->getIncludedEntities();
-        if (null !== $includedEntities) {
-            $context->setIncludedEntities($includedEntities);
         }
 
         return $context;
-    }
-
-    /**
-     * @param FormInterface $form
-     *
-     * @return string
-     */
-    private function getPropertyPath(FormInterface $form): string
-    {
-        $path = [];
-        while (null !== $form->getParent()->getParent()) {
-            if (!$form->getData() instanceof Collection) {
-                if ($form->getParent()->getData() instanceof Collection) {
-                    $path[] = $form->getParent()->getName();
-                } else {
-                    $path[] = $form->getName();
-                }
-            }
-            $form = $form->getParent();
-        }
-
-        return \implode('.', \array_reverse($path));
-    }
-
-    /**
-     * @param FormFieldConfig $config
-     * @param string                 $propertyPath
-     *
-     * @return FormFieldConfig|null
-     */
-    private function getAssociationConfig(
-        FormFieldConfig $config,
-        string $propertyPath
-    ): ?FormFieldConfig {
-        $currentConfig = $config;
-        $path = ConfigUtil::explodePropertyPath($propertyPath);
-        foreach ($path as $fieldName) {
-            $fieldConfig = $currentConfig->getField($fieldName);
-            $currentConfig = null;
-            if (null !== $fieldConfig) {
-                $currentConfig = $fieldConfig->getTargetEntity();
-            }
-            if (null === $currentConfig) {
-                break;
-            }
-        }
-
-        return $currentConfig;
     }
 }

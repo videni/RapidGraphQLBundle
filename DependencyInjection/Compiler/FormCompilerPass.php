@@ -11,6 +11,12 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistry;
+use Videni\Bundle\RestBundle\Form\FormExtension;
+use Videni\Bundle\RestBundle\Form\FormExtensionState;
+use Videni\Bundle\RestBundle\Form\Extension\SwitchableDependencyInjectionExtension;
+use Videni\Bundle\RestBundle\Form\Guesser\MetadataTypeGuesser;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 
 /**
  * Configures all services required for Data API forms.
@@ -25,13 +31,9 @@ class FormCompilerPass implements CompilerPassInterface
     private const FORM_TYPE_FACTORY_SERVICE_ID             = 'form.resolved_type_factory';
 
     private const VIDENI_FORM_TYPE_FACTORY_SERVICE_ID         = 'videni_rest.form.resolved_type_factory';
-    private const VIDENI_FORM_EXTENSION_STATE_SERVICE_ID      = 'videni_rest.form.state';
-    private const VIDENI_FORM_SWITCHABLE_EXTENSION_SERVICE_ID = 'videni_rest.form.switchable_extension';
-    private const VIDENI_FORM_EXTENSION_SERVICE_ID            = 'videni_rest.form.extension';
     private const VIDENI_FORM_TYPE_TAG                        = 'videni_rest.form.type';
     private const VIDENI_FORM_TYPE_EXTENSION_TAG              = 'videni_rest.form.type_extension';
     private const VIDENI_FORM_TYPE_GUESSER_TAG                = 'videni_rest.form.type_guesser';
-    private const VIDENI_FORM_METADATA_GUESSER_SERVICE_ID     = 'videni_rest.form.guesser.metadata';
 
     /**
      * {@inheritdoc}
@@ -39,36 +41,53 @@ class FormCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(self::FORM_REGISTRY_SERVICE_ID) ||
-            !$container->hasDefinition(self::VIDENI_FORM_SWITCHABLE_EXTENSION_SERVICE_ID)
+            !$container->hasDefinition(SwitchableDependencyInjectionExtension::class)
         ) {
             return;
         }
 
         $config = DependencyInjectionUtil::getConfig($container);
 
+        //replace symfony form registry with ours
         $formRegistryDef = $container->getDefinition(self::FORM_REGISTRY_SERVICE_ID);
         $this->assertExistingFormRegistry($formRegistryDef, $container);
         $formRegistryDef->setClass(SwitchableFormRegistry::class);
-        $formRegistryDef->replaceArgument(0, [new Reference(self::VIDENI_FORM_SWITCHABLE_EXTENSION_SERVICE_ID)]);
-        $formRegistryDef->addArgument(new Reference(self::VIDENI_FORM_EXTENSION_STATE_SERVICE_ID));
+        $formRegistryDef->replaceArgument(0, [new Reference(SwitchableDependencyInjectionExtension::class)]);
+        $formRegistryDef->addArgument(new Reference(FormExtensionState::class));
 
         // decorates the "form.resolved_type_factory" service
         $this->decorateFormTypeFactory($container);
 
-        $apiFormDef = $container->getDefinition(self::VIDENI_FORM_SWITCHABLE_EXTENSION_SERVICE_ID);
+        $this->buildSwitchableDependencyInjectionExtensionService($container, $config);
+
+        if ($container->hasDefinition(MetadataTypeGuesser::class)) {
+            $dataTypeMappings = [];
+            foreach ($config['form_type_guesses'] as $dataType => $value) {
+                $dataTypeMappings[$dataType] = [$value['form_type'], $value['options']];
+            }
+            $container->getDefinition(MetadataTypeGuesser::class)
+                ->replaceArgument(0, $dataTypeMappings);
+        }
+    }
+
+    private function buildSwitchableDependencyInjectionExtensionService($container, $config)
+    {
+        $apiFormDef = $container->getDefinition(SwitchableDependencyInjectionExtension::class);
         if ($container->hasDefinition(self::FORM_EXTENSION_SERVICE_ID)) {
             $container->getDefinition(self::FORM_EXTENSION_SERVICE_ID)->setPublic(true);
+
             $apiFormDef->addMethodCall(
                 'addExtension',
                 [SwitchableFormRegistry::DEFAULT_EXTENSION, self::FORM_EXTENSION_SERVICE_ID]
             );
         }
-        if ($container->hasDefinition(self::VIDENI_FORM_EXTENSION_SERVICE_ID)) {
-            $apiFormExtensionDef = $container->getDefinition(self::VIDENI_FORM_EXTENSION_SERVICE_ID);
+        if ($container->hasDefinition(FormExtension::class)) {
+            $apiFormExtensionDef = $container->getDefinition(FormExtension::class);
             $apiFormExtensionDef->setPublic(true);
+
             $apiFormDef->addMethodCall(
                 'addExtension',
-                [SwitchableFormRegistry::API_EXTENSION, self::VIDENI_FORM_EXTENSION_SERVICE_ID]
+                [SwitchableFormRegistry::API_EXTENSION, FormExtension::class]
             );
 
             // reuse existing form types, form type extensions and form type guessers
@@ -81,19 +100,20 @@ class FormCompilerPass implements CompilerPassInterface
                     $formTypeClassNames[] = $formType;
                 }
             }
-            $this->addFormApiTag(
+            $this->addFormTag(
                 $container,
                 $formTypeServiceIds,
                 self::FORM_TYPE_TAG,
                 self::VIDENI_FORM_TYPE_TAG
             );
-            $this->addFormApiTag(
+
+            $this->addFormTag(
                 $container,
                 $config['form_type_extensions'],
                 self::FORM_TYPE_EXTENSION_TAG,
                 self::VIDENI_FORM_TYPE_EXTENSION_TAG
             );
-            $this->addFormApiTag(
+            $this->addFormTag(
                 $container,
                 $config['form_type_guessers'],
                 self::FORM_TYPE_GUESSER_TAG,
@@ -101,20 +121,13 @@ class FormCompilerPass implements CompilerPassInterface
             );
 
             // load form types, form type extensions and form type guessers for Data API form extension
-            $apiFormExtensionDef->replaceArgument(1, $this->getApiFormTypes($container, $formTypeClassNames));
-            $apiFormExtensionDef->replaceArgument(2, $this->getApiFormTypeExtensions($container));
-            $apiFormExtensionDef->replaceArgument(3, $this->getApiFormTypeGuessers($container));
-        }
-        if ($container->hasDefinition(self::VIDENI_FORM_METADATA_GUESSER_SERVICE_ID)) {
-            $dataTypeMappings = [];
-            foreach ($config['form_type_guesses'] as $dataType => $value) {
-                $dataTypeMappings[$dataType] = [$value['form_type'], $value['options']];
-            }
-            $container->getDefinition(self::VIDENI_FORM_METADATA_GUESSER_SERVICE_ID)
-                ->replaceArgument(0, $dataTypeMappings);
+            list($formTypeContainer, $formTypes) = $this->getFormTypes($container, $formTypeClassNames);
+            $apiFormExtensionDef->replaceArgument(0, $formTypeContainer);
+            $apiFormExtensionDef->replaceArgument(1, $formTypes);
+            $apiFormExtensionDef->replaceArgument(2, $this->getFormTypeExtensions($container));
+            $apiFormExtensionDef->replaceArgument(3, $this->getFormTypeGuessers($container));
         }
     }
-
     /**
      * @param ContainerBuilder $container
      */
@@ -124,7 +137,7 @@ class FormCompilerPass implements CompilerPassInterface
             ->register(self::VIDENI_FORM_TYPE_FACTORY_SERVICE_ID, ResolvedFormTypeFactory::class)
             ->setArguments([
                 new Reference(self::VIDENI_FORM_TYPE_FACTORY_SERVICE_ID . '.inner'),
-                new Reference(self::VIDENI_FORM_EXTENSION_STATE_SERVICE_ID)
+                new Reference(FormExtensionState::class)
             ])
             ->setPublic(false)
             ->setDecoratedService(self::FORM_TYPE_FACTORY_SERVICE_ID);
@@ -182,7 +195,7 @@ class FormCompilerPass implements CompilerPassInterface
      * @param string           $tagName
      * @param string           $apiTagName
      */
-    private function addFormApiTag(ContainerBuilder $container, array $serviceIds, $tagName, $apiTagName)
+    private function addFormTag(ContainerBuilder $container, array $serviceIds, $tagName, $apiTagName)
     {
         foreach ($serviceIds as $serviceId) {
             if ($container->hasDefinition($serviceId)) {
@@ -201,15 +214,21 @@ class FormCompilerPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getApiFormTypes(ContainerBuilder $container, array $formTypeClassNames)
+    private function getFormTypes(ContainerBuilder $container, array $formTypeClassNames)
     {
+        // Get service locator argument
+        $servicesMap = array();
+
         $types = array_fill_keys($formTypeClassNames, null);
         foreach ($container->findTaggedServiceIds(self::VIDENI_FORM_TYPE_TAG) as $serviceId => $tag) {
             $alias = DependencyInjectionUtil::getAttribute($tag[0], 'alias', $serviceId);
             $types[$alias] = $serviceId;
+
+            $serviceDefinition = $container->getDefinition($serviceId);
+            $servicesMap[$formType = $serviceDefinition->getClass()] = new Reference($serviceId);
         }
 
-        return $types;
+        return [ServiceLocatorTagPass::register($container, $servicesMap), $types];
     }
 
     /**
@@ -217,14 +236,17 @@ class FormCompilerPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getApiFormTypeExtensions(ContainerBuilder $container)
+    private function getFormTypeExtensions(ContainerBuilder $container)
     {
         $typeExtensions = [];
         foreach ($container->findTaggedServiceIds(self::VIDENI_FORM_TYPE_EXTENSION_TAG) as $serviceId => $tag) {
             $alias = DependencyInjectionUtil::getAttribute($tag[0], $this->getTagKeyForExtension(), $serviceId);
-            $typeExtensions[$alias][] = $serviceId;
+            $typeExtensions[$alias][] = new Reference($serviceId);
         }
 
+        foreach ($typeExtensions as $extendedType => $extensions) {
+            $typeExtensions[$extendedType] = new IteratorArgument($extensions);
+        }
         return $typeExtensions;
     }
 
@@ -233,7 +255,7 @@ class FormCompilerPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getApiFormTypeGuessers(ContainerBuilder $container)
+    private function getFormTypeGuessers(ContainerBuilder $container)
     {
         $guessers = [];
         foreach ($container->findTaggedServiceIds(self::VIDENI_FORM_TYPE_GUESSER_TAG) as $serviceId => $tags) {
@@ -243,7 +265,9 @@ class FormCompilerPass implements CompilerPassInterface
         }
         arsort($guessers, SORT_NUMERIC);
 
-        return array_keys($guessers);
+        return new IteratorArgument(array_map(function ($serviceId) {
+            return new Reference($serviceId);
+        }, array_keys($guessers)));
     }
 
     /**

@@ -38,6 +38,21 @@ class FormConfiguration
                             })
                         ->end()
                     ->end()
+                    ->variableNode('form_event_subscribers')
+                    ->validate()
+                        ->always(function ($v) {
+                            if (\is_string($v)) {
+                                return [$v];
+                            }
+                            if (\is_array($v)) {
+                                return $v;
+                            }
+                            throw new \InvalidArgumentException(
+                                'The value must be a string or an array.'
+                            );
+                        })
+                    ->end()
+            ->end()
                 ->end()
             ->end()
         ;

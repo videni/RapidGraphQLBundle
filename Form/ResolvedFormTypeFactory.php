@@ -36,7 +36,7 @@ class ResolvedFormTypeFactory implements ResolvedFormTypeFactoryInterface
     ) {
         $resolvedType = $this->defaultFactory->createResolvedType($type, $typeExtensions, $parent);
         if ($this->formExtensionChecker->isFormExtensionActivated()) {
-            $resolvedType = new ApiResolvedFormType($resolvedType);
+            $resolvedType = new ResolvedFormType($resolvedType);
         }
 
         return $resolvedType;

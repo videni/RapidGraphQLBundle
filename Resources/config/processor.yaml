@@ -9,8 +9,8 @@ imports:
 
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
+        autowire: true
+        autoconfigure: true
         public: false
 
     Oro\Component\ChainProcessor\ProcessorBagConfigProvider:
@@ -94,7 +94,7 @@ services:
         public: false
 
 
-    Videni\Bundle\RestBundle\Processor\CustomizeFormDataProcessor:
+    Videni\Bundle\RestBundle\Processor\CustomizeFormData\CustomizeFormDataProcessor:
         public: false
         arguments:
             - '@Videni\Bundle\RestBundle\Processor\OptimizedProcessorBag'

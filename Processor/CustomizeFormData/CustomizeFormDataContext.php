@@ -2,8 +2,6 @@
 
 namespace Videni\Bundle\RestBundle\Processor\CustomizeFormData;
 
-use Videni\Bundle\RestBundle\Collection\IncludedEntityCollection;
-use Videni\Bundle\RestBundle\Processor\CustomizeDataContext;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -58,9 +56,6 @@ class CustomizeFormDataContext extends CustomizeDataContext
 
     /** @var mixed */
     private $data;
-
-    /** @var IncludedEntityCollection|null */
-    private $includedEntities;
 
     /**
      * Checks if the context is already initialized.
