@@ -11,6 +11,8 @@ use Doctrine\Common\Util\ClassUtils;
 use Videni\Bundle\RestBundle\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RestBundle\Event\EventDispatcher;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 /**
  * Saves new ORM entity to the database and save its identifier into the context.
@@ -19,9 +21,12 @@ class SaveResource implements ProcessorInterface
 {
     private $doctrineHelper;
 
-    public function __construct(DoctrineHelper $doctrineHelper)
+    private $eventDispatcher;
+
+    public function __construct(DoctrineHelper $doctrineHelper, EventDispatcher $eventDispatcher)
     {
         $this->doctrineHelper = $doctrineHelper;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -51,6 +56,8 @@ class SaveResource implements ProcessorInterface
         } catch (UniqueConstraintViolationException $e) {
             throw $e;
         }
+
+        $this->eventDispatcher->dispatchPostEvent(ActionTypes::CREATE, $context->getResourceConfig(), $entity);
 
         // save entity id into the context
         if (null !==  $id = $entity->getId()) {

@@ -7,7 +7,7 @@ A rapid RESTfull API bundle, it can help you build your API extremely faster.
 * CRUD
 * Swagger Doc
 * API version(JMS serializer)
-* Deserialization
+* Map request to entity via Symfony Form
 * HAL
 * Custom paginator(filter, sorting for pagination)
 

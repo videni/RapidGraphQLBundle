@@ -17,7 +17,11 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('videni_rest');
 
-        $node = $rootNode->children()
+        $node = $rootNode
+            ->children()
+                ->scalarNode('application_name')
+                    ->defaultValue('videni_rest')
+                ->end()
         ;
 
         $this->addActionsNode($node);

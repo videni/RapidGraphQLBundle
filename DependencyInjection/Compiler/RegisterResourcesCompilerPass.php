@@ -13,11 +13,18 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {
+    private $applicationName;
+
     public function process(ContainerBuilder $container)
     {
+        $bundleConifig = DependencyInjectionUtil::getConfig($container);
+
+        $this->applicationName =  $bundleConifig['application_name'];
+
         $resourceConfigProvider = $container->get(ResourceConfigProvider::class);
 
         $resourceConfigs = $resourceConfigProvider->getAll();
@@ -88,6 +95,6 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('videni_rest.%s.%s', $key, $name);
+         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
     }
 }

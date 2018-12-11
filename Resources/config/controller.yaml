@@ -21,3 +21,8 @@ services:
     Videni\Bundle\RestBundle\Handler\ViewHandler: ~
 
     Videni\Bundle\RestBundle\Handler\ViewHandlerInterface:  '@Videni\Bundle\RestBundle\Handler\ViewHandler'
+
+    Videni\Bundle\RestBundle\Event\EventDispatcher:
+        arguments:
+            - "@event_dispatcher"
+            - '@=parameter("videni_rest.bundle_config")["application_name"]'

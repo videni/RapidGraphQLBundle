@@ -51,9 +51,7 @@ class BuildForm implements ProcessorInterface
 
         $formType = $resourceConfig->getOperationAttribute($context->getOperationName(), 'form');
         if (null === $formType) {
-             throw new \RuntimeException(
-                 sprintf('A form type must be existed for entity %s.', $context->getClassName())
-             );
+             return;
         }
 
         $options = [

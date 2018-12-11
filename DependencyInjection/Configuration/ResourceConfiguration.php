@@ -17,12 +17,15 @@ class ResourceConfiguration implements ConfigurationInterface
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
 
+    private $applicationName;
+
     /**
      * @param FilterOperatorRegistry $filterOperatorRegistry
      */
-    public function __construct(FilterOperatorRegistry $filterOperatorRegistry)
+    public function __construct(FilterOperatorRegistry $filterOperatorRegistry, $applicationName)
     {
         $this->filterOperatorRegistry = $filterOperatorRegistry;
+        $this->applicationName = $applicationName;
     }
 
     /**
@@ -306,6 +309,6 @@ class ResourceConfiguration implements ConfigurationInterface
     {
         $name = Inflector::tableize($resourceShortName);
 
-        return sprintf('videni_rest.%s.%s', $key, $name);
+        return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
     }
 }
