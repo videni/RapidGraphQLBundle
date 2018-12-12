@@ -198,6 +198,7 @@ class ResourceController extends Controller
         $context->setClassName($request->attributes->get('_api_resource_class'));
         $context->setOperationName($request->attributes->get('_api_operation_name'));
         $context->setRequestHeaders(new RestRequestHeaders($request));
+        $context->setAction($request->attributes->get('_action'));
         $context->setFormat($this->serializerFormat->getFormat($request, $context));
 
         $context->loadResourceConfig();

@@ -57,7 +57,7 @@ class SaveResource implements ProcessorInterface
             throw $e;
         }
 
-        $this->eventDispatcher->dispatchPostEvent(ActionTypes::CREATE, $context->getResourceConfig(), $entity);
+        $this->eventDispatcher->dispatchPostEvent($context->getAction(), $context->getResourceConfig(), $entity);
 
         // save entity id into the context
         if (null !==  $id = $entity->getId()) {

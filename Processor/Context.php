@@ -24,6 +24,7 @@ class Context extends BaseContext implements ContextInterface
     const FORMAT = 'format';
 
     const CRITERIA = 'criteria';
+    const ACTION = 'action';
 
     /**
      * a value indicates whether errors should just stop processing
@@ -110,6 +111,22 @@ class Context extends BaseContext implements ContextInterface
     public function setClassName($className)
     {
         $this->set(self::CLASS_NAME, $className);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAction()
+    {
+        return $this->get(self::ACTION);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAction($action)
+    {
+        $this->set(self::ACTION, $action);
     }
 
     public function setFormat($format)
