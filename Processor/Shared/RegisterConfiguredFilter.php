@@ -31,8 +31,6 @@ class RegisterConfiguredFilter extends RegisterFilters
     /** @var DoctrineHelper */
     protected $doctrineHelper;
 
-    protected $paginatorConfigProvider;
-
     /**
      * @param FilterFactoryInterface $filterFactory
      * @param DoctrineHelper         $doctrineHelper
@@ -52,17 +50,10 @@ class RegisterConfiguredFilter extends RegisterFilters
      */
     public function process(ContextInterface $context)
     {
-        $resourceConfig = $context->getResourceConfig();
-
-        $operationName = $context->getOperationName();
-
-        $paginator = $resourceConfig->getOperation($operationName)->getPaginator();
-        if (!$paginator || !$resourceConfig->hasPaginator($paginator)) {
+        $paginatorConfig = $context->getPaginatorConfig();
+        if (!$paginatorConfig) {
             return;
         }
-
-        $paginatorConfig = $resourceConfig->getPaginator($paginator);
-        $context->setPaginatorConfig($paginatorConfig);
 
         $entityClass = $context->getClassName();
 

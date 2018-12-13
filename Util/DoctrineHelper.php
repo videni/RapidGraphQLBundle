@@ -155,4 +155,36 @@ class DoctrineHelper
 
         return $relations;
     }
+
+       /**
+     * Gets the ORM metadata descriptor for target entity class of the given child association.
+     *
+     * @param string          $entityClass
+     * @param string[]|string $associationPath
+     *
+     * @return ClassMetadata|null
+     */
+    public function findEntityMetadataByPath($entityClass, $associationPath)
+    {
+        $manager = $this->registry->getManagerForClass($entityClass);
+        if (null === $manager) {
+            return null;
+        }
+
+        $metadata = $manager->getClassMetadata($entityClass);
+        if (null !== $metadata) {
+            if (!is_array($associationPath)) {
+                $associationPath = explode('.', $associationPath);
+            }
+            foreach ($associationPath as $associationName) {
+                if (!$metadata->hasAssociation($associationName)) {
+                    $metadata = null;
+                    break;
+                }
+                $metadata = $manager->getClassMetadata($metadata->getAssociationTargetClass($associationName));
+            }
+        }
+
+        return $metadata;
+    }
 }

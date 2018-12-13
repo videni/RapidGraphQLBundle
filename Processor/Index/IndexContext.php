@@ -40,4 +40,19 @@ class IndexContext extends Context
             $this->remove(self::PAGINATOR_CONFIG);
         }
     }
+
+    public function loadPaginatorConfig()
+    {
+        $resourceConfig = $this->getResourceConfig();
+
+        $operationName = $this->getOperationName();
+
+        $paginator = $resourceConfig->getOperation($operationName)->getPaginator();
+        if (!$paginator || !$resourceConfig->hasPaginator($paginator)) {
+            return;
+        }
+
+        $paginatorConfig = $resourceConfig->getPaginator($paginator);
+        $this->setPaginatorConfig($paginatorConfig);
+    }
 }

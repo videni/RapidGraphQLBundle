@@ -64,7 +64,7 @@ videni_rest:
                     initialize:
                         priority: -10
                     security:
-                        priority: - 15
+                        priority: -15
                     build_query:
                         priority: -20
                     load_resources:

@@ -91,7 +91,7 @@ final class ResourceRouteLoader extends Loader
 
         $controller = $operationConfig->getController() ?? sprintf('%s::%s', $this->resourceControllerId, $action);
 
-        $path = trim(trim($resourceConfig->getRoutePrefix()), '/');
+        $path = $resourceConfig->getRoutePrefix()? trim(trim($resourceConfig->getRoutePrefix()), '/'): '/';
         $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operationConfig, $operationName);
 
         $defaultMethods = ActionTypes::getMethods($action);
