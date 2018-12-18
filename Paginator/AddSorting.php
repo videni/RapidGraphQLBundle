@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Paginator;
 
 use Doctrine\Common\Collections\Criteria;
 use Videni\Bundle\RestBundle\Filter\FilterCollection;

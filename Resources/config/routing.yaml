@@ -8,7 +8,7 @@ services:
         arguments:
             - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider'
             - '@Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
-            - 'Videni\Bundle\RestBundle\Controller\ResourceController'
+            - '@service_container'
         tags: [ 'routing.loader' ]
 
     Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver:

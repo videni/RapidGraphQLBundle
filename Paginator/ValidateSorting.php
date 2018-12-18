@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Processor\Shared;
+namespace Videni\Bundle\RestBundle\Paginator;
 
 use Videni\Bundle\RestBundle\Config\SortingConfig;
 use Videni\Bundle\RestBundle\Processor\Context;

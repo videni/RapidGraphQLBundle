@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Videni\Bundle\RestBundle\Paginator\AddSorting: ~
+
+    Videni\Bundle\RestBundle\Paginator\BuildQuery: ~
+
+    Videni\Bundle\RestBundle\Paginator\PaginatorApplicator: ~
+
+    Videni\Bundle\RestBundle\Paginator\RegisterConfiguredFilter: ~
+
+    Videni\Bundle\RestBundle\Paginator\ValidateSorting: ~

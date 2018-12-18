@@ -1,11 +1,12 @@
 imports:
     - { resource: 'routing.yaml'}
     - { resource: 'serializer.yaml'}
-    - { resource: 'controller.yaml'}
+    - { resource: 'action.yaml'}
     - { resource: 'security.yaml'}
     - { resource: 'filters.yaml'}
     - { resource: 'config.yaml'}
-    - { resource: 'processor.yaml'}
+    - { resource: 'utils.yaml'}
+    - { resource: 'paginator.yaml'}
 
 parameters:
     videni_rest.resource_class_directories:
@@ -36,51 +37,21 @@ services:
 
     Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
 
-    Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
-
     Videni\Bundle\RestBundle\Validator\Validator:
         arguments: ['@validator', '@service_container']
 
     Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
 
-    Videni\Bundle\RestBundle\Handler\DeleteHandler: ~
-
-    Videni\Bundle\RestBundle\Handler\DeleteHandlerInterface: '@Videni\Bundle\RestBundle\Handler\DeleteHandler'
-
-    Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
-
     Hateoas\Representation\Factory\PagerfantaFactory: ~
 
-    Videni\Bundle\RestBundle\Validator\EventListener\ValidationExceptionListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException'}
 
-    Videni\Bundle\RestBundle\Context\ResourceContextStorage: ~
+    Videni\Bundle\RestBundle\Provider\FormatsProvider:
+        arguments:
+            - '%videni_rest.formats%'
 
-    Videni\Bundle\RestBundle\EventListener\FormatListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
+    Videni\Bundle\RestBundle\Provider\FormatsProviderInterface: '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
 
-    Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
-         arguments:
-            - '@videni_rest.negotiator'
-            - '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
-            - '@Videni\Bundle\RestBundle\Context\ResourceContextStorage'
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
-
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider: ~
-
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider: ~
-
-    Videni\Bundle\RestBundle\EventListener\ReadListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 4 }
-
-    Videni\Bundle\RestBundle\EventListener\DeserializeListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
-
-    videni_rest.negotiator:
-        class:  Negotiation\Negotiator\Negotiator:
-
+    Videni\Bundle\RestBundle\Event\EventDispatcher:
+        arguments:
+            - "@event_dispatcher"
+            - '@=parameter("videni_rest.bundle_config")["application_name"]'

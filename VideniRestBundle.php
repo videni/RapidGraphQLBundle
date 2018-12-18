@@ -19,17 +19,8 @@ class VideniRestBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new Compiler\ProcessorBagCompilerPass());
         $container->addCompilerPass(new Compiler\FilterFactoryCompilerPass());
         $container->addCompilerPass(new Compiler\QueryExpressionCompilerPass());
         $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
-
-        $container->addCompilerPass(
-            new LoadApplicableCheckersCompilerPass('videni_rest.processor_bag', 'videni_rest.processor.applicable_checker')
-        );
-        $container->addCompilerPass(
-            new CleanUpProcessorsCompilerPass(SimpleProcessorFactory::class, 'videni_rest.processor'),
-            PassConfig::TYPE_BEFORE_REMOVING
-        );
     }
 }

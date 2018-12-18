@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    videni_rest.action.placeholder:
+        public: true
+        class: Videni\Bundle\RestBundle\Action\PlaceholderAction
+
+    videni_rest.action.update:
+        public: true
+        alias: 'videni_rest.action.placeholder'
+
+    videni_rest.action.delete:
+        public: true
+        alias: 'videni_rest.action.placeholder'
+
+    videni_rest.action.view:
+        public: true
+        alias: 'videni_rest.action.placeholder'
+
+    videni_rest.action.index:
+        public: true
+        alias: 'videni_rest.action.placeholder'
+
+    videni_rest.action.bulk_delete:
+        public: true
+        alias: 'videni_rest.action.placeholder'
+
+    videni_rest.action.create:
+        public: true
+        alias: 'videni_rest.action.placeholder'

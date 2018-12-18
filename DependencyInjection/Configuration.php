@@ -24,73 +24,10 @@ class Configuration implements ConfigurationInterface
                 ->end()
         ;
 
-        $this->addActionsNode($node);
         $this->addFilterOperatorsNode($node);
         $this->addFiltersNode($node);
 
         return $treeBuilder;
-    }
-
-    /**
-     * @param NodeBuilder $node
-     */
-    private function addActionsNode(NodeBuilder $node)
-    {
-        $node
-            ->arrayNode('actions')
-                ->info('A definition of Data API actions')
-                ->example(
-                    [
-                        'get' => [
-                            'processor_service_id' => 'videni_rest.get.processor',
-                            'processing_groups' => [
-                                'intialize' => [
-                                    'priority' => -10
-                                ],
-                                'security' => [
-                                    'priority' => -20
-                                ]
-                            ]
-                        ]
-                    ]
-                )
-                ->useAttributeAsKey('name')
-                ->prototype('array')
-                    ->validate()
-                        ->always(function ($value) {
-                            if (!empty($value['processing_groups'])) {
-                                $priority = 0;
-                                foreach ($value['processing_groups'] as &$group) {
-                                    if (!isset($group['priority'])) {
-                                        $priority--;
-                                        $group['priority'] = $priority;
-                                    }
-                                }
-                            }
-
-                            return $value;
-                        })
-                    ->end()
-                    ->children()
-                        ->scalarNode('processor_service_id')
-                            ->info('The service id of the action processor. Set for public actions only.')
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->arrayNode('processing_groups')
-                            ->info('A list of groups by which child processors can be split')
-                            ->useAttributeAsKey('name')
-                            ->prototype('array')
-                                ->children()
-                                    ->scalarNode('priority')
-                                        ->info('The priority of the group.')
-                                        ->cannotBeEmpty()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
     }
 
     /**

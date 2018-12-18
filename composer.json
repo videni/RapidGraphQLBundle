@@ -13,7 +13,6 @@
     "require": {
         "php": "^7.1.3",
         "friendsofsymfony/rest-bundle": "^2.4",
-        "oro/chain-processor": "^1.0@dev",
         "oro/config": "^1.0@dev",
         "oro/doctrine-utils": "^1.0@dev",
         "pagerfanta/pagerfanta": "^2.0",

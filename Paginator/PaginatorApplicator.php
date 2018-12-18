@@ -71,7 +71,7 @@ class PaginatorApplicator
          * it is important to iterate by $filters, not by $filterValues,
          * because the the order of filters is matter,
          * e.g. "page size" filter should be processed before "page number" filter
-         * @see \Videni\Bundle\RestBundle\Processor\Shared\SetDefaultPaging::addPageNumberFilter
+         * @see \Videni\Bundle\RestBundle\Paginator\SetDefaultPaging::addPageNumberFilter
          */
         foreach ($filters as $filterKey => $filter) {
             if ($filterValues->has($filterKey)) {

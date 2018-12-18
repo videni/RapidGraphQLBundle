@@ -26,7 +26,7 @@ use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
 final class ResourceRouteLoader extends Loader
 {
     const ROUTE_NAME_PREFIX = 'api_';
-    const DEFAULT_ACTION_PATTERN = 'videni_rest.action.';
+    const DEFAULT_ACTION_PATTERN = 'videni_rest.action';
 
     private $resourceConfigProvider;
     private $operationPathResolver;
@@ -92,7 +92,7 @@ final class ResourceRouteLoader extends Loader
 
         $controller = $operationConfig->getController() ?? sprintf('%s.%s', self::DEFAULT_ACTION_PATTERN, strtolower($action));
         if (!$this->container->has($controller)) {
-            throw new RuntimeException(sprintf('There is no builtin action for the %s action. You need to define the controller yourself.', $action));
+            throw new \RuntimeException(sprintf('There is no builtin action for the %s action. You need to define the controller yourself.', $action));
         }
 
         $path = $resourceConfig->getRoutePrefix()? trim(trim($resourceConfig->getRoutePrefix()), '/'): '/';
