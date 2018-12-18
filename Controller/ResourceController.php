@@ -90,7 +90,7 @@ class ResourceController extends Controller
      */
     public function delete(Request $request)
     {
-         $processor = $this->getProcessor(ActionTypes::DELETE);
+        $processor = $this->getProcessor(ActionTypes::DELETE);
 
         /** @var DeleteContext $context */
         $context = $processor->createContext();

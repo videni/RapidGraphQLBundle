@@ -2,7 +2,6 @@
 
 namespace Videni\Bundle\RestBundle\Processor\Shared;
 
-use Videni\Bundle\RestBundle\Form\FormValidationHandler;
 use Videni\Bundle\RestBundle\Processor\FormContext;
 use Oro\Component\ChainProcessor\ContextInterface;
 use Oro\Component\ChainProcessor\ProcessorInterface;
