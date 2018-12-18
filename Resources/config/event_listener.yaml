@@ -15,10 +15,6 @@ services:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
 
     Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
-        arguments:
-            - '@videni_rest.negotiator'
-            - '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
-            - '@Videni\Bundle\RestBundle\Context\ResourceContextStorage'
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
 
