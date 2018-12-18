@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\EventListener;
 
-use Negotiation\Negotiator;
+use Negotiation\Negotiator\Negotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;

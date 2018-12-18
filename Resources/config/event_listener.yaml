@@ -15,7 +15,7 @@ services:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
 
     Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
-         arguments:
+        arguments:
             - '@videni_rest.negotiator'
             - '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
             - '@Videni\Bundle\RestBundle\Context\ResourceContextStorage'
@@ -24,7 +24,13 @@ services:
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider: ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider: ~
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider:
+        arguments:
+            - '@service_container'
+            - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'
+            - '@Doctrine\Common\Persistence\ManagerRegistry'
+            - '@=parameter("videni_rest.bundle_config")["application_name"]'
+
 
     Videni\Bundle\RestBundle\EventListener\DataPersister: ~
 

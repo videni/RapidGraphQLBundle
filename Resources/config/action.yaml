@@ -5,6 +5,8 @@ services:
         public: false
 
     videni_rest.action.placeholder:
+        autowire: false
+        autoconfigure: false
         public: true
         class: Videni\Bundle\RestBundle\Action\PlaceholderAction
 

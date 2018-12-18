@@ -23,11 +23,18 @@ class SingleResourceProvider
 
     private $registry;
 
-    public function __construct(ContainerInterface $container, ParametersParserInterface $parametersParser, ManagerRegistry $registry)
-    {
+    private $applicationName;
+
+    public function __construct(
+        ContainerInterface $container,
+        ParametersParserInterface $parametersParser,
+        ManagerRegistry $registry,
+        $applicationName
+    ) {
         $this->container = $container;
         $this->parametersParser = $parametersParser;
         $this->registry = $registry;
+        $this->applicationName = $applicationName;
     }
 
     /**
@@ -67,6 +74,6 @@ class SingleResourceProvider
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('videni_rest.repository.%s', $name);
+         return sprintf('%s.repository.%s', $this->applicationName, $name);
     }
 }

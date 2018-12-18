@@ -7,6 +7,7 @@ imports:
     - { resource: 'config.yaml'}
     - { resource: 'utils.yaml'}
     - { resource: 'paginator.yaml'}
+    - { resource: 'event_listener.yaml'}
 
 parameters:
     videni_rest.resource_class_directories:
@@ -43,7 +44,6 @@ services:
     Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
 
     Hateoas\Representation\Factory\PagerfantaFactory: ~
-
 
     Videni\Bundle\RestBundle\Provider\FormatsProvider:
         arguments:

@@ -16,6 +16,7 @@ use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
+use Videni\Bundle\RestBundle\Paginator\PaginatorApplicator;
 
 class CollectionResourceProvider
 {
