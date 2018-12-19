@@ -26,6 +26,8 @@ class PaginatorApplicator
 
     private $validateSorting;
 
+    private $paginatorConfig = null;
+
     /**
      * @param DoctrineHelper      $doctrineHelper
      * @param EntityClassResolver $entityClassResolver
@@ -46,26 +48,29 @@ class PaginatorApplicator
         $this->validateSorting = $validateSorting;
     }
 
-    public function apply(ResourceContext $resourceContext, FilterValueAccessor $filterValues)
+    public function apply(ResourceContext $resourceContext, FilterValueAccessor $filterValues, Request $request)
     {
         $criteria = new Criteria($this->entityClassResolver);
 
-        $paginatorConfig = $this->getPaginatorConifig($resourceContext);
-        if ($paginatorConfig) {
-            $this->applyFilters($criteria, $paginatorConfig);
-        }
+        $this->loadPaginatorConifig($resourceContext);
 
-        $query = $this->buildQuery->build($request, $resourceContext, $criteria);
+        $this->applyFilters($criteria, $resourceContext, $filterValues);
+
+        return $this->buildQuery->build($criteria, $resourceContext, $request);
     }
 
-    protected function applyFilters($criteria, $paginatorConfig)
+    protected function applyFilters(Criteria $criteria, ResourceContext $resourceContext,FilterValueAccessor $filterValues)
     {
+        if (!$this->paginatorConfig) {
+            return;
+        }
+
         /** @var FilterInterface[] $filters */
-        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $paginatorConfig);
+        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $this->paginatorConfig);
 
-        $this->addSorting->process($resourceContext->getClassName(), $paginatorConfig, $filters);
+        $this->addSorting->process($resourceContext->getClassName(), $this->paginatorConfig, $filters);
 
-        $this->validateSorting->validate($filters, $filterValues, $paginatorConfig);
+        $this->validateSorting->validate($filters, $filterValues, $this->paginatorConfig);
 
         /**
          * it is important to iterate by $filters, not by $filterValues,
@@ -86,14 +91,21 @@ class PaginatorApplicator
         }
     }
 
-    protected function getPaginatorConifig(ResourceContext $context)
+    protected function loadPaginatorConifig(ResourceContext $context)
     {
         $operationName = $context->getOperationName();
-        $paginator = $resourceConfig->getOperation($operationName)->getPaginator();
-        if (!$paginator || !$resourceConfig->hasPaginator($paginator)) {
+        $resourceConfig = $context->getResourceConfig();
+
+        $paginatorName = $resourceConfig->getOperation($operationName)->getPaginator();
+        if (!$paginatorName || !$resourceConfig->hasPaginator($paginatorName)) {
             return;
         }
 
-        return $resourceConfig->getPaginator($paginator);
+        $this->paginatorConfig = $resourceConfig->getPaginator($paginatorName);
+    }
+
+    public function getPaginatorConfig()
+    {
+        return $this->paginatorConfig;
     }
 }

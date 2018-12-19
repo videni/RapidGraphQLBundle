@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
+use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 class SingleResourceProvider
 {

@@ -10,11 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use  Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 final class FormListener
 {
@@ -36,6 +37,9 @@ final class FormListener
     {
         $context = $this->resourceContextStorage->getContext();
         if (null == $context) {
+            return;
+        }
+        if(!in_array($context->getAction(), [ActionTypes::UPDATE, ActionTypes::CREATE])) {
             return;
         }
 

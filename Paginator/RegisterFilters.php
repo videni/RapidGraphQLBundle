@@ -7,6 +7,7 @@ use Videni\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
 use Videni\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
 /**
  * Abstract class for register filters processor.

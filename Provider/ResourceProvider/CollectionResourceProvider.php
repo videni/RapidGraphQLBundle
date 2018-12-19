@@ -40,24 +40,19 @@ class CollectionResourceProvider
         $this->filterValueAccessorFactory = $filterValueAccessorFactory;
     }
 
-    public function get(ResourceContext $resourceContext, Request $request)
+    public function get(ResourceContext $context, Request $request)
     {
         $filterValues = $this->filterValueAccessorFactory->create($request);
 
-        $query = $this->paginatorApplicator->apply($resourceContext, $filterValues);
+        $query = $this->paginatorApplicator->apply($context, $filterValues, $request);
 
-        $paginatorConfig = $context->getPaginatorConfig();
-        if (null == $paginatorConfig || -1 === $paginatorConfig->getMaxResults()) {
-            // the paging is disabled
-            return $query->getQuery()->getResult();
-        }
+        $paginatorConfig = $this->paginatorApplicator->getPaginatorConfig();
 
         $paginator = $this->getPaginator($query);
 
         //we have to add paging filter here for we have to set pagination info for Pagerfanta
         $this->addPaging($filterValues, $paginator, $paginatorConfig);
 
-        $request = $context->getRequest();
         $route = new Route($request->attributes->get('_route'), array_merge($request->attributes->get('_route_params'), $request->query->all()));
 
         // This prevents Pagerfanta from querying database from a template

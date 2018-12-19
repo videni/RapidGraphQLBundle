@@ -10,6 +10,8 @@ use Doctrine\ORM\QueryBuilder;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RestBundle\Collection\Criteria;
+use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 /**
  * Builds ORM QueryBuilder object that will be used to get a list of entities
@@ -63,7 +65,7 @@ class BuildQuery
     protected function resolveQueryBuilder(Request $request, ResourceContext $context)
     {
           /** @var ServiceConfig */
-        $repositoryConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'repository');
+        $repositoryConfig = $context->getResourceConfig()->getOperationAttribute($context->getOperationName(), 'repository');
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 

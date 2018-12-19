@@ -3,7 +3,6 @@
 namespace Videni\Bundle\RestBundle\Paginator;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Videni\Bundle\RestBundle\Config\PaginatorConfig;
 use Videni\Bundle\RestBundle\Filter\ComparisonFilter;
 use Videni\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
@@ -12,6 +11,7 @@ use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Videni\Bundle\RestBundle\Filter\FilterCollection;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
 
 /**
  * Registers filters according to the "filters" configuration section.

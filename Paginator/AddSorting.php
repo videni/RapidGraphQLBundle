@@ -38,12 +38,6 @@ class AddSorting
     public function process($entityClass, PaginatorConfig $paginatorConfig, FilterCollection $filters)
     {
         $metadata = $this->doctrineHelper->getEntityMetadataForClass($entityClass);
-
-        $paginatorConfig = $context->getPaginatorConfig();
-        if (null === $paginatorConfig) {
-            return;
-        }
-
         if (empty($paginatorConfig->getSortings())) {
             $this->addDefaultSortFilter(
                 $this->filterNames->getSortFilterName(),

@@ -29,7 +29,7 @@ class DataPersister
         }
     }
 
-    public function delete($data)
+    public function remove($data)
     {
         $em = $this->doctrineHelper->getEntityManager($data, false);
         if (!$em) {
