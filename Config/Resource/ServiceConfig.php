@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
-class ServiceConfig extends \ArrayObject
+class ServiceConfig
 {
     private $id;
     private $arguments = [];

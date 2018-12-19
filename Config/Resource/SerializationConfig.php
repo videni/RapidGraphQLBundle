@@ -4,7 +4,7 @@ namespace Videni\Bundle\RestBundle\Config\Resource;
 
 class SerializationConfig extends \ArrayObject
 {
-    private $groups;
+    private $groups = [];
 
     /**
      * @return mixed

@@ -40,7 +40,7 @@ class SerializeListener
         $serializationContext = new SerializationContext();
 
         if ($normailzationConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'normalization_context')) {
-            $serializationContext->setGroups($normailzationConfig->getGroups());
+            $serializationContext->setGroups(array_merge($normailzationConfig->getGroups(), ['Default']));
         }
 
         $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $serializationContext));
