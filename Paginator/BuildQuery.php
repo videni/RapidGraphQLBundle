@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Builds ORM QueryBuilder object that will be used to get a list of entities
  * based on the Criteria object.
  */
-class BuildQuery implements ProcessorInterface
+class BuildQuery
 {
     /** @var DoctrineHelper */
     protected $doctrineHelper;

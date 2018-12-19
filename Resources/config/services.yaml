@@ -15,7 +15,7 @@ parameters:
 
     videni_rest.formats:
         json:
-            mime_types: 'application/json'
+           - 'application/json'
 
 services:
     _defaults:

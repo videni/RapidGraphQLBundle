@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Videni\Bundle\RestBundle\EventListener;
 
 use Doctrine\Common\Util\ClassUtils;
-use Videni\Bundle\RestBundle\Processor\FormContext;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use  Symfony\Component\Form\FormInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
+use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 
-final class DeserializeListener
+final class FormListener
 {
     private $formFactory;
     private $validator;
@@ -33,6 +34,11 @@ final class DeserializeListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        $context = $this->resourceContextStorage->getContext();
+        if (null == $context) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         $form = $this->createForm($context, $request->attributes->get('data'));
@@ -42,7 +48,7 @@ final class DeserializeListener
              * @see \VideniBundleRestBundle\Form\FormValidationHandler::validate
              * @see \VideniBundleRestBundle\Processor\Shared\BuildFormBuilder::$enableFullValidation
              */
-            $form->submit($this->prepareRequestData($context->getRequest()->request->all()), false);
+            $form->submit($this->prepareRequestData($request->request->all()), false);
 
             $violations = $this->validate($form);
             if (0 !== \count($violations)) {
@@ -91,7 +97,6 @@ final class DeserializeListener
     protected function getFormDataClass(ResourceContext $context, $entity)
     {
         $dataClass = $context->getClassName();
-        $entity = $context->getResult();
         if (\is_object($entity)) {
             $entityClass = ClassUtils::getClass($entity);
             if ($entityClass !== $dataClass) {

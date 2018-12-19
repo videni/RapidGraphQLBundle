@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\EventListener;
 
-use Negotiation\Negotiator\Negotiator;
+use Negotiation\Negotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
@@ -46,13 +46,13 @@ class FormatListener
 
         $resourceContext = $this->resourceContextStorage->getContext();
 
-        $this->formats = $this->formatsProvider->getFormats($resourceContext, $resourceContext->getOperationName());
+        $this->formats = $this->formatsProvider->getFormats($resourceContext->getResourceConfig(), $resourceContext->getOperationName());
 
         $this->populateMimeTypes();
+
         $this->addRequestFormats($request, $this->formats);
 
-        // Empty strings must be converted to null because the Symfony router doesn't support parameter typing before 3.2 (_format)
-        if (null === $routeFormat = $request->attributes->get('_format') ?: null) {
+        if (null === $routeFormat = $request->attributes->get('_format')) {
             $mimeTypes = array_keys($this->mimeTypes);
         } elseif (!isset($this->formats[$routeFormat])) {
             throw new NotFoundHttpException(sprintf('Format "%s" is not supported', $routeFormat));

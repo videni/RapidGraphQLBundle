@@ -4,19 +4,7 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Validator\EventListener\ValidationExceptionListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException'}
-
     Videni\Bundle\RestBundle\Context\ResourceContextStorage: ~
-
-    Videni\Bundle\RestBundle\EventListener\FormatListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
-
-    Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider: ~
 
@@ -27,24 +15,43 @@ services:
             - '@Doctrine\Common\Persistence\ManagerRegistry'
             - '@=parameter("videni_rest.bundle_config")["application_name"]'
 
+    Videni\Bundle\RestBundle\Factory\NewResourceFactory: ~
 
     Videni\Bundle\RestBundle\EventListener\DataPersister: ~
 
-    Videni\Bundle\RestBundle\EventListener\ReadListener:
+    Negotiation\Negotiator: ~
+
+# kernel.request event
+    Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
+
+    Videni\Bundle\RestBundle\EventListener\FormatListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
+
+    Videni\Bundle\RestBundle\EventListener\ResourceListener:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 4 }
 
-    Videni\Bundle\RestBundle\EventListener\DeserializeListener:
+    Videni\Bundle\RestBundle\EventListener\FormListener:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
 
-    Videni\Bundle\RestBundle\EventListener\SerializeListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelRequest', priority: 16 }
-
+# kernel.view event
     Videni\Bundle\RestBundle\EventListener\WriteListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelRequest', priority: 32 }
+            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView', priority: 32 }
 
-    Negotiation\Negotiator\Negotiator: ~
+    Videni\Bundle\RestBundle\EventListener\SerializeListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView', priority: 16 }
 
+    Videni\Bundle\RestBundle\EventListener\RespondListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView', priority: 8 }
+
+# kernel.exception event
+    Videni\Bundle\RestBundle\Validator\EventListener\ValidationExceptionListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException'}

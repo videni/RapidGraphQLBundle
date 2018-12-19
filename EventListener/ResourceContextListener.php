@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
+use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 class ResourceContextListener
 {

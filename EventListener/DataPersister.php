@@ -13,15 +13,15 @@ class DataPersister
         $this->doctrineHelper = $doctrineHelper;
     }
 
-    protected function persist($data)
+    public function persist($data)
     {
-        $em = $this->doctrineHelper->getEntityManager($entity, false);
+        $em = $this->doctrineHelper->getEntityManager($data, false);
         if (!$em) {
             // only manageable entities are supported
             return;
         }
 
-        $em->persist($entity);
+        $em->persist($data);
         try {
             $em->flush();
         } catch (UniqueConstraintViolationException $e) {
@@ -29,9 +29,9 @@ class DataPersister
         }
     }
 
-    protected function delete($data)
+    public function delete($data)
     {
-        $em = $this->doctrineHelper->getEntityManager($entity, false);
+        $em = $this->doctrineHelper->getEntityManager($data, false);
         if (!$em) {
             // only manageable entities are supported
             return;
@@ -41,7 +41,7 @@ class DataPersister
             $em->getConnection()->beginTransaction();
             try {
                 foreach ($data as $entity) {
-                    $handler->processDelete($entity, $em);
+                    $em->remove($entity);
                 }
                 $em->getConnection()->commit();
             } catch (\Exception $e) {

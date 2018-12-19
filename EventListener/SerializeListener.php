@@ -44,6 +44,8 @@ class SerializeListener
         }
 
         $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $serializationContext));
+
+        $request->attributes->set('_api_respond', true);
     }
 
        /**

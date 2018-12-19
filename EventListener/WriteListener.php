@@ -28,20 +28,20 @@ class WriteListener
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        $data = $request->attributes->get('data');
-
         $request = $event->getRequest();
         if ($request->isMethodSafe(false) || !$request->attributes->has('_api_resource_class') || !$request->attributes->getBoolean('_api_persist', true)) {
             return;
         }
 
+        $data = $request->attributes->get('data');
+
         $controllerResult = $event->getControllerResult();
 
-        $context = $this->resourceContextStorage()->getContext();
+        $context = $this->resourceContextStorage->getContext();
 
         $action = $context->getAction();
 
-        $this->eventDispatcher->dispatchPreEvent($context->getAction(), $context->getResourceConfig(), $entity);
+        $this->eventDispatcher->dispatchPreEvent($context->getAction(), $context->getResourceConfig(), $data);
 
         if (in_array($action, [ActionTypes::UPDATE, ActionTypes::CREATE])) {
             $this->dataPersister->persist($controllerResult);
@@ -50,6 +50,6 @@ class WriteListener
             $this->dataPersister->remove($data);
         }
 
-        $this->eventDispatcher->dispatchPostEvent($context->getAction(), $context->getResourceConfig(), $entity);
+        $this->eventDispatcher->dispatchPostEvent($context->getAction(), $context->getResourceConfig(), $data);
     }
 }

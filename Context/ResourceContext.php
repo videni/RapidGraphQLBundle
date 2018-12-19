@@ -12,6 +12,8 @@ class ResourceContext
 
     private $resourceConfig;
 
+    private $requestHeaders;
+
     /**
      * @return mixed
      */
@@ -88,6 +90,26 @@ class ResourceContext
     public function setResourceConfig($resourceConfig)
     {
         $this->resourceConfig = $resourceConfig;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestHeaders()
+    {
+        return $this->requestHeaders;
+    }
+
+    /**
+     * @param mixed $requestHeaders
+     *
+     * @return self
+     */
+    public function setRequestHeaders($requestHeaders)
+    {
+        $this->requestHeaders = $requestHeaders;
 
         return $this;
     }
