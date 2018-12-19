@@ -19,16 +19,37 @@ services:
 
     Videni\Bundle\RestBundle\EventListener\DataPersister: ~
 
+    Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider:
+        arguments:
+            - '@service_container'
+            - []
+
+    Videni\Bundle\RestBundle\Decoder\DecoderProviderInterface: '@Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider'
+
+    Videni\Bundle\RestBundle\Decoder\JsonDecoder: ~
+
+    Videni\Bundle\RestBundle\Normalizer\CamelKeysNormalizer: ~
+
+    Videni\Bundle\RestBundle\Normalizer\ArrayNormalizerInterface: '@Videni\Bundle\RestBundle\Normalizer\CamelKeysNormalizer'
+
     Negotiation\Negotiator: ~
 
 # kernel.request event
     Videni\Bundle\RestBundle\EventListener\ResourceContextListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 10 }
 
     Videni\Bundle\RestBundle\EventListener\FormatListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 7 }
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 8 }
+
+    Videni\Bundle\RestBundle\EventListener\BodyListener:
+        arguments:
+            - '@Videni\Bundle\RestBundle\Normalizer\ArrayNormalizerInterface'
+            - '@Videni\Bundle\RestBundle\Decoder\DecoderProviderInterface'
+            - false
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 6 }
 
     Videni\Bundle\RestBundle\EventListener\ResourceListener:
         tags:

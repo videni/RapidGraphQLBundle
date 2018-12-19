@@ -18,6 +18,9 @@ use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Symfony\Component\Config\Loader\GlobFileLoader;
 use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
+use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
+use Videni\Bundle\RestBundle\EventListener\BodyListener;
 
 class VideniRestExtension extends Extension
 {
@@ -33,8 +36,9 @@ class VideniRestExtension extends Extension
         $loader->load('services.yaml');
 
         $this->registerFilterOperators($container, $config);
-
         $this->loadResourceConfiguration($container, $config['application_name']);
+
+        $this->configureBodyListener($container, $config);
 
         DependencyInjectionUtil::setConfig($container, $config);
     }
@@ -82,5 +86,36 @@ class VideniRestExtension extends Extension
         );
 
         $container->setParameter('videni_rest.resource_config', $configs);
+    }
+
+    public function configureBodyListener($container, $config)
+    {
+        $bodyListenerDef = $container->getDefinition(BodyListener::class);
+        if (!empty($config['body_listener']['service'])) {
+            $bodyListenerDef->clearTag('kernel.event_listener');
+        }
+
+        $bodyListenerDef->replaceArgument(2, $config['body_listener']['throw_exception_on_unsupported_content_type']);
+
+        //decoder
+        $decoderProviderDef = $container->getDefinition(ContainerDecoderProvider::class);
+        $decoderProviderDef->replaceArgument(1, $config['body_listener']['decoders']);
+
+        $decoderServicesMap = array();
+        foreach ($config['body_listener']['decoders'] as $id) {
+            $decoderServicesMap[$id] = new Reference($id);
+        }
+
+        $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
+
+        $decoderProviderDef->replaceArgument(0, $decodersServiceLocator);
+
+        //normalizer
+        $arrayNormalizer = $config['body_listener']['array_normalizer'];
+
+        if (null !== $arrayNormalizer['service']) {
+            $bodyListener = $container->getDefinition('fos_rest.body_listener');
+            $bodyListener->replaceArgument(0, new Reference($arrayNormalizer['service']));
+        }
     }
 }

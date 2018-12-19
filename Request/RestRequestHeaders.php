@@ -2,7 +2,6 @@
 
 namespace Videni\Bundle\RestBundle\Request;
 
-use Oro\Component\ChainProcessor\AbstractParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

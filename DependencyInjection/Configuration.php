@@ -6,6 +6,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
+use Videni\Bundle\RestBundle\Decoder\JsonDecoder;
 
 class Configuration implements ConfigurationInterface
 {
@@ -26,6 +27,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addFilterOperatorsNode($node);
         $this->addFiltersNode($node);
+        $this->addBodyListenerSection($node);
 
         return $treeBuilder;
     }
@@ -114,5 +116,42 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private function addBodyListenerSection(NodeBuilder $node)
+    {
+        $decodersDefaultValue = ['json' => JsonDecoder::class];
+
+        $node
+            ->arrayNode('body_listener')
+                ->fixXmlConfig('decoder', 'decoders')
+                ->addDefaultsIfNotSet()
+                ->canBeUnset()
+                ->canBeDisabled()
+                ->children()
+                    ->scalarNode('service')->defaultNull()->end()
+                    ->scalarNode('default_format')->defaultNull()->end()
+                    ->booleanNode('throw_exception_on_unsupported_content_type')
+                        ->defaultFalse()
+                    ->end()
+                    ->arrayNode('decoders')
+                        ->useAttributeAsKey('name')
+                        ->defaultValue($decodersDefaultValue)
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('array_normalizer')
+                        ->addDefaultsIfNotSet()
+                        ->beforeNormalization()
+                            ->ifString()->then(function ($v) {
+                                return ['service' => $v];
+                            })
+                        ->end()
+                        ->children()
+                            ->scalarNode('service')->defaultNull()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }
