@@ -156,6 +156,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('path')->end()
                                 ->scalarNode('paginator')->end()
+                                ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
