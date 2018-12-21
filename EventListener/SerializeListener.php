@@ -39,7 +39,7 @@ class SerializeListener
 
         $serializationContext = new SerializationContext();
 
-        if ($normailzationConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'normalization_context')) {
+        if ($normailzationConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'normalization_context', true)) {
             $serializationContext
                 ->setGroups(array_merge($normailzationConfig->getGroups(), ['Default']))
                 ->setSerializeNull(true)

@@ -29,7 +29,7 @@ class NewResourceFactory
         $resourceConfig = $context->getResourceConfig();
 
         /** @var ServiceConfig  */
-        $factoryConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'factory');
+        $factoryConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'factory', true);
         if (null === $factoryConfig) {
             throw new \RuntimeException(sprintf('No resource factory found for class %s', $context->getClassName()));
         }

@@ -49,7 +49,7 @@ class SingleResourceProvider
     protected function load(Request $request, $operationName, $className, ResourceConfig $resourceConfig)
     {
         /** @var ServiceConfig */
-        $repositoryConfig = $resourceConfig->getOperationAttribute($operationName, 'repository');
+        $repositoryConfig = $resourceConfig->getOperationAttribute($operationName, 'repository', true);
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 

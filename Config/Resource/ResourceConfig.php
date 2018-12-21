@@ -243,7 +243,7 @@ class ResourceConfig
         unset($this->operations[$operationName]);
     }
 
-    public function getOperationAttribute(string $operationName, string $key)
+    public function getOperationAttribute(string $operationName, string $key, $fallback = false)
     {
         $operationAttribute = null;
 
@@ -253,29 +253,34 @@ class ResourceConfig
                 $operationAttribute = $operation->$getter();
             }
         }
-
-        $resourceAttribute = null;
-        if ($getter = $this->getGetter($this, $key)) {
-            $resourceAttribute = $this->$getter();
-        }
-
-        if (empty($operationAttribute)) {
-            return $resourceAttribute;
-        }
-
-        if ($operationAttribute && $operationAttribute instanceof ServiceConfig) {
-            return ServiceConfig::fromArray(array_merge($resourceAttribute->toArray(), array_filter($operationAttribute->toArray())));
-        }
-
-        if ($operationAttribute && $operationAttribute instanceof SerializationConfig) {
-            return SerializationConfig::fromArray(array_merge($resourceAttribute->toArray(), array_filter($operationAttribute->toArray())));
+        //for service config, we need to merge operation level with resource level's
+        $isServiceConfig = $operationAttribute instanceof ServiceConfig ?? false;
+        if ($isServiceConfig) {
+            $resourceLevelAttribute  = $this->getResourceLevelAttribute($key);
+            if(null !==$resourceLevelAttribute) {
+                return ServiceConfig::fromArray(array_merge($resourceLevelAttribute->toArray(), array_filter($operationAttribute->toArray())));
+            }
         }
 
         if (!empty($operationAttribute)) {
             return $operationAttribute;
         }
 
+        if($fallback) {
+            return $this->getResourceLevelAttribute($key);
+        }
+
         return null;
+    }
+
+    private function getResourceLevelAttribute($key)
+    {
+        $resourceLevelAttribute = null;
+        if ($getter = $this->getGetter($this, $key)){
+            $resourceLevelAttribute = $this->$getter();
+        }
+
+        return $resourceLevelAttribute;
     }
 
     /**
