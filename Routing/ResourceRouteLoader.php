@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Videni\Bundle\RestBundle\Routing;
 
-use Videni\Bundle\RestBundle\Exception\InvalidResourceException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
@@ -19,6 +18,7 @@ use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
+use Videni\Bundle\RestBundle\Exception\InvalidResourceException;
 
 /**
  * Loads Resources.
