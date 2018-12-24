@@ -12,6 +12,7 @@ class OperationConfig
     private $routeName;
     private $form;
     private $controller;
+    private $resourceProvider;
     private $accessControll;
     private $accessControlMessage;
 
@@ -319,6 +320,9 @@ class OperationConfig
         if (array_key_exists('controller', $config)) {
             $self->setController($config['controller']);
         }
+        if (array_key_exists('resource_provider', $config)) {
+            $self->setResourceProvider($config['resource_provider']);
+        }
         if (array_key_exists('route_name', $config)) {
             $self->setRouteName($config['route_name']);
         }
@@ -362,6 +366,26 @@ class OperationConfig
     public function setForm($form)
     {
         $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResourceProvider()
+    {
+        return $this->resourceProvider;
+    }
+
+    /**
+     * @param mixed $resourceProvider
+     *
+     * @return self
+     */
+    public function setResourceProvider($resourceProvider)
+    {
+        $this->resourceProvider = $resourceProvider;
 
         return $this;
     }

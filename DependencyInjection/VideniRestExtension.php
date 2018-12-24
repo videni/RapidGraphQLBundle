@@ -21,6 +21,7 @@ use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfigura
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
+use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
 
 class VideniRestExtension extends Extension
 {
@@ -37,8 +38,8 @@ class VideniRestExtension extends Extension
 
         $this->registerFilterOperators($container, $config);
         $this->loadResourceConfiguration($container, $config['application_name']);
-
         $this->configureBodyListener($container, $config);
+        $this->configureResourceProvider($container, $config);
 
         DependencyInjectionUtil::setConfig($container, $config);
     }
@@ -88,7 +89,7 @@ class VideniRestExtension extends Extension
         $container->setParameter('videni_rest.resource_config', $configs);
     }
 
-    public function configureBodyListener($container, $config)
+    private function configureBodyListener($container, $config)
     {
         $bodyListenerDef = $container->getDefinition(BodyListener::class);
         if (!empty($config['body_listener']['service'])) {
@@ -117,5 +118,13 @@ class VideniRestExtension extends Extension
             $bodyListener = $container->getDefinition('fos_rest.body_listener');
             $bodyListener->replaceArgument(0, new Reference($arrayNormalizer['service']));
         }
+    }
+
+    public function configureResourceProvider($container)
+    {
+        $container->registerForAutoconfiguration(ResourceProviderInterface::class)
+            ->addTag('videni_rest.resource_provider')
+            ->setPublic(true)
+        ;
     }
 }

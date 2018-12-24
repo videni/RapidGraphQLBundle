@@ -17,8 +17,9 @@ use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 use Videni\Bundle\RestBundle\Paginator\PaginatorApplicator;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
-class CollectionResourceProvider
+class CollectionResourceProvider implements ResourceProviderInterface
 {
     private $filterNames;
 
@@ -42,6 +43,10 @@ class CollectionResourceProvider
 
     public function get(ResourceContext $context, Request $request)
     {
+        if (!in_array($context->getAction(), [ActionTypes::INDEX])) {
+            return;
+        }
+
         $filterValues = $this->filterValueAccessorFactory->create($request);
 
         $query = $this->paginatorApplicator->apply($context, $filterValues, $request);

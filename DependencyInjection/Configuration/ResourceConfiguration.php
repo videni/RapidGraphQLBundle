@@ -158,6 +158,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->scalarNode('paginator')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
+                                ->scalarNode('resource_provider')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
                                 ->scalarNode('action')->isRequired()->cannotBeEmpty()->end()

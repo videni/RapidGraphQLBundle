@@ -15,8 +15,9 @@ use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
-class SingleResourceProvider
+class SingleResourceProvider implements ResourceProviderInterface
 {
     private $container;
 
@@ -43,6 +44,10 @@ class SingleResourceProvider
      */
     public function get(ResourceContext $context, Request $request)
     {
+        if (!in_array($context->getAction(), [ActionTypes::VIEW, ActionTypes::UPDATE, ActionTypes::DELETE])) {
+            return;
+        }
+
         return $this->load($request, $context->getOperationName(), $context->getClassName(), $context->getResourceConfig());
     }
 

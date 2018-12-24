@@ -6,7 +6,7 @@ class ResourceContext
 {
     private $className;
 
-    private $operationName;
+    private $operationName = null;
 
     private $action;
 
@@ -112,5 +112,18 @@ class ResourceContext
         $this->requestHeaders = $requestHeaders;
 
         return $this;
+    }
+
+    public function getOperationConfig()
+    {
+        if (null === $this->operationName) {
+            throw new \RuntimeException('Operation must be set in the context before operation config is requested');
+        }
+
+        if (null === $this->resourceConfig) {
+            throw new \RuntimeException('ResourceConfig must be set in the context before operation config is requested');
+        }
+
+        return $this->resourceConfig->hasOperation($this->operationName)?$this->resourceConfig->getOperation($this->operationName): null;
     }
 }

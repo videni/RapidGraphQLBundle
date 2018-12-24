@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Factory;
+namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
@@ -8,8 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
-class NewResourceFactory
+class NewResourceProvider implements ResourceProviderInterface
 {
     private $container;
 
@@ -24,8 +25,12 @@ class NewResourceFactory
      /**
      * {@inheritdoc}
      */
-    public function create(ResourceContext $context, Request $request)
+    public function get(ResourceContext $context, Request $request)
     {
+        if ($context->getAction() !== ActionTypes::CREATE) {
+            return;
+        }
+
         $resourceConfig = $context->getResourceConfig();
 
         /** @var ServiceConfig  */
