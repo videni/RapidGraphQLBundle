@@ -13,6 +13,8 @@ use Doctrine\Common\Inflector\Inflector;
 class ResourceConfiguration implements ConfigurationInterface
 {
     public const ROOT_NODE = "api";
+    public const MAX_RESULTS = 50;
+
 
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
@@ -56,25 +58,18 @@ class ResourceConfiguration implements ConfigurationInterface
                         if (!isset($value['short_name'])) {
                             $value['short_name'] = $this->getClassName($key);
                         }
-                        if (!isset($value['repository'])) {
-                            $value['repository'] = $this->getServiceId($value['short_name'], 'repository');
-                        } else if (!isset($value['repository']['id'])) {
-                            $value['repository'] = array_merge(
-                                ['id' => $this->getServiceId($value['short_name'], 'repository')],
-                                is_string($value['repository']) ? ['id' => $value['repository']] : $value['repository']
-                            );
-                        }
+                        $this->setDefaultService($value, 'repository');
+                        $this->setDefaultService($value, 'factory');
 
-                        if (!isset($value['factory'])) {
-                            $value['factory'] = $this->getServiceId($value['short_name'], 'factory');
-                        } else if (!isset($value['factory']['id'])) {
-                            $value['factory'] = array_merge(
-                                ['id' => $this->getServiceId($value['short_name'], 'factory')],
-                                is_string($value['factory']) ? ['id' => $value['factory']] : $value['factory']
-                            );
+                        if(!array_key_exists('paginators', $value) || !array_key_exists('default', $value['paginators'])) {
+                            $value['paginators'] = [
+                                    'default' => [
+                                        'max_results' => self::MAX_RESULTS
+                                    ]
+                                ]
+                            ;
                         }
                     }
-
                     return $v;
                 })
             ->end()
@@ -147,17 +142,22 @@ class ResourceConfiguration implements ConfigurationInterface
                     ->arrayNode('operations')
                         ->useAttributeAsKey('name')
                         ->arrayPrototype()
-                            ->validate()
+                            ->beforeNormalization()
                                 ->ifTrue(function ($value) {
                                     return $value['action'] === ActionTypes::INDEX  && empty($value['paginator']);
                                 })
-                                ->thenInvalid('Paginator is required for index action')
+                                ->then(function ($v) {
+                                    $v['paginator'] = 'default';
+
+                                    return $v;
+                                })
                             ->end()
                             ->children()
                                 ->scalarNode('path')->end()
                                 ->scalarNode('paginator')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
+                                ->scalarNode('acl_enabled')->defaultValue(false)->end()
                                 ->scalarNode('resource_provider')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
@@ -236,9 +236,9 @@ class ResourceConfiguration implements ConfigurationInterface
         $rootNode
             ->useAttributeAsKey('paginator_name')
             ->arrayPrototype()
+                ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('class')->cannotBeEmpty()->end()
-                    ->scalarNode('max_results')->defaultValue(50)->end()
+                    ->scalarNode('max_results')->defaultValue(self::MAX_RESULTS)->end()
                     ->scalarNode('disable_sorting')->defaultValue(false)->end()
                     ->arrayNode('sortings')
                         ->useAttributeAsKey('name')
@@ -312,5 +312,19 @@ class ResourceConfiguration implements ConfigurationInterface
         $name = Inflector::tableize($resourceShortName);
 
         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
+    }
+
+    private function setDefaultService(&$value, $attributeName)
+    {
+        $serviceId = $this->getServiceId($value['short_name'], $attributeName);
+
+        if (!isset($value[$attributeName])) {
+            $value[$attributeName] = $serviceId;
+        } else if (!isset($value[$attributeName]['id'])) {
+            $value[$attributeName] = array_merge(
+                ['id' => $serviceId],
+                is_string($value[$attributeName]) ? ['id' => $value[$attributeName]] : $value[$attributeName]
+            );
+        }
     }
 }
