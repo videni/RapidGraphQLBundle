@@ -26,8 +26,6 @@ class PaginatorApplicator
 
     private $validateSorting;
 
-    private $paginatorConfig = null;
-
     /**
      * @param DoctrineHelper      $doctrineHelper
      * @param EntityClassResolver $entityClassResolver
@@ -52,8 +50,6 @@ class PaginatorApplicator
     {
         $criteria = new Criteria($this->entityClassResolver);
 
-        $this->loadPaginatorConifig($resourceContext);
-
         $this->applyFilters($criteria, $resourceContext, $filterValues);
 
         return $this->buildQuery->build($criteria, $resourceContext, $request);
@@ -61,16 +57,17 @@ class PaginatorApplicator
 
     protected function applyFilters(Criteria $criteria, ResourceContext $resourceContext,FilterValueAccessor $filterValues)
     {
-        if (!$this->paginatorConfig) {
+        $paginatorConfig = $resourceContext->getPaginatorConfig();
+        if (null === $paginatorConfig) {
             return;
         }
 
         /** @var FilterInterface[] $filters */
-        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $this->paginatorConfig);
+        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $paginatorConfig);
 
-        $this->addSorting->process($resourceContext->getClassName(), $this->paginatorConfig, $filters);
+        $this->addSorting->process($resourceContext->getClassName(), $paginatorConfig, $filters);
 
-        $this->validateSorting->validate($filters, $filterValues, $this->paginatorConfig);
+        $this->validateSorting->validate($filters, $filterValues, $paginatorConfig);
 
         /**
          * it is important to iterate by $filters, not by $filterValues,
@@ -89,23 +86,5 @@ class PaginatorApplicator
                 $filter->apply($criteria);
             }
         }
-    }
-
-    protected function loadPaginatorConifig(ResourceContext $context)
-    {
-        $operationName = $context->getOperationName();
-        $resourceConfig = $context->getResourceConfig();
-
-        $paginatorName = $resourceConfig->getOperation($operationName)->getPaginator();
-        if (!$paginatorName || !$resourceConfig->hasPaginator($paginatorName)) {
-            return;
-        }
-
-        $this->paginatorConfig = $resourceConfig->getPaginator($paginatorName);
-    }
-
-    public function getPaginatorConfig()
-    {
-        return $this->paginatorConfig;
     }
 }

@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
+use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 
 class VideniRestExtension extends Extension
 {
@@ -122,8 +123,13 @@ class VideniRestExtension extends Extension
 
     public function configureResourceProvider($container)
     {
-        $container->registerForAutoconfiguration(ResourceProviderInterface::class)
+        $container
+            ->registerForAutoconfiguration(ResourceProviderInterface::class)
             ->addTag('videni_rest.resource_provider')
+            ->setPublic(true)
+        ;
+        $container
+            ->registerForAutoconfiguration(EntityRepository::class)
             ->setPublic(true)
         ;
     }

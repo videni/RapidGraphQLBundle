@@ -61,14 +61,17 @@ class ResourceConfiguration implements ConfigurationInterface
                         $this->setDefaultService($value, 'repository');
                         $this->setDefaultService($value, 'factory');
 
+                        $default = [
+                            'default' => [
+                                'max_results' => self::MAX_RESULTS
+                            ]
+                        ];
+
                         //set 'default' paginator for each resource
-                        if(!array_key_exists('paginators', $value) || !array_key_exists('default', $value['paginators'])) {
-                            $value['paginators'] = [
-                                    'default' => [
-                                        'max_results' => self::MAX_RESULTS
-                                    ]
-                                ]
-                            ;
+                        if(!array_key_exists('paginators', $value)) {
+                            $value['paginators'] = $default;
+                        } else if (!array_key_exists('default', $value['paginators'])) {
+                            $value['paginators'] = $value['paginators'] + $default;
                         }
                     }
 

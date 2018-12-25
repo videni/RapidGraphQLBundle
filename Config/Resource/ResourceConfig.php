@@ -485,7 +485,7 @@ class ResourceConfig
         if(null !== $resourceLevelAttribute) {
             return array_merge(
                     $resourceLevelAttribute->toArray(),
-                    array_filter($operationAttribute->toArray(),
+                    array_filter($operationLevelAttribute->toArray(),
                     function($value) {
                         return $value !== null;
                     }

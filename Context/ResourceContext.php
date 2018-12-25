@@ -116,6 +116,25 @@ class ResourceContext
 
     public function getOperationConfig()
     {
+        $this->assure();
+
+        return $this->resourceConfig->hasOperation($this->operationName) ? $this->resourceConfig->getOperation($this->operationName) : null;
+    }
+
+    public function getPaginatorConfig()
+    {
+        $this->assure();
+
+        $paginatorName = $this->resourceConfig->getOperation($this->operationName)->getPaginator();
+        if (!$paginatorName || !$this->resourceConfig->hasPaginator($paginatorName)) {
+            return null;
+        }
+
+        return $this->resourceConfig->getPaginator($paginatorName);
+    }
+
+    private function assure()
+    {
         if (null === $this->operationName) {
             throw new \RuntimeException('Operation must be set in the context before operation config is requested');
         }
@@ -123,7 +142,5 @@ class ResourceContext
         if (null === $this->resourceConfig) {
             throw new \RuntimeException('ResourceConfig must be set in the context before operation config is requested');
         }
-
-        return $this->resourceConfig->hasOperation($this->operationName)?$this->resourceConfig->getOperation($this->operationName): null;
     }
 }

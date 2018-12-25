@@ -65,7 +65,7 @@ class BuildQuery
     protected function resolveQueryBuilder(Request $request, ResourceContext $context)
     {
           /** @var ServiceConfig */
-        $repositoryConfig = $context->getResourceConfig()->getOperationAttribute($context->getOperationName(), 'repository', false);
+        $repositoryConfig = $context->getResourceConfig()->getOperationAttribute($context->getOperationName(), 'repository', true);
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 

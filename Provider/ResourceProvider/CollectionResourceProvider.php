@@ -21,6 +21,8 @@ use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 class CollectionResourceProvider implements ResourceProviderInterface
 {
+    const UNLIMITED_RESULT = -1;
+
     private $filterNames;
 
     private $pagerfantaRepresentationFactory;
@@ -51,7 +53,10 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
         $query = $this->paginatorApplicator->apply($context, $filterValues, $request);
 
-        $paginatorConfig = $this->paginatorApplicator->getPaginatorConfig();
+        $paginatorConfig = $context->getPaginatorConfig();
+        if(self::UNLIMITED_RESULT === $paginatorConfig->getMaxResults()) {
+            return $query->getQuery()->getResult();
+        }
 
         $paginator = $this->getPaginator($query);
 
@@ -79,7 +84,7 @@ class CollectionResourceProvider implements ResourceProviderInterface
         return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, false, false));
     }
 
-    protected function addPaging(FilterValueAccessor $filterValues, Pagerfanta $paginator, PaginatorConfig $paginatorConfig = null)
+    protected function addPaging(FilterValueAccessor $filterValues, Pagerfanta $paginator, PaginatorConfig $paginatorConfig)
     {
         $paginator
             ->setAllowOutOfRangePages(true)
