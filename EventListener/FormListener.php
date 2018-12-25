@@ -74,7 +74,7 @@ final class FormListener
         }
 
         $options = [
-            'validation_groups' => $resourceConfig->getOperationAttribute($context->getOperationName(), 'validationGroups', true),
+            'validation_groups' => $resourceConfig->getOperationAttribute($context->getOperationName(), 'validation_groups', true),
             'data_class' =>  $this->getFormDataClass($context, $data),
         ];
 

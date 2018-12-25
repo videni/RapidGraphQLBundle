@@ -56,7 +56,7 @@ class Kernel extends BaseKernel
 
 1. Resolve resource API configurations from project config directory, such as config/rest
 
-2. Compire resource configuration when resource API definition file changed.
+2. Compile resource configuration when resource API definition file changed.
 
 
 ## Demo

@@ -265,6 +265,10 @@ class ResourceConfig
             }
         };
 
+        //empty array
+        if (is_array($operationAttribute) && empty($operationAttribute)) {
+            $operationAttribute = null;
+        }
         if (null !== $operationAttribute) {
             return $operationAttribute;
         }
@@ -396,27 +400,6 @@ class ResourceConfig
     protected function camelize($string)
     {
         return strtr(\ucwords(strtr($string, ['_' => ' '])), [' ' => '']);
-    }
-
-     /**
-     * Gets a string that unique identify this instance of entity definition config.
-     *
-     * @return string|null
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * Sets a string that unique identify this instance of entity definition config.
-     * Do not set this value in your code.
-     *
-     * @param string|null $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
     }
 
     /**
