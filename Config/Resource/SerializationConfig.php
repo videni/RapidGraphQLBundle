@@ -4,7 +4,9 @@ namespace Videni\Bundle\RestBundle\Config\Resource;
 
 class SerializationConfig extends \ArrayObject
 {
-    private $groups = [];
+    private $groups = null;
+
+    private $enableMaxDepth = null;
 
     /**
      * @return mixed
@@ -33,6 +35,9 @@ class SerializationConfig extends \ArrayObject
         if (isset($config['groups'])) {
             $self->setGroups($config['groups']);
         }
+        if (isset($config['enable_max_depth'])) {
+            $self->setEnableMaxDepth($config['enable_max_depth']);
+        }
 
         return $self;
     }
@@ -42,5 +47,25 @@ class SerializationConfig extends \ArrayObject
         return [
             'groups' => $this->getGroups()
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableMaxDepth()
+    {
+        return $this->enableMaxDepth;
+    }
+
+    /**
+     * @param mixed $enableMaxDepth
+     *
+     * @return self
+     */
+    public function setEnableMaxDepth($enableMaxDepth)
+    {
+        $this->enableMaxDepth = $enableMaxDepth;
+
+        return $this;
     }
 }

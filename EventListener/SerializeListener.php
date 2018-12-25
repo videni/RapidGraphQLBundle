@@ -43,6 +43,7 @@ class SerializeListener
             $serializationContext
                 ->setGroups($normailzationConfig->getGroups())
                 ->setSerializeNull(true)
+                ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())
             ;
         }
 

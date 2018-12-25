@@ -9,21 +9,18 @@ class ResourceConfig
 {
     private $routePrefix;
     private $shortName;
-    private $form;
     private $description;
-    private $formats = [];
 
+    private $formats = null;
     private $factory = null;
     private $repository = null;
     private $normalizationContext = null;
     private $denormalizationContext = null;
-    private $parentResourceClass;
+    private $validationGroups = null;
+    private $form = null;
 
     private $operations = [];
     private $paginators = [];
-
-    private $formFields = [];
-
 
      /**
      * A string that unique identify this instance of entity definition config.
@@ -254,16 +251,21 @@ class ResourceConfig
             }
         }
 
-        //for service config, we need to merge operation level with resource level
-        $isServiceConfig = $operationAttribute instanceof ServiceConfig ?? false;
-        if ($isServiceConfig) {
-            $resourceLevelAttribute  = $this->getResourceLevelAttribute($key);
-            if(null !==$resourceLevelAttribute) {
-                return ServiceConfig::fromArray(array_merge($resourceLevelAttribute->toArray(), array_filter($operationAttribute->toArray(), function($value) { return $value !== null; })));
+        //we need to merge operation level with resource level attributes for ServiceConfig and SerializationConfig.
+        if($operationAttribute instanceof ServiceConfig) {
+            $mergedAttribtues = $this->mergeResourceLevelAttributes($key, $operationAttribute);
+            if($mergedAttribtues !== false) {
+                return ServiceConfig::fromArray($mergedAttribtues);
             }
-        }
+        };
+        if($operationAttribute instanceof SerializationConfig) {
+            $mergedAttribtues = $this->mergeResourceLevelAttributes($key, $operationAttribute);
+            if($mergedAttribtues !== false) {
+                return SerializationConfig::fromArray($mergedAttribtues);
+            }
+        };
 
-        if (!empty($operationAttribute)) {
+        if (null !== $operationAttribute) {
             return $operationAttribute;
         }
 
@@ -272,16 +274,6 @@ class ResourceConfig
         }
 
         return null;
-    }
-
-    private function getResourceLevelAttribute($key)
-    {
-        $resourceLevelAttribute = null;
-        if ($getter = $this->getGetter($this, $key)){
-            $resourceLevelAttribute = $this->$getter();
-        }
-
-        return $resourceLevelAttribute;
     }
 
     /**
@@ -467,83 +459,6 @@ class ResourceConfig
         return $this;
     }
 
-      /**
-     * Checks whether the configuration of at least one form field exists.
-     *
-     * @return bool
-     */
-    public function hasFormFields()
-    {
-        return !empty($this->formFields);
-    }
-
-    /**
-     * Gets the configuration for all formFields.
-     *
-     * @return FormFieldConfig[] [formField name => config, ...]
-     */
-    public function getFormFields()
-    {
-        return $this->formFields;
-    }
-
-    /**
-     * Checks whether the configuration of the formField exists.
-     *
-     * @param string $formFieldName
-     *
-     * @return bool
-     */
-    public function hasFormField($formFieldName)
-    {
-        return isset($this->formFields[$formFieldName]);
-    }
-
-    /**
-     * Gets the configuration of the formField.
-     *
-     * @param string $formFieldName
-     *
-     * @return FormFieldConfig|null
-     */
-    public function getFormField($formFieldName)
-    {
-        if (!isset($this->formFields[$formFieldName])) {
-            return null;
-        }
-
-        return $this->formFields[$formFieldName];
-    }
-
-     /**
-     * Adds the configuration of the formField.
-     *
-     * @param string                 $formFieldName
-     * @param FormFieldConfig|null $formField
-     *
-     * @return FormFieldConfig
-     */
-    public function addFormField($formFieldName, $formField = null)
-    {
-        if (null === $formField) {
-            $formField = new FormFieldConfig();
-        }
-
-        $this->formFields[$formFieldName] = $formField;
-
-        return $formField;
-    }
-
-    /**
-     * Removes the configuration of the formField.
-     *
-     * @param string $formFieldName
-     */
-    public function removeFormField($formFieldName)
-    {
-        unset($this->formFields[$formFieldName]);
-    }
-
     /**
      * @return mixed
      */
@@ -562,5 +477,32 @@ class ResourceConfig
         $this->form = $form;
 
         return $this;
+    }
+
+    private function mergeResourceLevelAttributes($key, $operationLevelAttribute)
+    {
+        $resourceLevelAttribute  = $this->getResourceLevelAttribute($key);
+        if(null !== $resourceLevelAttribute) {
+            return array_merge(
+                    $resourceLevelAttribute->toArray(),
+                    array_filter($operationAttribute->toArray(),
+                    function($value) {
+                        return $value !== null;
+                    }
+                )
+            );
+        }
+
+        return false;
+    }
+
+    private function getResourceLevelAttribute($key)
+    {
+        $resourceLevelAttribute = null;
+        if ($getter = $this->getGetter($this, $key)){
+            $resourceLevelAttribute = $this->$getter();
+        }
+
+        return $resourceLevelAttribute;
     }
 }

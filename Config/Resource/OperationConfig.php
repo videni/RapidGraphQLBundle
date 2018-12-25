@@ -5,24 +5,24 @@ namespace Videni\Bundle\RestBundle\Config\Resource;
 class OperationConfig
 {
     private $action;
-    private $defaults = [];
+    private $defaults;
     private $path;
-    private $paginator = null;
-    private $methods =  [];
+    private $paginator;
+    private $methods;
     private $routeName;
-    private $form;
-    private $controller;
     private $resourceProvider;
     private $accessControll;
     private $accessControlMessage;
     private $aclEnabled = false;
+    private $controller;
 
-    private $factory;
-    private $repository;
-    private $normalizationContext;
-    private $denormalizationContext;
-    private $validationGroups;
-    private $formats = [];
+    private $formats = null;
+    private $factory = null;
+    private $repository = null;
+    private $normalizationContext = null;
+    private $denormalizationContext = null;
+    private $validationGroups = null;
+    private $form = null;
 
     /**
      * @return mixed
