@@ -65,7 +65,7 @@ class BuildQuery
     protected function resolveQueryBuilder(Request $request, ResourceContext $context)
     {
           /** @var ServiceConfig */
-        $repositoryConfig = $context->getResourceConfig()->getOperationAttribute($context->getOperationName(), 'repository', true);
+        $repositoryConfig = $context->getResourceConfig()->getOperationAttribute($context->getOperationName(), 'repository', false);
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
@@ -75,9 +75,9 @@ class BuildQuery
                 $arguments = [$arguments];
             }
 
-            $arguments = array_values($this->parametersParser->parseRequestValues($arguments, $request));
+            $arguments = $this->parametersParser->parseRequestValues($arguments, $request);
 
-            $query = $repositoryInstance->$method(...$arguments);
+            $query = $repositoryConfig->getSpreadArguments() ? $repositoryInstance->$method(...array_values($arguments)) : $repositoryInstance->$method($arguments);
 
             if (!$query instanceof QueryBuilder) {
                 throw new \LogicException(sprintf(

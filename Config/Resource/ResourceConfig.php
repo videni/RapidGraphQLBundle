@@ -253,12 +253,13 @@ class ResourceConfig
                 $operationAttribute = $operation->$getter();
             }
         }
-        //for service config, we need to merge operation level with resource level's
+
+        //for service config, we need to merge operation level with resource level
         $isServiceConfig = $operationAttribute instanceof ServiceConfig ?? false;
         if ($isServiceConfig) {
             $resourceLevelAttribute  = $this->getResourceLevelAttribute($key);
             if(null !==$resourceLevelAttribute) {
-                return ServiceConfig::fromArray(array_merge($resourceLevelAttribute->toArray(), array_filter($operationAttribute->toArray())));
+                return ServiceConfig::fromArray(array_merge($resourceLevelAttribute->toArray(), array_filter($operationAttribute->toArray(), function($value) { return $value !== null; })));
             }
         }
 

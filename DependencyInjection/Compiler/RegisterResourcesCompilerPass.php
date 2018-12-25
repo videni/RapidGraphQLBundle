@@ -11,7 +11,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Factory\Factory;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 

@@ -8,6 +8,7 @@ class ServiceConfig
     private $arguments = [];
     private $method;
     private $class;
+    private $spreadArguments = true;
 
     /**
      * @return mixed
@@ -105,6 +106,9 @@ class ServiceConfig
         if (array_key_exists('class', $config)) {
             $self->setClass($config['class']);
         }
+        if (array_key_exists('spread_arguments', $config)) {
+            $self->setSpreadArguments($config['spread_arguments']);
+        }
 
         return $self;
     }
@@ -116,6 +120,27 @@ class ServiceConfig
             'class' => $this->getClass(),
             'method' => $this->getMethod(),
             'arguments' => $this->getArguments(),
+            'spread_arguments' => $this->getSpreadArguments(),
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpreadArguments()
+    {
+        return $this->spreadArguments;
+    }
+
+    /**
+     * @param mixed $spreadArguments
+     *
+     * @return self
+     */
+    public function setSpreadArguments($spreadArguments)
+    {
+        $this->spreadArguments = $spreadArguments;
+
+        return $this;
     }
 }

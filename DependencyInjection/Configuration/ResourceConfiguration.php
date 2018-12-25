@@ -61,6 +61,7 @@ class ResourceConfiguration implements ConfigurationInterface
                         $this->setDefaultService($value, 'repository');
                         $this->setDefaultService($value, 'factory');
 
+                        //set 'default' paginator for each resource
                         if(!array_key_exists('paginators', $value) || !array_key_exists('default', $value['paginators'])) {
                             $value['paginators'] = [
                                     'default' => [
@@ -70,6 +71,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ;
                         }
                     }
+
                     return $v;
                 })
             ->end()
@@ -101,6 +103,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->scalarNode('id')->end()
                             ->scalarNode('method')->end()
                             ->scalarNode('class')->end()
+                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
                             ->arrayNode('arguments')
                                 ->prototype('scalar')->end()
                             ->end()
@@ -134,6 +137,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->scalarNode('id')->end()
                             ->scalarNode('method')->end()
                             ->scalarNode('class')->end()
+                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
                             ->arrayNode('arguments')
                                 ->prototype('scalar')->end()
                             ->end()
@@ -179,6 +183,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                         ->children()
                                             ->scalarNode('id')->end()
                                             ->scalarNode('method')->end()
+                                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
                                             ->arrayNode('arguments')
                                                 ->prototype('scalar')->end()
                                             ->end()
@@ -211,6 +216,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('id')->end()
                                         ->scalarNode('method')->end()
+                                        ->scalarNode('spread_arguments')->defaultValue(true)->end()
                                         ->arrayNode('arguments')
                                             ->prototype('scalar')->end()
                                         ->end()
@@ -307,13 +313,6 @@ class ResourceConfiguration implements ConfigurationInterface
         return null;
     }
 
-    private function getServiceId($resourceShortName, $key)
-    {
-        $name = Inflector::tableize($resourceShortName);
-
-        return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
-    }
-
     private function setDefaultService(&$value, $attributeName)
     {
         $serviceId = $this->getServiceId($value['short_name'], $attributeName);
@@ -326,5 +325,12 @@ class ResourceConfiguration implements ConfigurationInterface
                 is_string($value[$attributeName]) ? ['id' => $value[$attributeName]] : $value[$attributeName]
             );
         }
+    }
+
+    private function getServiceId($resourceShortName, $key)
+    {
+        $name = Inflector::tableize($resourceShortName);
+
+        return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
     }
 }
