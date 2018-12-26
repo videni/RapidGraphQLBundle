@@ -20,7 +20,8 @@
         "symfony/validator": "^4.1",
         "symfony/yaml": "^4.1",
         "willdurand/hateoas-bundle": "^1.4",
-        "willdurand/negotiation": "^2.3"
+        "willdurand/negotiation": "^2.3",
+        "zendframework/zend-stdlib": "^3.2"
     },
     "repositories": [
         {
