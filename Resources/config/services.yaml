@@ -6,13 +6,9 @@ imports:
     - { resource: 'filters.yaml'}
     - { resource: 'config.yaml'}
     - { resource: 'utils.yaml'}
-    - { resource: 'paginator.yaml'}
     - { resource: 'event_listener.yaml'}
 
 parameters:
-    videni_rest.resource_class_directories:
-        - "%kernel.project_dir%/config/packages/videni_resources"
-
     videni_rest.formats:
         json:
            - 'application/json'
@@ -22,6 +18,10 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+
+    Videni\Bundle\RestBundle\:
+        resource: '../../{Paginator}'
+        public: true
 
     Videni\Bundle\RestBundle\Faker\EntityProvider:
         arguments:
@@ -55,3 +55,5 @@ services:
         arguments:
             - "@event_dispatcher"
             - '@=parameter("videni_rest.bundle_config")["application_name"]'
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\FilterValueNormalizerInterface: '@Videni\Bundle\RestBundle\Filter\Normalizer\CompositeNormalizer'

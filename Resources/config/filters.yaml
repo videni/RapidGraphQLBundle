@@ -179,3 +179,53 @@ services:
         public: false
         tags:
           - { name: videni_rest.query.comparison_expression, operator: 'NOT_ENDS_WITH' }
+
+# Filter value normalizer
+    Videni\Bundle\RestBundle\Filter\Normalizer\FilterValueNormalizer: ~
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\NormalizerCompositor: ~
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\BigintNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'bigint' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\BooleanNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'boolean' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\DateNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'boolean' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\DateTimeNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'datetime' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\DecimalNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'decimal|money|money_value' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\IntegerNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'integer|smallint|duration' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\NumberNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'float|percent' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\StringNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'string|guid|currency' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\TimeNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'time' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\OrderByNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'orderBy' }
+
+    Videni\Bundle\RestBundle\Filter\Normalizer\UnsignedIntegerNormalizer:
+        tags:
+            - { name: 'videni_rest.filter_value.normalizer', dataType: 'unsignedInteger' }
+

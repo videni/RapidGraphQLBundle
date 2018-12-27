@@ -26,6 +26,8 @@ class PaginatorApplicator
 
     private $validateSorting;
 
+    private $normalizeFilterValues;
+
     /**
      * @param DoctrineHelper      $doctrineHelper
      * @param EntityClassResolver $entityClassResolver
@@ -36,7 +38,8 @@ class PaginatorApplicator
         BuildQuery $buildQuery,
         RegisterConfiguredFilter $registerConfiguredFilter,
         AddSorting $addSorting,
-        ValidateSorting $validateSorting
+        ValidateSorting $validateSorting,
+        NormalizeFilterValues $normalizeFilterValues
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->entityClassResolver = $entityClassResolver;
@@ -44,6 +47,7 @@ class PaginatorApplicator
         $this->registerConfiguredFilter = $registerConfiguredFilter;
         $this->addSorting = $addSorting;
         $this->validateSorting = $validateSorting;
+        $this->normalizeFilterValues = $normalizeFilterValues;
     }
 
     public function apply(ResourceContext $resourceContext, FilterValueAccessor $filterValues, Request $request)
@@ -66,8 +70,8 @@ class PaginatorApplicator
         $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $paginatorConfig);
 
         $this->addSorting->process($resourceContext->getClassName(), $paginatorConfig, $filters);
-
         $this->validateSorting->validate($filters, $filterValues, $paginatorConfig);
+        $this->normalizeFilterValues->normalize($resourceContext, $filters, $filterValues);
 
         /**
          * it is important to iterate by $filters, not by $filterValues,
