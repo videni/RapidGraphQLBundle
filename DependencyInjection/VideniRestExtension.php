@@ -23,6 +23,7 @@ use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RestBundle\Factory\FactoryInterface;
 
 class VideniRestExtension extends Extension
 {
@@ -130,6 +131,10 @@ class VideniRestExtension extends Extension
         ;
         $container
             ->registerForAutoconfiguration(EntityRepository::class)
+            ->setPublic(true)
+        ;
+        $container
+            ->registerForAutoconfiguration(FactoryInterface::class)
             ->setPublic(true)
         ;
     }

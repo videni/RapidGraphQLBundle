@@ -15,10 +15,10 @@ services:
     Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider:
         calls:
             - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider', 10]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider', 5]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider', 0]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\NewResourceProvider', 5]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider', 0]]
             - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider', -5]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\NewResourceProvider', -10]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider', -10]]
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface: '@Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider'
 

@@ -27,10 +27,23 @@ class NewResourceProvider implements ResourceProviderInterface
      */
     public function get(ResourceContext $context, Request $request)
     {
+        $force = $request->attributes->get('_treat_as_new', false);
+        if ($force) {
+            return $this->create($context, $request);
+        }
+
         if ($context->getAction() !== ActionTypes::CREATE) {
             return;
         }
 
+        return $this->create($context, $request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function create(ResourceContext $context, Request $request)
+    {
         $resourceConfig = $context->getResourceConfig();
 
         /** @var ServiceConfig  */
