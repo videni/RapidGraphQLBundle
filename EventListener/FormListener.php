@@ -44,6 +44,9 @@ final class FormListener
         }
 
         $request = $event->getRequest();
+        if($request->attributes->get('_disable_form', false)) {
+            return;
+        }
 
         $form = $this->createForm($context, $request->attributes->get('data'));
         if ($form) {
