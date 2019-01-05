@@ -163,6 +163,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('path')->end()
                                 ->scalarNode('paginator')->end()
+                                ->scalarNode('route_name')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
                                 ->scalarNode('acl_enabled')->defaultValue(false)->end()

@@ -16,6 +16,7 @@ use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SingleResourceProvider implements ResourceProviderInterface
 {
@@ -69,11 +70,12 @@ class SingleResourceProvider implements ResourceProviderInterface
             return $repositoryInstance->$method(...$arguments);
         }
 
-        if ($request->attributes->has('id')) {
-            return $repositoryInstance->find($request->attributes->get('id'));
+        $id = $request->attributes->get('id', null);
+        if (null !== $id ) {
+            return $repositoryInstance->find((int)$id);
         }
 
-        return null;
+        throw new NotFoundHttpException('The resource you requested is not found');
     }
 
     private static function getRepositoryServiceId($resourceShortName)
