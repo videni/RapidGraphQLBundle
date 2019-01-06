@@ -53,7 +53,7 @@ class BodyListener
                 $data = $decoder->decode($content);
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
-                    $normalizeRequest = true;
+                    $normalizeRequest = $request->attributes->get('_api_normalize_request', true);
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }

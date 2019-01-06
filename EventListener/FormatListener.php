@@ -45,6 +45,9 @@ class FormatListener
         }
 
         $resourceContext = $this->resourceContextStorage->getContext();
+        if (null === $resourceContext) {
+            return;
+        }
 
         $this->formats = $this->formatsProvider->getFormats($resourceContext->getResourceConfig(), $resourceContext->getOperationName());
 

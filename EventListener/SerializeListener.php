@@ -66,8 +66,15 @@ class SerializeListener
         }
 
         $serializationContext = new SerializationContext();
-        $serializationContext->setGroups($request->attributes->get('_api_normalization_context', []));
 
-        $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $request->attributes->get('_api_normalization_context', [])));
+        $normalizationContext = $request->attributes->get('_api_normalization_context', null);
+        if (null !== $normalizationContext && isset($normalizationContext['groups']) && !empty($normalizationContext['groups'])) {
+            $serializationContext
+                ->setGroups($normalizationContext['groups'])
+                ->setSerializeNull(true)
+            ;
+        }
+
+        $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $serializationContext));
     }
 }
