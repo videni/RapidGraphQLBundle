@@ -6,6 +6,8 @@ namespace Videni\Bundle\RestBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 final class RespondListener
 {
@@ -13,6 +15,19 @@ final class RespondListener
         'POST' => Response::HTTP_CREATED,
         'DELETE' => Response::HTTP_NO_CONTENT,
     ];
+
+    const ACTION_TO_CODE = [
+        ActionTypes::UPDATE =>  Response::HTTP_OK,
+        ActionTypes::CREATE =>  Response::HTTP_CREATED,
+        ActionTypes::DELETE =>  Response::HTTP_NO_CONTENT,
+    ];
+
+    private $resourceContextStorage;
+
+    public function __construct(ResourceContextStorage $resourceContextStorage)
+    {
+        $this->resourceContextStorage = $resourceContextStorage;
+    }
 
     /**
      * Creates a Response to send to the client according to the requested format.
@@ -26,6 +41,13 @@ final class RespondListener
             return;
         }
 
+        $status = self::METHOD_TO_CODE[$request->getMethod()] ?? Response::HTTP_OK;
+
+        $context = $this->resourceContextStorage->getContext();
+        if (null !== $context) {
+            $status = self::ACTION_TO_CODE[$context->getAction()]?? Response::HTTP_OK;
+        }
+
         $headers = [
             'Content-Type' => sprintf('%s; charset=utf-8', $request->getMimeType($request->getRequestFormat())),
             'Vary' => 'Accept',
@@ -35,7 +57,7 @@ final class RespondListener
 
         $event->setResponse(new Response(
             $controllerResult,
-            self::METHOD_TO_CODE[$request->getMethod()] ?? Response::HTTP_OK,
+            $status,
             $headers
         ));
     }
