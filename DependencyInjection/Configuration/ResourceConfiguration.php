@@ -15,6 +15,7 @@ class ResourceConfiguration implements ConfigurationInterface
     public const ROOT_NODE = "api";
     public const MAX_RESULTS = 50;
 
+    public const DEFAULT_PAGINATOR_NAME = 'default';
 
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
@@ -62,7 +63,7 @@ class ResourceConfiguration implements ConfigurationInterface
                         $this->setDefaultService($value, 'factory');
 
                         $default = [
-                            'default' => [
+                            self::DEFAULT_PAGINATOR_NAME => [
                                 'max_results' => self::MAX_RESULTS
                             ]
                         ];
@@ -73,6 +74,8 @@ class ResourceConfiguration implements ConfigurationInterface
                         } else if (!array_key_exists('default', $value['paginators'])) {
                             $value['paginators'] = $value['paginators'] + $default;
                         }
+
+                        $this->normalizeOperations($value);
                     }
 
                     return $v;
@@ -149,15 +152,12 @@ class ResourceConfiguration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('operations')
                         ->useAttributeAsKey('name')
+                        ->cannotBeEmpty()
                         ->arrayPrototype()
                             ->beforeNormalization()
-                                ->ifTrue(function ($value) {
-                                    return $value['action'] === ActionTypes::INDEX  && empty($value['paginator']);
-                                })
+                                ->ifString()
                                 ->then(function ($v) {
-                                    $v['paginator'] = 'default';
-
-                                    return $v;
+                                    return ['action' => $v];
                                 })
                             ->end()
                             ->children()
@@ -170,7 +170,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->scalarNode('resource_provider')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
-                                ->scalarNode('action')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('action')->end()
                                 ->arrayNode('methods')
                                     ->prototype('scalar')->end()
                                 ->end()
@@ -338,5 +338,42 @@ class ResourceConfiguration implements ConfigurationInterface
         $name = Inflector::tableize($resourceShortName);
 
         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
+    }
+
+    private function normalizeOperations(&$value)
+    {
+        if(!array_key_exists('operations', $value)) {
+            return;
+        }
+
+        $defaultActions = [
+            ActionTypes::UPDATE,
+            ActionTypes::INDEX,
+            ActionTypes::CREATE,
+            ActionTypes::VIEW,
+            ActionTypes::DELETE,
+            ActionTypes::BULK_DELETE,
+        ];
+
+        foreach($value['operations'] as $operationName => &$actionConfig) {
+            if (!isset($actionConfig['action'])) {
+                if (!in_array($operationName, $defaultActions)) {
+                    throw new \LogicException(sprintf('There is no action type defined for operation %s, None default operation must have action type defined', $operationName));
+                }
+
+               $actionConfig = array_merge(
+                    $actionConfig,
+                    [
+                        'action' => $operationName,
+                    ]
+                );
+            } else if(!in_array($actionConfig['action'], $defaultActions)) {
+                throw new \LogicException(sprintf('Action type %s of operation %s is not existed, only %s are supported', $actionConfig['action'], $operationName, implode(',', $defaultActions)));
+            }
+
+            if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['paginator'])) {
+                $actionConfig['paginator'] =  self::DEFAULT_PAGINATOR_NAME;
+            }
+        }
     }
 }
