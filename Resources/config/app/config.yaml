@@ -1,6 +1,7 @@
 videni_rest:
     filters:
-        string: ~
+        string:
+            supported_operators: ['=', '!=', '*', '!*', '~']
         boolean: ~
         integer:
             supported_operators: ['=', '!=', '<', '<=', '>', '>=', '*', '!*']
