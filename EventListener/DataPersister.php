@@ -15,6 +15,10 @@ class DataPersister
 
     public function persist($data)
     {
+        if(null === $data) {
+            return;
+        }
+
         $em = $this->doctrineHelper->getEntityManager($data, false);
         if (!$em) {
             // only manageable entities are supported
@@ -31,6 +35,10 @@ class DataPersister
 
     public function remove($data)
     {
+        if(null === $data) {
+            return;
+        }
+
         $em = $this->doctrineHelper->getEntityManager($data, false);
         if (!$em) {
             // only manageable entities are supported
