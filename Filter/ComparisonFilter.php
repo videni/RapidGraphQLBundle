@@ -32,7 +32,7 @@ use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValue;
  * * an array, in this case IN expression will be used
  * * an instance of Range class, in this case BETWEEN expression will be used
  */
-class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInterface
+class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInterface, CollectionAwareFilterInterface
 {
     /** @var string "not equal to" operator */
     public const NEQ = 'neq';
@@ -61,8 +61,17 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
     /** @var string "not ends with" (NOT LIKE %value) operator */
     public const NOT_ENDS_WITH = 'not_ends_with';
 
+     /** @var string[] The list of operators that support several values, e.g. an array or a range */
+    private const SUPPORT_SEVERAL_VALUES_OPERATORS = [self::EQ, self::NEQ, self::NEQ_OR_NULL];
+
+    /** @var string[] The list of operators that support several values specified as an array for collection */
+    private const SUPPORT_ARRAY_VALUES_OPERATORS_COLLECTION = [self::CONTAINS, self::NOT_CONTAINS];
+
     /** @var string */
     protected $field;
+
+     /** @var bool */
+    protected $collection = false;
 
     /** @var bool */
     private $caseInsensitive = false;
@@ -88,6 +97,25 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
         $this->field = $field;
     }
 
+     /**
+     * Indicates whether the filter represents a collection valued association.
+     *
+     * @return bool
+     */
+    public function isCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCollection($collection)
+    {
+        $this->collection = $collection;
+    }
+
+
     /**
      * {@inheritdoc}
      */
@@ -95,7 +123,14 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
     {
         return
             parent::isArrayAllowed($operator)
-            && (null === $operator || \in_array($operator, [self::EQ, self::NEQ], true));
+            && (
+                null === $operator
+                || \in_array($operator, self::SUPPORT_SEVERAL_VALUES_OPERATORS, true)
+                || (
+                    $this->isCollection()
+                    && \in_array($operator, self::SUPPORT_ARRAY_VALUES_OPERATORS_COLLECTION, true)
+                )
+            );
     }
 
     /**
@@ -179,7 +214,9 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
             $operator = self::EQ;
         }
         if (\in_array($operator, $this->operators, true)) {
-            $expr = $this->doBuildExpression($field, $path, $operator, $value);
+            $expr = $this->collection
+                ? $this->doBuildCollectionExpression($field, $path, $operator, $value)
+                : $this->doBuildExpression($field, $path, $operator, $value);
             if (null !== $expr) {
                 return $expr;
             }
@@ -232,6 +269,38 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
             default:
                 return null;
         }
+    }
+
+     /**
+     * @param string $field
+     * @param string $path
+     * @param string $operator
+     * @param mixed  $value
+     *
+     * @return Expression|null
+     */
+    protected function doBuildCollectionExpression($field, $path, $operator, $value)
+    {
+        switch ($operator) {
+            case self::EQ:
+                return $this->buildComparisonExpression($field, Comparison::MEMBER_OF, $value);
+            case self::NEQ:
+                return $this->buildNotExpression(
+                    $this->buildComparisonExpression($field, Comparison::MEMBER_OF, $value)
+                );
+            case self::EXISTS:
+                return $this->buildComparisonExpression($field, 'EMPTY', !$value);
+            case self::NEQ_OR_NULL:
+                return $this->buildComparisonExpression($field, 'NEQ_OR_EMPTY', $value);
+            case self::CONTAINS:
+                return $this->buildComparisonExpression($field, 'ALL_MEMBER_OF', $value);
+            case self::NOT_CONTAINS:
+                return $this->buildNotExpression(
+                    $this->buildComparisonExpression($field, 'ALL_MEMBER_OF', $value)
+                );
+        }
+
+        return null;
     }
 
     /**
@@ -299,6 +368,16 @@ class ComparisonFilter extends StandaloneFilter implements FieldAwareFilterInter
         }
 
         return new Comparison($field, $operator, new Value($value));
+    }
+
+     /**
+     * @param Expression $expr
+     *
+     * @return Expression
+     */
+    protected function buildNotExpression(Expression $expr)
+    {
+        return new CompositeExpression('NOT', [$expr]);
     }
 
     /**

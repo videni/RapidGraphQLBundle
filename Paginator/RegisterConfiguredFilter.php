@@ -24,10 +24,21 @@ class RegisterConfiguredFilter extends RegisterFilters
         ComparisonFilter::EXISTS,
         ComparisonFilter::NEQ_OR_NULL
     ];
+
+    private const COLLECTION_ASSOCIATION_ALLOWED_OPERATORS = [
+        ComparisonFilter::EQ,
+        ComparisonFilter::NEQ,
+        ComparisonFilter::EXISTS,
+        ComparisonFilter::NEQ_OR_NULL,
+        ComparisonFilter::CONTAINS,
+        ComparisonFilter::NOT_CONTAINS
+    ];
+
     private const SINGLE_IDENTIFIER_EXCLUDED_OPERATORS = [
         ComparisonFilter::EXISTS,
         ComparisonFilter::NEQ_OR_NULL
     ];
+
 
     /** @var DoctrineHelper */
     protected $doctrineHelper;
@@ -66,29 +77,19 @@ class RegisterConfiguredFilter extends RegisterFilters
         $filters = new FilterCollection();
 
         $filtersConfig = $paginatorConfig->getFilters();
-        foreach ($filtersConfig as $filterKey => $filter) {
+        foreach ($filtersConfig as $filterKey => $filterConfig) {
             if ($filters->has($filterKey)) {
                 continue;
             }
-            $propertyPath = $filter->getPropertyPath($filterKey);
-            $filter = $this->createFilter($filter, $propertyPath, $resourceConfig);
+            $propertyPath = $filterConfig->getPropertyPath();
+            $filter = $this->createFilter($filterConfig, $propertyPath, $resourceConfig);
             if (null !== $filter) {
                 if ($filter instanceof FieldAwareFilterInterface) {
                     if ($idFieldName && $filterKey === $idFieldName) {
-                        $filter->setSupportedOperators(
-                            \array_diff($filter->getSupportedOperators(), self::SINGLE_IDENTIFIER_EXCLUDED_OPERATORS)
-                        );
+                        $this->updateSingleIdentifierOperators($filter);
                     }
-                    // @todo BAP-11881. Update this code when NEQ operator for to-many collection
-                    // will be implemented in Videni\Bundle\RestBundle\Filter\ComparisonFilter
-                    if (null !== $metadata && $this->isCollection($metadata, $propertyPath)) {
-                        $filter->setSupportedOperators([StandaloneFilter::EQ]);
-                    }
-                    // only EQ, NEQ and EXISTS operators should be available for association filters
-                    if (\in_array($propertyPath, $associationNames, true) &&
-                        [] !== \array_diff($filter->getSupportedOperators(), self::ASSOCIATION_ALLOWED_OPERATORS)
-                    ) {
-                        $filter->setSupportedOperators(self::ASSOCIATION_ALLOWED_OPERATORS);
+                    if (\in_array($propertyPath, $associationNames, true)) {
+                        $this->updateAssociationOperators($filter, $filterConfig->isCollection());
                     }
                 }
 
@@ -127,29 +128,26 @@ class RegisterConfiguredFilter extends RegisterFilters
     }
 
     /**
-     * @param ClassMetadata $metadata
-     * @param string        $propertyPath
-     *
-     * @return bool
+     * @param StandaloneFilter $filter
      */
-    protected function isCollection(ClassMetadata $metadata, $propertyPath)
+    private function updateSingleIdentifierOperators(StandaloneFilter $filter)
     {
-        $isCollection = false;
-        $path = \explode('.', $propertyPath);
-        foreach ($path as $filterName) {
-            if ($metadata->isCollectionValuedAssociation($filterName)) {
-                $isCollection = true;
-                break;
-            }
-            if (!$metadata->hasAssociation($filterName)) {
-                break;
-            }
+        $filter->setSupportedOperators(
+            \array_diff($filter->getSupportedOperators(), self::SINGLE_IDENTIFIER_EXCLUDED_OPERATORS)
+        );
+    }
 
-            $metadata = $this->doctrineHelper->getEntityMetadataForClass(
-                $metadata->getAssociationTargetClass($filterName)
-            );
+    /**
+     * @param StandaloneFilter $filter
+     * @param bool             $isCollection
+     */
+    private function updateAssociationOperators(StandaloneFilter $filter, bool $isCollection)
+    {
+        $allowedOperators = $isCollection
+            ? self::COLLECTION_ASSOCIATION_ALLOWED_OPERATORS
+            : self::ASSOCIATION_ALLOWED_OPERATORS;
+        if ([] !== \array_diff($filter->getSupportedOperators(), $allowedOperators)) {
+            $filter->setSupportedOperators($allowedOperators);
         }
-
-        return $isCollection;
     }
 }

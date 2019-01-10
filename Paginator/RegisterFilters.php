@@ -8,6 +8,7 @@ use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
 use Videni\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Filter\CollectionAwareFilterInterface;
 
 /**
  * Abstract class for register filters processor.
@@ -51,6 +52,16 @@ abstract class RegisterFilters
             }
             if ($filter instanceof FieldAwareFilterInterface) {
                 $filter->setField($propertyPath);
+            }
+            if ($filterConfig->isCollection()) {
+                if ($filter instanceof CollectionAwareFilterInterface) {
+                    $filter->setCollection(true);
+                } else {
+                    throw new \LogicException(\sprintf(
+                        'The filter by "%s" does not support the "collection" option',
+                        $propertyPath
+                    ));
+                }
             }
             if ($filter instanceof MetadataAwareFilterInterface) {
                 $filter->setMetadata($resourceConfig);

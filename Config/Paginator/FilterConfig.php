@@ -205,7 +205,7 @@ class FilterConfig
     /**
      * @return mixed
      */
-    public function getCollection()
+    public function isCollection()
     {
         return $this->collection;
     }
