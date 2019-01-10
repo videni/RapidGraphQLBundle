@@ -35,6 +35,10 @@ final class FormListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if(!$event->isMasterRequest()) {
+            return;
+        }
+
         $context = $this->resourceContextStorage->getContext();
         if (null == $context) {
             return;

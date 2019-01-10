@@ -25,6 +25,10 @@ class ResourceProviderListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if(!$event->isMasterRequest()) {
+            return;
+        }
+
         $resourceContext = $this->resourceContextStorage->getContext();
         if (null === $resourceContext) {
             return;

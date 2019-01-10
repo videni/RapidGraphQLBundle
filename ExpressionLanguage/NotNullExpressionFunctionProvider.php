@@ -17,10 +17,10 @@ final class NotNullExpressionFunctionProvider implements ExpressionFunctionProvi
     {
         return [
             new ExpressionFunction('notFoundOnNull', function ($result) {
-                return sprintf('(null !== %1$s) ? %1$s : throw new NotFoundHttpException(\'Requested page is invalid.\')', $result);
+                return sprintf('(null !== %1$s) ? %1$s : throw new NotFoundHttpException(\'Requested resource is not found.\')', $result);
             }, function ($arguments, $result) {
                 if (null === $result) {
-                    throw new NotFoundHttpException('Requested page is invalid.');
+                    throw new NotFoundHttpException('Requested resource is not found.');
                 }
 
                 return $result;
