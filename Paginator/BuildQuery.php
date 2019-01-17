@@ -12,6 +12,7 @@ use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Collection\Criteria;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RestBundle\Util\AclHelperInterface;
 
 /**
  * Builds ORM QueryBuilder object that will be used to get a list of entities
@@ -31,6 +32,8 @@ class BuildQuery
 
     private $filterValueAccessorFactory;
 
+    private $aclHelper;
+
     /**
      * @param DoctrineHelper    $doctrineHelper
      * @param CriteriaConnector $criteriaConnector
@@ -39,12 +42,14 @@ class BuildQuery
         DoctrineHelper $doctrineHelper,
         CriteriaConnector $criteriaConnector,
         ContainerInterface $container,
-        ParametersParserInterface $parametersParser
+        ParametersParserInterface $parametersParser,
+        AclHelperInterface $aclHelper = null
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->criteriaConnector = $criteriaConnector;
         $this->container = $container;
         $this->parametersParser = $parametersParser;
+        $this->aclHelper = $aclHelper;
     }
 
     /**
@@ -69,6 +74,8 @@ class BuildQuery
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
+        $query = null;
+
         if ($method = $repositoryConfig->getMethod()) {
             $arguments = $repositoryConfig->getArguments() ?? [];
             if (!is_array($arguments)) {
@@ -87,10 +94,17 @@ class BuildQuery
                     $repositoryConfig->getId()
                 ));
             }
+        }
 
+        if (null === $this->aclHelper) {
             return $query;
         }
 
-        return $query = $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
+        $query = $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
+        if ($context->getOperationConfig()->isAclEnabled()) {
+            return $this->aclHelper->apply($query);
+        }
+
+        return $query;
     }
 }

@@ -32,15 +32,22 @@ class ResourceContextListener
         $resourceContext = new ResourceContext();
 
         $entityClass = $request->attributes->get('_api_resource_class');
-        $action = $request->attributes->get('_action');
-
-        $resourceContext->setClassName($entityClass);
-        $resourceContext->setOperationName($request->attributes->get('_api_operation_name'));
-        $resourceContext->setRequestHeaders(new RestRequestHeaders($request));
-        $resourceContext->setAction($action);
 
         $resourceConfig = $this->resourceConfigProvider->get($entityClass);
         $resourceContext->setResourceConfig($resourceConfig);
+
+        $operationName = $request->attributes->get('_api_operation_name');
+        $resourceContext->setOperationName($operationName);
+
+        if(!$resourceConfig->hasOperation($operationName)) {
+            throw new \LogicException(sprintf('Operation %s is not found for resource %s', $operationName, $entityClass));
+        }
+
+        $resourceContext->setAction($resourceConfig->getOperation($operationName)->getAction());
+
+        $resourceContext->setClassName($entityClass);
+        $resourceContext->setRequestHeaders(new RestRequestHeaders($request));
+
 
         $this->resourceContextStorage->setContext($resourceContext);
     }
