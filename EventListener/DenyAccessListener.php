@@ -34,13 +34,18 @@ class DenyAccessListener
         }
         $operationConfig = $context->getOperationConfig();
 
+        $accessControl = $operationConfig->getAccessControl();
+        if (null === $accessControl) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         $extraVariables = $request->attributes->all();
         $extraVariables['object'] = $request->attributes->get('data');
         $extraVariables['request'] = $request;
 
-        $accessControl = $operationConfig->getAccessControl();
+
         $isGranted = $this->resourceAccessChecker->isGranted($accessControl, $extraVariables);
         if (!$isGranted){
             throw new AccessDeniedException($operationConfig->getAccessControlMessage() ?? 'Access Denied');
