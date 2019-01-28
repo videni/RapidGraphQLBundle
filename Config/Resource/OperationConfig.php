@@ -11,7 +11,7 @@ class OperationConfig
     private $methods;
     private $routeName;
     private $resourceProvider;
-    private $accessControll;
+    private $accessControl;
     private $accessControlMessage;
     private $aclEnabled = false;
     private $controller;
@@ -234,19 +234,19 @@ class OperationConfig
     /**
      * @return mixed
      */
-    public function getAccessControll()
+    public function getAccessControl()
     {
-        return $this->accessControll;
+        return $this->accessControl;
     }
 
     /**
-     * @param mixed $accessControll
+     * @param mixed $accessControl
      *
      * @return self
      */
-    public function setAccessControll($accessControll)
+    public function setAccessControl($accessControl)
     {
-        $this->accessControll = $accessControll;
+        $this->accessControl = $accessControl;
 
         return $this;
     }
@@ -315,8 +315,8 @@ class OperationConfig
         if (array_key_exists('access_control_message', $config)) {
             $self->setAccessControlMessage($config['access_control_message']);
         }
-        if (array_key_exists('access_controll', $config)) {
-            $self->setAccessControll($config['access_controll']);
+        if (array_key_exists('access_control', $config)) {
+            $self->setAccessControl($config['access_control']);
         }
         if (array_key_exists('controller', $config)) {
             $self->setController($config['controller']);

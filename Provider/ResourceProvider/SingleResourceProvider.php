@@ -59,6 +59,7 @@ class SingleResourceProvider implements ResourceProviderInterface
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
+        $result = null;
         if ($method = $repositoryConfig->getMethod()) {
             $arguments = $repositoryConfig->getArguments() ?? [];
             if (!is_array($arguments)) {
@@ -67,15 +68,19 @@ class SingleResourceProvider implements ResourceProviderInterface
 
             $arguments = array_values($this->parametersParser->parseRequestValues($arguments, $request));
 
-            return $repositoryInstance->$method(...$arguments);
+            $result=  $repositoryInstance->$method(...$arguments);
         }
 
         $id = $request->attributes->get('id', null);
         if (null !== $id ) {
-            return $repositoryInstance->find((int)$id);
+            $result =  $repositoryInstance->find((int)$id);
         }
 
-        throw new NotFoundHttpException('The resource you requested is not found');
+        if (null === $result) {
+            throw new NotFoundHttpException('The resource you requested is not found');
+        }
+
+        return $result;
     }
 
     private static function getRepositoryServiceId($resourceShortName)

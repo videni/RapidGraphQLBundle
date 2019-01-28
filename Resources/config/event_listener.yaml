@@ -67,6 +67,10 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 4 }
 
+    Videni\Bundle\RestBundle\EventListener\DenyAccessListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 3 }
+
     Videni\Bundle\RestBundle\EventListener\FormListener:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }

@@ -4,7 +4,8 @@ namespace Videni\Bundle\RestBundle\Doctrine\ORM;
 
 use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 class EntityRepository extends BaseEntityRepository
 {
@@ -41,7 +42,7 @@ class EntityRepository extends BaseEntityRepository
         return $this->getPaginator($queryBuilder);
     }
 
-     /**
+    /**
      * @param QueryBuilder $queryBuilder
      *
      * @return Pagerfanta
@@ -49,7 +50,7 @@ class EntityRepository extends BaseEntityRepository
     protected function getPaginator(QueryBuilder $queryBuilder): Pagerfanta
     {
         // Use output walkers option in DoctrineORMAdapter should be false as it affects performance greatly (see #3775)
-        return new Paginator(new DoctrineORMAdapter($queryBuilder, false, false));
+        return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, false, false));
     }
 
     public function newQueryBuilderWithCriteria(array $criteria = [])

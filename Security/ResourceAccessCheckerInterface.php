@@ -12,5 +12,5 @@ interface ResourceAccessCheckerInterface
     /**
      * Checks if the given item can be accessed by the current user.
      */
-    public function isGranted(string $resourceClass, string $expression, array $extraVariables = []): bool;
+    public function isGranted(string $expression, array $extraVariables = []): bool;
 }

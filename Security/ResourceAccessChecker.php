@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Checks if the logged user has sufficient permissions to access the given resource.
@@ -17,6 +18,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 final class ResourceAccessChecker implements ResourceAccessCheckerInterface
 {
     private $expressionLanguage;
+    private $container;
     private $authenticationTrustResolver;
     private $roleHierarchy;
     private $tokenStorage;
@@ -24,20 +26,24 @@ final class ResourceAccessChecker implements ResourceAccessCheckerInterface
 
     public function __construct(
         ExpressionLanguage $expressionLanguage,
+        ContainerInterface $container,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorizationChecker,
         AuthenticationTrustResolverInterface $authenticationTrustResolver,
         RoleHierarchyInterface $roleHierarchy = null
     ) {
         $this->expressionLanguage = $expressionLanguage;
+        $this->container = $container;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
         $this->roleHierarchy = $roleHierarchy;
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function isGranted(string $resourceClass, string $expression, array $extraVariables = []): bool
+    public function isGranted(string $expression, array $extraVariables = []): bool
     {
+        $variables = array_merge($extraVariables, $this->getVariables($this->tokenStorage->getToken()));
+
         return (bool) $this->expressionLanguage->evaluate($expression, array_merge($extraVariables, $this->getVariables($this->tokenStorage->getToken())));
     }
 
@@ -53,6 +59,7 @@ final class ResourceAccessChecker implements ResourceAccessCheckerInterface
         return [
             'token' => $token,
             'user' => $token->getUser(),
+            'container' => $this->container,
             'roles' => array_map(function (Role $role) {
                 return $role->getRole();
             }, $roles),

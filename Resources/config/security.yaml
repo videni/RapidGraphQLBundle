@@ -7,6 +7,7 @@ services:
     Videni\Bundle\RestBundle\Security\ResourceAccessChecker:
         arguments:
             - '@Videni\Bundle\RestBundle\Security\ExpressionLanguage'
+            - '@service_container'
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@security.authentication.trust_resolver'
