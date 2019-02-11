@@ -4,6 +4,10 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Serializer\Handler\ConstraintViolationListHandler:
+    Videni\Bundle\RestBundle\Serializer\Handler\FormErrorNormalizer:
+        tags:
+            - { name: 'jms_serializer.subscribing_handler' }
+
+    Videni\Bundle\RestBundle\Serializer\Handler\InitialValuesNormalizer:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }

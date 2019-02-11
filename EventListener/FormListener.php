@@ -17,7 +17,8 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Limenius\Liform\Liform;
-use Symfony\Component\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RestBundle\Event\AfterFormResolveEvent;
@@ -77,6 +78,8 @@ final class FormListener
 
             return;
         }
+        $context = new SerializationContext();
+        $context->setAttribute('form', $form);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
             /**
@@ -84,31 +87,34 @@ final class FormListener
              */
             $isValid = $form->submit($this->prepareRequestData($request->request->all()), false)->isValid();
             if (false === $isValid) {
-                $data = $this->serializer->normalize($form, null , ['status_code' => Response::HTTP_BAD_REQUEST]) + [
-                    'initial_values' => $form,
+                $context->setAttribute('status_code', Response::HTTP_BAD_REQUEST);
+
+                $data = [
+                    $form,
+                    'initial_values' => $form->createView(),
                     'form_schema' => $this->liform->transform($form),
                 ];
 
-                $this->setResponse($event, $data, Response::HTTP_BAD_REQUEST);
+                $this->setResponse($event, $data, Response::HTTP_BAD_REQUEST, $context);
             }
         }
         //serialize form and its initial values
         else {
             $data = [
-                'initial_values' => $form,
+                'initial_values' => $form->createView(),
                 'form_schema' => $this->liform->transform($form)
             ];
 
-            $this->setResponse($event, $data, Response::HTTP_OK);
+            $this->setResponse($event, $data, Response::HTTP_OK, $context);
         }
     }
 
-    protected function setResponse($event, $data, $status)
+    protected function setResponse($event, $data, $status, SerializationContext $context = null)
     {
         $request = $event->getRequest();
 
         $event->setResponse(new Response(
-            $this->serializer->serialize($data, $request->getRequestFormat()),
+            $this->serializer->serialize($data, $request->getRequestFormat(), $context),
             $status,
             [
                 'Content-Type' => sprintf('%s; charset=utf-8', $request->getMimeType($request->getRequestFormat())),
