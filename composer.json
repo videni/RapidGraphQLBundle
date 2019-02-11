@@ -21,7 +21,8 @@
         "symfony/yaml": "^4.1",
         "willdurand/hateoas-bundle": "^1.4",
         "willdurand/negotiation": "^2.3",
-        "zendframework/zend-stdlib": "^3.2"
+        "zendframework/zend-stdlib": "^3.2",
+        "limenius/liform-bundle": "^0.13.0"
     },
     "repositories": [
         {
