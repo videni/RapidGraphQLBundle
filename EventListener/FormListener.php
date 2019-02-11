@@ -85,7 +85,7 @@ final class FormListener
             $isValid = $form->submit($this->prepareRequestData($request->request->all()), false)->isValid();
             if (false === $isValid) {
                 $data = $this->serializer->normalize($form, null , ['status_code' => Response::HTTP_BAD_REQUEST]) + [
-                    'initial_values' => $form->createView(),
+                    'initial_values' => $form,
                     'form_schema' => $this->liform->transform($form),
                 ];
 
@@ -95,7 +95,7 @@ final class FormListener
         //serialize form and its initial values
         else {
             $data = [
-                'initial_values' => $form->createView(),
+                'initial_values' => $form,
                 'form_schema' => $this->liform->transform($form)
             ];
 
