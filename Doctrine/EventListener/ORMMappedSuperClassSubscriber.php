@@ -2,33 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\EventListener;
+namespace Videni\Bundle\RestBundle\Doctrine\EventListener;
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Mapping\ReflectionService;
-use Doctrine\Common\Persistence\Mapping\RuntimeReflectionService;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
-use Videni\Bundle\RestBundle\Model\ResourceInterface;
 
-final class ORMMappedSuperClassSubscriber implements EventSubscriber
+final class ORMMappedSuperClassSubscriber extends AbstractDoctrineSubscriber
 {
-    protected $resourceConfigProvider;
-
-     /**
-     * @var RuntimeReflectionService
-     */
-    private $reflectionService;
-
-    public function __construct(ResourceConfigProvider $resourceConfigProvider)
-    {
-        $this->resourceConfigProvider = $resourceConfigProvider;
-    }
-
     /**
      * @return array
      */
@@ -53,29 +36,6 @@ final class ORMMappedSuperClassSubscriber implements EventSubscriber
         } else {
             $this->unsetAssociationMappings($metadata);
         }
-    }
-
-    protected function getReflectionService(): ReflectionService
-    {
-        if ($this->reflectionService === null) {
-            $this->reflectionService = new RuntimeReflectionService();
-        }
-
-        return $this->reflectionService;
-    }
-
-    /**
-     * @param ClassMetadata $metadata
-     *
-     * @return bool
-     */
-    protected function isResource(ClassMetadata $metadata): bool
-    {
-        if (!$reflClass = $metadata->getReflectionClass()) {
-            return false;
-        }
-
-        return $reflClass->implementsInterface(ResourceInterface::class);
     }
 
     /**

@@ -36,11 +36,11 @@ class ResourceConfigLoader
         if (array_key_exists('formats', $config)) {
             $resourceConfig->setFormats($config['formats']);
         }
-        if (array_key_exists('factory', $config)) {
-            $resourceConfig->setFactory(ServiceConfig::fromArray($config['factory']));
+        if (array_key_exists('factory_class', $config)) {
+            $resourceConfig->setFactoryClass($config['factory_class']);
         }
-        if (array_key_exists('repository', $config)) {
-            $resourceConfig->setRepository(ServiceConfig::fromArray($config['repository']));
+        if (array_key_exists('repository_class', $config)) {
+            $resourceConfig->setRepositoryClass($config['repository_class']);
         }
         if (array_key_exists('route_prefix', $config)) {
             $resourceConfig->setRoutePrefix($config['route_prefix']);

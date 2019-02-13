@@ -12,8 +12,8 @@ class ResourceConfig
     private $description;
 
     private $formats = null;
-    private $factory = null;
-    private $repository = null;
+    private $factoryClass = null;
+    private $repositoryClass = null;
     private $normalizationContext = null;
     private $denormalizationContext = null;
     private $validationGroups = null;
@@ -113,30 +113,6 @@ class ResourceConfig
         $this->formats = $formats;
 
         return $this;
-    }
-
-    public function setFactory(?ServiceConfig $factory)
-    {
-        $this->factory = $factory;
-
-        return $this;
-    }
-
-    public function getFactory(): ?ServiceConfig
-    {
-        return $this->factory;
-    }
-
-    public function setRepository(?ServiceConfig $repostory)
-    {
-        $this->repository = $repostory;
-
-        return $this;
-    }
-
-    public function getRepository(): ?ServiceConfig
-    {
-        return $this->repository;
     }
 
     public function setNormalizationContext(?SerializationConfig $normalizationContext)
@@ -251,13 +227,6 @@ class ResourceConfig
             }
         }
 
-        //we need to merge operation level with resource level attributes for ServiceConfig and SerializationConfig.
-        if($operationAttribute instanceof ServiceConfig) {
-            $mergedAttribtues = $this->mergeResourceLevelAttributes($key, $operationAttribute);
-            if($mergedAttribtues !== false) {
-                return ServiceConfig::fromArray($mergedAttribtues);
-            }
-        };
         if($operationAttribute instanceof SerializationConfig) {
             $mergedAttribtues = $this->mergeResourceLevelAttributes($key, $operationAttribute);
             if($mergedAttribtues !== false) {
@@ -487,5 +456,45 @@ class ResourceConfig
         }
 
         return $resourceLevelAttribute;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRepositoryClass()
+    {
+        return $this->repositoryClass;
+    }
+
+    /**
+     * @param mixed $repositoryClass
+     *
+     * @return self
+     */
+    public function setRepositoryClass($repositoryClass)
+    {
+        $this->repositoryClass = $repositoryClass;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFactoryClass()
+    {
+        return $this->factoryClass;
+    }
+
+    /**
+     * @param mixed $factoryClass
+     *
+     * @return self
+     */
+    public function setFactoryClass($factoryClass)
+    {
+        $this->factoryClass = $factoryClass;
+
+        return $this;
     }
 }

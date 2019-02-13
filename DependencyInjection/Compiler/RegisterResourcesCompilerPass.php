@@ -12,8 +12,10 @@ use Videni\Bundle\RestBundle\Factory\Factory;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
+use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {
@@ -29,6 +31,9 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
 
         $resourceConfigs = $resourceConfigProvider->getAll();
         foreach ($resourceConfigs as $className => $resourceConfig) {
+            //register entity class parameter
+            $container->setParameter(sprintf('%s.class', $this->getServiceId($resourceConfig->getShortName(), 'entity')), $className);
+
             $this->registerFactory($className, $resourceConfig, $container);
             $this->registerRepository($className, $resourceConfig, $container);
         }
@@ -36,59 +41,61 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
 
     private function registerFactory($className, ResourceConfig $resourceConfig, $container)
     {
-         /** @var ServiceConfig */
-        $factoryConfig = null;
+        $factoryClass = $resourceConfig->getFactoryClass();
 
-        if ($factoryConfig = $resourceConfig->getFactory()) {
-            if ($factoryConfig->getId() && $container->has($factoryConfig->getId())) {
-                //don't register if a factory is associated with this resource
-                return;
-            }
+        $alias =  self::getServiceId($resourceConfig->getShortName(), 'factory');
+        if ($container->has($factoryClass)) {
+             //don't register if a factory is associated with this resource
+            return;
         }
 
-        $factoryDefId = $factoryConfig ? $factoryConfig->getId(): self::getServiceId($resourceConfig->getShortName(), 'factory');
-        $class = Factory::class;
-        if ($factoryConfig && $factoryConfig->getClass()) {
-            $class =  $factoryConfig->getClass();
-        }
+        $container->setParameter(sprintf('%s.class', $alias), $factoryClass);
 
-        $container->setParameter(sprintf('%s.class', $factoryDefId), $class);
-
-        $factoryDef = (new Definition($class))
+        $factoryDef = (new Definition($factoryClass))
             ->addArgument($className)
             ->setPublic(true)
         ;
 
-        $container->setDefinition($factoryDefId, $factoryDef);
+        //register it with class name as service name and also add an alias
+        if ($factoryClass !== Factory::class) {
+            $container->setDefinition($factoryClass, $factoryDef);
+            $container->setAlias($alias, $factoryClass);
+        } else {
+            $container->setDefinition($alias, $factoryDef);
+        }
     }
 
     private function registerRepository($className, ResourceConfig $resourceConfig, $container)
     {
-        /** @var ServiceConfig */
-        $respositoryConfig = null;
+        $repositoryClass = $resourceConfig->getRepositoryClass();
 
-        if ($respositoryConfig = $resourceConfig->getRepository()) {
-            if ($respositoryConfig->getId() && $container->has($respositoryConfig->getId())) {
-                return;
-            }
+        $alias = self::getServiceId($resourceConfig->getShortName(), 'repository');
+        $container->setParameter(sprintf('%s.class', $alias), $repositoryClass);
+
+        if ($container->has($repositoryClass)) {
+            $container->setAlias($alias, $repositoryClass);
+
+            return;
         }
 
-        $repositoryDefId = $respositoryConfig? $respositoryConfig->getId(): self::getServiceId($resourceConfig->getShortName(), 'repository');
-
-        $class = ServiceEntityRepository::class;
-        if ($respositoryConfig && $respositoryConfig->getClass()) {
-            $class = $respositoryConfig->getClass();
+        if (is_a($repositoryClass, ServiceEntityRepositoryInterface::class, true) && !$container->has($repositoryClass)) {
+            throw new \RuntimeException('The repository %s is an instance of %1, please register it into service container yourself', $repositoryClass);
         }
 
-        $container->setParameter(sprintf('%s.class', $repositoryDefId), $class);
-
-        $repositoryDef = (new Definition($class))
-            ->addArgument(new Reference(ManagerRegistry::class))
-            ->addArgument($className)
+        $definition = new Definition($repositoryClass);
+        $definition->setArguments([
+                new Reference($this->getManagerServiceId($resourceConfig)),
+                $this->getClassMetadataDefinition($className, $resourceConfig),
+            ])
             ->setPublic(true)
         ;
 
-        $container->setDefinition($repositoryDefId, $repositoryDef);
+        if (!in_array($repositoryClass, [ServiceEntityRepository::class, EntityRepository::class])) {
+            $container->setDefinition($repositoryClass, $definition);
+            $container->setAlias($alias, $repositoryClass);
+        } else {
+            $container->setDefinition($alias, $definition);
+        }
     }
 
     private function getServiceId($resourceShortName, $key)
@@ -96,5 +103,33 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
          $name = Inflector::tableize($resourceShortName);
 
          return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
+    }
+
+    protected function getClassMetadataDefinition($className, ResourceConfig $resourceConfig): Definition
+    {
+        $definition = new Definition($this->getClassMetadataClassname());
+        $definition
+            ->setFactory([new Reference($this->getManagerServiceId($resourceConfig)), 'getClassMetadata'])
+            ->setArguments([$className])
+            ->setPublic(false)
+        ;
+
+        return $definition;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getClassMetadataClassname(): string
+    {
+        return 'Doctrine\\ORM\\Mapping\\ClassMetadata';
+    }
+
+     /**
+     * {@inheritdoc}
+     */
+    protected function getManagerServiceId(ResourceConfig $resourceConfig): string
+    {
+        return 'doctrine.orm.entity_manager';
     }
 }

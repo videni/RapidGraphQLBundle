@@ -9,6 +9,8 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Doctrine\Common\Inflector\Inflector;
+use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RestBundle\Factory\Factory;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
@@ -55,18 +57,23 @@ class ResourceConfiguration implements ConfigurationInterface
         $rootNode
             ->beforeNormalization()
                 ->always(function ($v) {
-                    foreach ($v as $key => &$value) {
+                    foreach ($v as $resourceClass => &$value) {
                         if (!isset($value['short_name'])) {
-                            $value['short_name'] = $this->getClassName($key);
+                            $value['short_name'] = $this->getClassName($resourceClass);
                         }
-                        $this->setDefaultService($value, 'repository');
-                        $this->setDefaultService($value, 'factory');
 
                         $default = [
                             self::DEFAULT_PAGINATOR_NAME => [
                                 'max_results' => self::MAX_RESULTS
                             ]
                         ];
+
+                        if (isset($value['repository_class']) && !class_exists($value['repository_class'])) {
+                            throw new \InvalidArgumentException(sprintf('repository_class %s of resource %s is not found', $value['repository_class'], $resourceClass));
+                        }
+                        if (isset($value['factory_class']) && !class_exists($value['factory_class'])) {
+                            throw new \InvalidArgumentException(sprintf('factory_class %s of resource %s is not found', $value['factory_class'], $resourceClass));
+                        }
 
                         //set 'default' paginator for each resource
                         if(!array_key_exists('paginators', $value)) {
@@ -75,7 +82,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             $value['paginators'] = $value['paginators'] + $default;
                         }
 
-                        $this->normalizeOperations($value);
+                        $this->normalizeOperations($value['short_name'], $value);
                     }
 
                     return $v;
@@ -83,9 +90,9 @@ class ResourceConfiguration implements ConfigurationInterface
             ->end()
             ->validate()
                 ->always(function ($v) {
-                    foreach ($v as $key => &$value) {
-                        if (!class_exists($key)) {
-                            throw new \InvalidArgumentException(sprintf('Resource %s is supposed to be full quanlified class', $key));
+                    foreach ($v as $resourceClass => &$value) {
+                        if (!class_exists($resourceClass)) {
+                            throw new \InvalidArgumentException(sprintf('Resource %s is supposed to be full quanlified class', $resourceClass));
                         }
                     }
 
@@ -98,23 +105,8 @@ class ResourceConfiguration implements ConfigurationInterface
                     ->scalarNode('route_prefix')->end()
                     ->scalarNode('short_name')->end()
                     ->scalarNode('form')->end()
-                    ->arrayNode('repository')
-                        ->beforeNormalization()
-                            ->ifString()
-                            ->then(function ($v) {
-                                return ['id' => $v];
-                            })
-                        ->end()
-                        ->children()
-                            ->scalarNode('id')->end()
-                            ->scalarNode('method')->end()
-                            ->scalarNode('class')->end()
-                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
-                            ->arrayNode('arguments')
-                                ->prototype('scalar')->end()
-                            ->end()
-                        ->end()
-                    ->end()
+                    ->scalarNode('repository_class')->defaultValue(EntityRepository::class)->cannotBeEmpty()->end()
+                    ->scalarNode('factory_class')->defaultValue(Factory::class)->cannotBeEmpty()->end()
                     ->arrayNode('validation_groups')
                         ->prototype('scalar')->end()
                     ->end()
@@ -131,23 +123,6 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->prototype('variable')->end()
                             ->end()
                             ->scalarNode('enable_max_depth')->defaultValue(false)->end()
-                        ->end()
-                    ->end()
-                    ->arrayNode('factory')
-                        ->beforeNormalization()
-                            ->ifString()
-                            ->then(function ($v) {
-                                return ['id' => $v];
-                            })
-                        ->end()
-                        ->children()
-                            ->scalarNode('id')->end()
-                            ->scalarNode('method')->end()
-                            ->scalarNode('class')->end()
-                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
-                            ->arrayNode('arguments')
-                                ->prototype('scalar')->end()
-                            ->end()
                         ->end()
                     ->end()
                     ->arrayNode('operations')
@@ -319,28 +294,7 @@ class ResourceConfiguration implements ConfigurationInterface
         return null;
     }
 
-    private function setDefaultService(&$value, $attributeName)
-    {
-        $serviceId = $this->getServiceId($value['short_name'], $attributeName);
-
-        if (!isset($value[$attributeName])) {
-            $value[$attributeName] = $serviceId;
-        } else if (!isset($value[$attributeName]['id'])) {
-            $value[$attributeName] = array_merge(
-                ['id' => $serviceId],
-                is_string($value[$attributeName]) ? ['id' => $value[$attributeName]] : $value[$attributeName]
-            );
-        }
-    }
-
-    private function getServiceId($resourceShortName, $key)
-    {
-        $name = Inflector::tableize($resourceShortName);
-
-        return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
-    }
-
-    private function normalizeOperations(&$value)
+    private function normalizeOperations($resourceShortName, &$value)
     {
         if(!array_key_exists('operations', $value)) {
             return;
@@ -374,6 +328,25 @@ class ResourceConfiguration implements ConfigurationInterface
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['paginator'])) {
                 $actionConfig['paginator'] =  self::DEFAULT_PAGINATOR_NAME;
             }
+
+            $this->setDefaultServiceConfig($resourceShortName, 'repository', $actionConfig);
+            $this->setDefaultServiceConfig($resourceShortName, 'factory', $actionConfig);
         }
+    }
+
+    private function setDefaultServiceConfig($resourceShortName, $key, &$actionConfig)
+    {
+        $config = [
+            "id" =>  $this->getServiceId($resourceShortName, $key),
+        ];
+
+        $actionConfig[$key] = isset($actionConfig[$key])?  array_merge($config, $actionConfig[$key]) : $config;
+    }
+
+    private function getServiceId($resourceShortName, $key)
+    {
+         $name = Inflector::tableize($resourceShortName);
+
+         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
     }
 }

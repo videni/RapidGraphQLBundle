@@ -6,8 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use LogicException;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 
-class ServiceEntityRepository extends EntityRepository
+class ServiceEntityRepository extends EntityRepository implements ServiceEntityRepositoryInterface
 {
     /**
      * @param string $entityClass The class name of the entity this repository manages

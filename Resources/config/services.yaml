@@ -58,6 +58,10 @@ services:
 
     Videni\Bundle\RestBundle\Filter\Normalizer\FilterValueNormalizerInterface: '@Videni\Bundle\RestBundle\Filter\Normalizer\CompositeNormalizer'
 
-    Videni\Bundle\RestBundle\EventListener\ORMMappedSuperClassSubscriber:
+    Videni\Bundle\RestBundle\Doctrine\EventListener\ORMMappedSuperClassSubscriber:
+        tags:
+            - { name: "doctrine.event_subscriber", priority: 8192}
+
+    Videni\Bundle\RestBundle\Doctrine\EventListener\ORMRepositoryClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}

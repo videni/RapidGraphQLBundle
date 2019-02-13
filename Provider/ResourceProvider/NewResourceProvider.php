@@ -47,7 +47,7 @@ class NewResourceProvider implements ResourceProviderInterface
         $resourceConfig = $context->getResourceConfig();
 
         /** @var ServiceConfig  */
-        $factoryConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'factory', true);
+        $factoryConfig = $context->getOperationConfig()->getFactory();
         if (null === $factoryConfig) {
             throw new \RuntimeException(sprintf('No resource factory found for class %s', $context->getClassName()));
         }

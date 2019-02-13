@@ -49,14 +49,11 @@ class SingleResourceProvider implements ResourceProviderInterface
             return;
         }
 
-        return $this->load($request, $context->getOperationName(), $context->getClassName(), $context->getResourceConfig());
+        return $this->load($request, $context->getOperationConfig()->getRepository(), $context->getClassName(), $context->getResourceConfig());
     }
 
-    protected function load(Request $request, $operationName, $className, ResourceConfig $resourceConfig)
+    protected function load(Request $request, ServiceConfig $repositoryConfig, $className, ResourceConfig $resourceConfig)
     {
-        /** @var ServiceConfig */
-        $repositoryConfig = $resourceConfig->getOperationAttribute($operationName, 'repository', true);
-
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
         $result = null;
