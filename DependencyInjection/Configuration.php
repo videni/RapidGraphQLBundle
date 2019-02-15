@@ -20,9 +20,6 @@ class Configuration implements ConfigurationInterface
 
         $node = $rootNode
             ->children()
-                ->scalarNode('application_name')
-                    ->defaultValue('videni_rest')
-                ->end()
         ;
 
         $this->addFilterOperatorsNode($node);

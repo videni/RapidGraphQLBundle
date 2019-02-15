@@ -19,20 +19,16 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {
-    private $applicationName;
-
     public function process(ContainerBuilder $container)
     {
         $bundleConifig = DependencyInjectionUtil::getConfig($container);
-
-        $this->applicationName =  $bundleConifig['application_name'];
 
         $resourceConfigProvider = $container->get(ResourceConfigProvider::class);
 
         $resourceConfigs = $resourceConfigProvider->getAll();
         foreach ($resourceConfigs as $className => $resourceConfig) {
             //register entity class parameter
-            $container->setParameter(sprintf('%s.class', $this->getServiceId($resourceConfig->getShortName(), 'entity')), $className);
+            $container->setParameter(sprintf('%s.class', $this->getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'entity')), $className);
 
             $this->registerFactory($className, $resourceConfig, $container);
             $this->registerRepository($className, $resourceConfig, $container);
@@ -43,7 +39,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
         $factoryClass = $resourceConfig->getFactoryClass();
 
-        $alias =  self::getServiceId($resourceConfig->getShortName(), 'factory');
+        $alias =  self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'factory');
         if ($container->has($factoryClass)) {
              //don't register if a factory is associated with this resource
             return;
@@ -69,7 +65,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
         $repositoryClass = $resourceConfig->getRepositoryClass();
 
-        $alias = self::getServiceId($resourceConfig->getShortName(), 'repository');
+        $alias = self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'repository');
         $container->setParameter(sprintf('%s.class', $alias), $repositoryClass);
 
         if ($container->has($repositoryClass)) {
@@ -98,11 +94,11 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function getServiceId($resourceShortName, $key)
+    private function getServiceId($scope, $resourceShortName, $key)
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
+         return sprintf('%s.%s.%s', $scope, $key, $name);
     }
 
     protected function getClassMetadataDefinition($className, ResourceConfig $resourceConfig): Definition

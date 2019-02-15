@@ -8,6 +8,7 @@ use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 class ResourceConfig
 {
     private $routePrefix;
+    private $scope;
     private $shortName;
     private $description;
 
@@ -494,6 +495,26 @@ class ResourceConfig
     public function setFactoryClass($factoryClass)
     {
         $this->factoryClass = $factoryClass;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param mixed $scope
+     *
+     * @return self
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
 
         return $this;
     }

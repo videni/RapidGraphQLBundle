@@ -39,7 +39,7 @@ class VideniRestExtension extends Extension
         $loader->load('services.yaml');
 
         $this->registerFilterOperators($container, $config);
-        $this->loadResourceConfiguration($container, $config['application_name']);
+        $this->loadResourceConfiguration($container);
         $this->configureBodyListener($container, $config);
         $this->configureResourceProvider($container, $config);
 
@@ -69,7 +69,7 @@ class VideniRestExtension extends Extension
      *
      * @return array
      */
-    private function loadResourceConfiguration($container, $applicationName)
+    private function loadResourceConfiguration($container)
     {
         $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
 
@@ -84,7 +84,7 @@ class VideniRestExtension extends Extension
         }
 
         $configs =  $this->processConfiguration(
-            new ResourceConfiguration($container->get(FilterOperatorRegistry::class), $applicationName),
+            new ResourceConfiguration($container->get(FilterOperatorRegistry::class)),
             $config
         );
 

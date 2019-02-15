@@ -48,6 +48,9 @@ class ResourceConfigLoader
         if (array_key_exists('short_name', $config)) {
             $resourceConfig->setShortName($config['short_name']);
         }
+        if (array_key_exists('scope', $config)) {
+            $resourceConfig->setScope($config['scope']);
+        }
         if (array_key_exists('form', $config)) {
             $resourceConfig->setForm($config['form']);
         }

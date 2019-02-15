@@ -22,15 +22,12 @@ class ResourceConfiguration implements ConfigurationInterface
     /** @var FilterOperatorRegistry */
     private $filterOperatorRegistry;
 
-    private $applicationName;
-
     /**
      * @param FilterOperatorRegistry $filterOperatorRegistry
      */
-    public function __construct(FilterOperatorRegistry $filterOperatorRegistry, $applicationName)
+    public function __construct(FilterOperatorRegistry $filterOperatorRegistry)
     {
         $this->filterOperatorRegistry = $filterOperatorRegistry;
-        $this->applicationName = $applicationName;
     }
 
     /**
@@ -61,6 +58,9 @@ class ResourceConfiguration implements ConfigurationInterface
                         if (!isset($value['short_name'])) {
                             $value['short_name'] = $this->getClassName($resourceClass);
                         }
+                        if (!isset($value['scope'])) {
+                            $value['scope'] = 'videni_rest';
+                        }
 
                         $default = [
                             self::DEFAULT_PAGINATOR_NAME => [
@@ -82,7 +82,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             $value['paginators'] = $value['paginators'] + $default;
                         }
 
-                        $this->normalizeOperations($value['short_name'], $value);
+                        $this->normalizeOperations($value['scope'], $value['short_name'], $value);
                     }
 
                     return $v;
@@ -104,6 +104,7 @@ class ResourceConfiguration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('route_prefix')->end()
                     ->scalarNode('short_name')->end()
+                    ->scalarNode('scope')->defaultValue('videni_rest')->cannotBeEmpty()->end()
                     ->scalarNode('form')->end()
                     ->scalarNode('repository_class')->defaultValue(EntityRepository::class)->cannotBeEmpty()->end()
                     ->scalarNode('factory_class')->defaultValue(Factory::class)->cannotBeEmpty()->end()
@@ -313,7 +314,7 @@ class ResourceConfiguration implements ConfigurationInterface
         return null;
     }
 
-    private function normalizeOperations($resourceShortName, &$value)
+    private function normalizeOperations($scope, $resourceShortName, &$value)
     {
         if(!array_key_exists('operations', $value)) {
             return;
@@ -348,24 +349,24 @@ class ResourceConfiguration implements ConfigurationInterface
                 $actionConfig['paginator'] =  self::DEFAULT_PAGINATOR_NAME;
             }
 
-            $this->setDefaultServiceConfig($resourceShortName, 'repository', $actionConfig);
-            $this->setDefaultServiceConfig($resourceShortName, 'factory', $actionConfig);
+            $this->setDefaultServiceConfig($scope, $resourceShortName, 'repository', $actionConfig);
+            $this->setDefaultServiceConfig($scope, $resourceShortName, 'factory', $actionConfig);
         }
     }
 
-    private function setDefaultServiceConfig($resourceShortName, $key, &$actionConfig)
+    private function setDefaultServiceConfig($scope, $resourceShortName, $key, &$actionConfig)
     {
         $config = [
-            "id" =>  $this->getServiceId($resourceShortName, $key),
+            "id" =>  $this->getServiceId($scope, $resourceShortName, $key),
         ];
 
         $actionConfig[$key] = isset($actionConfig[$key])?  array_merge($config, $actionConfig[$key]) : $config;
     }
 
-    private function getServiceId($resourceShortName, $key)
+    private function getServiceId($scope, $resourceShortName, $key)
     {
          $name = Inflector::tableize($resourceShortName);
 
-         return sprintf('%s.%s.%s', $this->applicationName, $key, $name);
+         return sprintf('%s.%s.%s', $scope, $key, $name);
     }
 }
