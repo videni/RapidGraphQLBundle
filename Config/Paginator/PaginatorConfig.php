@@ -16,6 +16,8 @@ class PaginatorConfig
 
     protected $sortings =  [];
 
+    protected $actionGroups;
+
     /**
      * @return mixed
      */
@@ -228,5 +230,95 @@ class PaginatorConfig
         $this->class = $class;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActionGroups(): array
+    {
+        return $this->actionGroups;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnabledActionGroups(): array
+    {
+        return $this->getEnabledItems($this->getActionGroups());
+    }
+
+    /**
+     * @param ActionGroup $actionGroup
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addActionGroup(ActionGroup $actionGroup): void
+    {
+        $name = $actionGroup->getName();
+
+        Assert::false($this->hasActionGroup($name), sprintf('ActionGroup "%s" already exists.', $name));
+
+        $this->actionGroups[$name] = $actionGroup;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function removeActionGroup(string $name): void
+    {
+        if ($this->hasActionGroup($name)) {
+            unset($this->actionGroups[$name]);
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ActionGroup
+     */
+    public function getActionGroup(string $name): ActionGroup
+    {
+        Assert::true($this->hasActionGroup($name), sprintf('ActionGroup "%s" does not exist.', $name));
+
+        return $this->actionGroups[$name];
+    }
+
+    /**
+     * @param ActionGroup $actionGroup
+     */
+    public function setActionGroup(ActionGroup $actionGroup): void
+    {
+        $name = $actionGroup->getName();
+
+        $this->actionGroups[$name] = $actionGroup;
+    }
+
+    /**
+     * @param string $groupName
+     *
+     * @return Action[]
+     */
+    public function getActions(string $groupName): array
+    {
+        return $this->getActionGroup($groupName)->getActions();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnabledActions($groupName): array
+    {
+        return $this->getEnabledItems($this->getActions($groupName));
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasActionGroup(string $name): bool
+    {
+        return array_key_exists($name, $this->actionGroups);
     }
 }

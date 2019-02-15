@@ -36,6 +36,56 @@ class PaginatorConfigLoader
             $paginatorConfig->setDisableSorting($config['disable_sorting']);
         }
 
+        foreach ($config['actions'] as $name => $actionGroupConfiguration) {
+            $paginatorConfig->addActionGroup($this->convertActionGroup($name, $actionGroupConfiguration));
+        }
+
         return $paginatorConfig;
+    }
+
+    /**
+     * @param string $name
+     * @param array $configuration
+     *
+     * @return ActionGroup
+     */
+    private function convertActionGroup(string $name, array $configuration): ActionGroup
+    {
+        $actionGroup = ActionGroup::named($name);
+
+        foreach ($configuration as $actionName => $actionConfiguration) {
+            $actionGroup->addAction($this->convertAction($actionName, $actionConfiguration));
+        }
+
+        return $actionGroup;
+    }
+
+     /**
+     * @param string $name
+     * @param array $configuration
+     *
+     * @return Action
+     */
+    private function convertAction(string $name, array $configuration): Action
+    {
+        $action = Action::fromNameAndType($name, $configuration['type']);
+
+        if (array_key_exists('label', $configuration)) {
+            $action->setLabel($configuration['label']);
+        }
+        if (array_key_exists('icon', $configuration)) {
+            $action->setIcon($configuration['icon']);
+        }
+        if (array_key_exists('enabled', $configuration)) {
+            $action->setEnabled($configuration['enabled']);
+        }
+        if (array_key_exists('position', $configuration)) {
+            $action->setPosition($configuration['position']);
+        }
+        if (array_key_exists('options', $configuration)) {
+            $action->setOptions($configuration['options']);
+        }
+
+        return $action;
     }
 }
