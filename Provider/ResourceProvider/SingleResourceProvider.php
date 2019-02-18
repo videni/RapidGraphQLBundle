@@ -26,18 +26,14 @@ class SingleResourceProvider implements ResourceProviderInterface
 
     private $registry;
 
-    private $applicationName;
-
     public function __construct(
         ContainerInterface $container,
         ParametersParserInterface $parametersParser,
-        ManagerRegistry $registry,
-        $applicationName
+        ManagerRegistry $registry
     ) {
         $this->container = $container;
         $this->parametersParser = $parametersParser;
         $this->registry = $registry;
-        $this->applicationName = $applicationName;
     }
 
     /**
@@ -78,12 +74,5 @@ class SingleResourceProvider implements ResourceProviderInterface
         }
 
         return $result;
-    }
-
-    private static function getRepositoryServiceId($resourceShortName)
-    {
-         $name = Inflector::tableize($resourceShortName);
-
-         return sprintf('%s.repository.%s', $this->applicationName, $name);
     }
 }

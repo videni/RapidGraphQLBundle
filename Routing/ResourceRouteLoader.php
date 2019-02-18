@@ -90,8 +90,11 @@ final class ResourceRouteLoader extends Loader
             throw new \RuntimeException(sprintf('%s is not a valid action', $action));
         }
 
-        $controller = $operationConfig->getController() ?? sprintf('%s.%s', self::DEFAULT_ACTION_PATTERN, strtolower($action));
-        if (!$this->container->has($controller)) {
+        $controllerId = $controller = $operationConfig->getController() ?? sprintf('%s.%s', self::DEFAULT_ACTION_PATTERN, strtolower($action));
+        if (strpos($controller, '::')) {
+            list($controllerId, $action) = explode('::', $controller);
+        }
+        if (!$this->container->has($controllerId)) {
             throw new \RuntimeException(sprintf('There is no builtin action for the %s action. You need to define the controller yourself.', $action));
         }
 

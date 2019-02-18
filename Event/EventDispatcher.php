@@ -13,15 +13,12 @@ final class EventDispatcher implements EventDispatcherInterface
      */
     private $eventDispatcher;
 
-    private $applicationName;
-
     /**
      * @param SymfonyEventDispatcherInterface $eventDispatcher
      */
-    public function __construct(SymfonyEventDispatcherInterface $eventDispatcher, $applicationName)
+    public function __construct(SymfonyEventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->applicationName = $applicationName;
     }
 
     /**
@@ -34,7 +31,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): ResourceEvent {
         $event = new ResourceEvent($resource);
 
-        $this->eventDispatcher->dispatch(sprintf('%s.%s.pre_%s', $this->applicationName, Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
+        $this->eventDispatcher->dispatch(sprintf('%s.%s.pre_%s', $resourceConifig->getScope(), Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
 
         return $event;
     }
@@ -49,7 +46,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): ResourceEvent {
         $event = new ResourceEvent($resource);
 
-        $this->eventDispatcher->dispatch(sprintf('%s.%s.post_%s', $this->applicationName, Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
+        $this->eventDispatcher->dispatch(sprintf('%s.%s.post_%s', $resourceConifig->getScope(), Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
 
         return $event;
     }

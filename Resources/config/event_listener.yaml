@@ -27,7 +27,6 @@ services:
             - '@service_container'
             - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'
             - '@Doctrine\Common\Persistence\ManagerRegistry'
-            - '@=parameter("videni_rest.bundle_config")["application_name"]'
 
     Videni\Bundle\RestBundle\EventListener\DataPersister: ~
 
