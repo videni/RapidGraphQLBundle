@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Videni\Bundle\RestBundle\Provider;
 
 use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
 
 /**
  * {@inheritdoc}
@@ -24,7 +24,7 @@ final class FormatsProvider implements FormatsProviderInterface
      *
      * @throws InvalidArgumentException
      */
-    public function getFormats(ResourceConfig $resourceConfig, string $operationName): array
+    public function getFormats(Resource $resourceConfig, string $operationName): array
     {
         if (!$formats = $resourceConfig->getOperationAttribute($operationName, 'formats')) {
             return $this->configuredFormats;

@@ -75,11 +75,11 @@ class ResourceConfiguration implements ConfigurationInterface
                             throw new \InvalidArgumentException(sprintf('factory_class %s of resource %s is not found', $value['factory_class'], $resourceClass));
                         }
 
-                        //set 'default' paginator for each resource
-                        if(!array_key_exists('paginators', $value)) {
-                            $value['paginators'] = $default;
-                        } else if (!array_key_exists('default', $value['paginators'])) {
-                            $value['paginators'] = $value['paginators'] + $default;
+                        //set 'default' grid for each resource
+                        if(!array_key_exists('grids', $value)) {
+                            $value['grids'] = $default;
+                        } else if (!array_key_exists('default', $value['grids'])) {
+                            $value['grids'] = $value['grids'] + $default;
                         }
 
                         $this->normalizeOperations($value['scope'], $value['short_name'], $value);
@@ -138,7 +138,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->end()
                             ->children()
                                 ->scalarNode('path')->end()
-                                ->scalarNode('paginator')->end()
+                                ->scalarNode('grid')->end()
                                 ->scalarNode('route_name')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
@@ -207,7 +207,7 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                    ->append($this->addPaginatorConfigurationSection())
+                    ->append($this->addGridConfigurationSection())
                 ->end()
             ->end()
         ->end()
@@ -216,31 +216,32 @@ class ResourceConfiguration implements ConfigurationInterface
         return $rootNode;
     }
 
-    private function addPaginatorConfigurationSection()
+    private function addGridConfigurationSection()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('paginators');
+        $rootNode = $treeBuilder->root('grids');
 
         $rootNode
-            ->useAttributeAsKey('paginator_name')
+            ->useAttributeAsKey('name')
             ->arrayPrototype()
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->scalarNode('max_results')->defaultValue(self::MAX_RESULTS)->end()
                     ->scalarNode('disable_sorting')->defaultValue(false)->end()
-                    ->arrayNode('sortings')
+                    ->arrayNode('fields')
                         ->useAttributeAsKey('name')
                         ->arrayPrototype()
-                            ->beforeNormalization()
-                                ->ifString()
-                                ->then(function ($v) {
-                                    return ['order' => $v];
-                                })
-                            ->end()
                             ->children()
-                                ->scalarNode('description')->end()
-                                ->scalarNode('property_path')->end()
-                                ->enumNode('order')->values(['asc', 'desc'])->cannotBeEmpty()->end()
+                                ->scalarNode('type')->isRequired()->cannotBeEmpty()->end()
+                                ->scalarNode('label')->cannotBeEmpty()->end()
+                                ->scalarNode('property_path')->cannotBeEmpty()->end()
+                                ->enumNode('sorting')->values(['asc', 'desc', false])->defaultFalse()->end()
+                                ->scalarNode('enabled')->defaultTrue()->end()
+                                ->scalarNode('position')->defaultValue(100)->end()
+                                ->arrayNode('options')
+                                    ->performNoDeepMerging()
+                                    ->variablePrototype()->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
@@ -286,6 +287,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('type')->isRequired()->end()
                                     ->scalarNode('label')->end()
+                                    ->scalarNode('access_control')->end()
                                     ->scalarNode('enabled')->defaultTrue()->end()
                                     ->scalarNode('icon')->end()
                                     ->scalarNode('position')->defaultValue(100)->end()
@@ -345,8 +347,8 @@ class ResourceConfiguration implements ConfigurationInterface
                 throw new \LogicException(sprintf('Action type %s of operation %s is not existed, only %s are supported', $actionConfig['action'], $operationName, implode(',', $defaultActions)));
             }
 
-            if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['paginator'])) {
-                $actionConfig['paginator'] =  self::DEFAULT_PAGINATOR_NAME;
+            if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
+                $actionConfig['grid'] =  self::DEFAULT_PAGINATOR_NAME;
             }
 
             $this->setDefaultServiceConfig($scope, $resourceShortName, 'repository', $actionConfig);

@@ -1,11 +1,11 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Grid;
 
 /**
  * Represents the configuration of a field that can be used to filter data.
  */
-class FilterConfig
+class Filter
 {
     private $type;
     private $allowArray = false;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Grid;
 
 class Action
 {

@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;

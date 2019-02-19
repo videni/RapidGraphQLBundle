@@ -1,13 +1,13 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
-use Videni\Bundle\RestBundle\Config\Paginator\FilterConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Filter;
 use Videni\Bundle\RestBundle\Filter\FieldAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\Factory\FilterFactoryInterface;
 use Videni\Bundle\RestBundle\Filter\MetadataAwareFilterInterface;
 use Videni\Bundle\RestBundle\Filter\StandaloneFilter;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Filter\CollectionAwareFilterInterface;
 
 /**
@@ -27,13 +27,13 @@ abstract class RegisterFilters
     }
 
     /**
-     * @param FilterConfig $filterConfig
+     * @param Filter $filterConfig
      * @param string            $propertyPath
      * @param Context           $context
      *
      * @return StandaloneFilter|null
      */
-    protected function createFilter(FilterConfig $filterConfig, $propertyPath, ResourceConfig $resourceConfig)
+    protected function createFilter(Filter $filterConfig, $propertyPath, Resource $resourceConfig)
     {
         $filterOptions = $filterConfig->getOptions();
         if (null === $filterOptions) {

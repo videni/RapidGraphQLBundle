@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Videni\Bundle\RestBundle\Filter\ComparisonFilter;
 use Videni\Bundle\RestBundle\Filter\FilterValue;
@@ -12,7 +12,7 @@ use Videni\Bundle\RestBundle\Filter\FilterCollection;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
-use Videni\Bundle\RestBundle\Paginator\EntityIdTransformer;
+use Videni\Bundle\RestBundle\Grid\EntityIdTransformer;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 /**

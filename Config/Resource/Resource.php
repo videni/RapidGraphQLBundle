@@ -2,10 +2,10 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Grid;
 use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
 
-class ResourceConfig
+class Resource
 {
     private $routePrefix;
     private $scope;
@@ -116,26 +116,26 @@ class ResourceConfig
         return $this;
     }
 
-    public function setNormalizationContext(?SerializationConfig $normalizationContext)
+    public function setNormalizationContext(?Serialization $normalizationContext)
     {
         $this->normalizationContext = $normalizationContext;
 
         return $this;
     }
 
-    public function getNormalizationContext(): ?SerializationConfig
+    public function getNormalizationContext(): ?Serialization
     {
         return $this->normalizationContext;
     }
 
-    public function setDenormalizationContext(?SerializationConfig $denormalizationContext)
+    public function setDenormalizationContext(?Serialization $denormalizationContext)
     {
         $this->denormalizationContext = $denormalizationContext;
 
         return $this;
     }
 
-    public function getDenormalizationContext(): ?SerializationConfig
+    public function getDenormalizationContext(): ?Serialization
     {
         return $this->denormalizationContext;
     }
@@ -153,7 +153,7 @@ class ResourceConfig
     /**
      * Gets the configuration for all operations.
      *
-     * @return OperationConfig[] [operation name => config, ...]
+     * @return Operation[] [operation name => config, ...]
      */
     public function getOperations()
     {
@@ -177,7 +177,7 @@ class ResourceConfig
      *
      * @param string $operationName
      *
-     * @return OperationConfig|null
+     * @return Operation|null
      */
     public function getOperation($operationName)
     {
@@ -192,14 +192,14 @@ class ResourceConfig
      * Adds the configuration of the operation.
      *
      * @param string                 $operationName
-     * @param OperationConfig|null $operation
+     * @param Operation|null $operation
      *
-     * @return OperationConfig
+     * @return Operation
      */
     public function addOperation($operationName, $operation = null)
     {
         if (null === $operation) {
-            $operation = new OperationConfig();
+            $operation = new Operation();
         }
 
         $this->operations[$operationName] = $operation;
@@ -228,10 +228,10 @@ class ResourceConfig
             }
         }
 
-        if($operationAttribute instanceof SerializationConfig) {
+        if($operationAttribute instanceof Serialization) {
             $mergedAttribtues = $this->mergeResourceLevelAttributes($key, $operationAttribute);
             if($mergedAttribtues !== false) {
-                return SerializationConfig::fromArray($mergedAttribtues);
+                return Serialization::fromArray($mergedAttribtues);
             }
         };
 
@@ -263,7 +263,7 @@ class ResourceConfig
     /**
      * Gets the configuration for all paginators.
      *
-     * @return PaginatorConfig[] [paginator name => config, ...]
+     * @return Grid[] [paginator name => config, ...]
      */
     public function getPaginators()
     {
@@ -287,7 +287,7 @@ class ResourceConfig
      *
      * @param string $paginatorName
      *
-     * @return PaginatorConfig|null
+     * @return Grid|null
      */
     public function getPaginator($paginatorName)
     {
@@ -302,14 +302,14 @@ class ResourceConfig
      * Adds the configuration of the paginator.
      *
      * @param string                 $paginatorName
-     * @param PaginatorConfig|null $paginator
+     * @param Grid|null $paginator
      *
-     * @return PaginatorConfig
+     * @return Grid
      */
     public function addPaginator($paginatorName, $paginator = null)
     {
         if (null === $paginator) {
-            $paginator = new PaginatorConfig();
+            $paginator = new Grid();
         }
 
         $this->paginators[$paginatorName] = $paginator;

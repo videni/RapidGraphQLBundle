@@ -4,10 +4,10 @@ namespace Videni\Bundle\RestBundle\Config\Resource;
 
 use Videni\Bundle\RestBundle\Exception\ConfigNotFoundException;
 
-class ResourceConfigProvider
+class ResourceProvider
 {
    /**
-     * @var PaginatorConfig[]
+     * @var Grid[]
      */
     private $resourceConfigs = [];
 
@@ -15,7 +15,7 @@ class ResourceConfigProvider
     private $resourceConfigLoader;
 
     public function __construct(
-        ResourceConfigLoader $resourceConfigLoader,
+        ResourceLoader $resourceConfigLoader,
         array $resourceConfigurations
     ) {
         $this->resourceConfigLoader = $resourceConfigLoader;

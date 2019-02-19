@@ -1,13 +1,13 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Util\CriteriaConnector;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Collection\Criteria;
@@ -69,7 +69,7 @@ class BuildQuery
 
     protected function resolveQueryBuilder(Request $request, ResourceContext $context)
     {
-          /** @var ServiceConfig */
+          /** @var Service */
         $repositoryConfig = $context->getOperationConfig()->getRepository();
 
         $repositoryInstance = $this->container->get($repositoryConfig->getId());

@@ -1,3 +1,6 @@
+parameters:
+    videni_rest.data_persister.class: Videni\Bundle\RestBundle\EventListener\DataPersister
+
 services:
     _defaults:
         autowire: true
@@ -28,7 +31,8 @@ services:
             - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'
             - '@Doctrine\Common\Persistence\ManagerRegistry'
 
-    Videni\Bundle\RestBundle\EventListener\DataPersister: ~
+    Videni\Bundle\RestBundle\EventListener\DataPersister:
+        class: '%videni_rest.data_persister.class%'
 
     Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider:
         arguments:

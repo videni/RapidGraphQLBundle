@@ -3,7 +3,7 @@
 namespace Videni\Bundle\RestBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyEventDispatcherInterface;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Doctrine\Common\Inflector\Inflector;
 
 final class EventDispatcher implements EventDispatcherInterface
@@ -26,7 +26,7 @@ final class EventDispatcher implements EventDispatcherInterface
      */
     public function dispatchPreEvent(
         string $eventName,
-        ResourceConfig $resourceConifig,
+        Resource $resourceConifig,
         $resource
     ): ResourceEvent {
         $event = new ResourceEvent($resource);
@@ -41,7 +41,7 @@ final class EventDispatcher implements EventDispatcherInterface
      */
     public function dispatchPostEvent(
         string $eventName,
-        ResourceConfig $resourceConifig,
+        Resource $resourceConifig,
         $resource
     ): ResourceEvent {
         $event = new ResourceEvent($resource);

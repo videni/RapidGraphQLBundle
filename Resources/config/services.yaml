@@ -20,7 +20,7 @@ services:
         public: false
 
     Videni\Bundle\RestBundle\:
-        resource: '../../{Paginator}'
+        resource: '../../{Grid}'
         public: true
 
     Videni\Bundle\RestBundle\Faker\EntityProvider:

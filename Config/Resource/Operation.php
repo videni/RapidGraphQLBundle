@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
-class OperationConfig
+class Operation
 {
     private $action;
     private $defaults;
@@ -184,49 +184,49 @@ class OperationConfig
         return $this;
     }
 
-    public function setFactory(?ServiceConfig $factory)
+    public function setFactory(?Service $factory)
     {
         $this->factory = $factory;
         return $this;
     }
 
-    public function getFactory(): ?ServiceConfig
+    public function getFactory(): ?Service
     {
         return $this->factory;
     }
 
-    public function setRepository(?ServiceConfig $repostory)
+    public function setRepository(?Service $repostory)
     {
         $this->repository = $repostory;
 
         return $this;
     }
 
-    public function getRepository(): ?ServiceConfig
+    public function getRepository(): ?Service
     {
         return $this->repository;
     }
 
-    public function setNormalizationContext(?SerializationConfig $normalizationContext)
+    public function setNormalizationContext(?Serialization $normalizationContext)
     {
         $this->normalizationContext = $normalizationContext;
 
         return $this;
     }
 
-    public function getNormalizationContext(): ?SerializationConfig
+    public function getNormalizationContext(): ?Serialization
     {
         return $this->normalizationContext;
     }
 
-    public function setDenormalizationContext(?SerializationConfig $denormalizationContext)
+    public function setDenormalizationContext(?Serialization $denormalizationContext)
     {
         $this->denormalizationContext = $denormalizationContext;
 
         return $this;
     }
 
-    public function getDenormalizationContext(): ?SerializationConfig
+    public function getDenormalizationContext(): ?Serialization
     {
         return $this->denormalizationContext;
     }
@@ -276,10 +276,10 @@ class OperationConfig
         $self = new self();
 
         if (array_key_exists('denormalization_context', $config)) {
-            $self->setDenormalizationContext(SerializationConfig::fromArray($config['denormalization_context']));
+            $self->setDenormalizationContext(Serialization::fromArray($config['denormalization_context']));
         }
         if (array_key_exists('normalization_context', $config)) {
-            $self->setNormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
+            $self->setNormalizationContext(Serialization::fromArray($config['normalization_context']));
         }
         if (array_key_exists('validation_groups', $config)) {
             $self->setValidationGroups($config['validation_groups']);
@@ -291,10 +291,10 @@ class OperationConfig
             $self->setPaginator($config['paginator']);
         }
         if (array_key_exists('factory', $config)) {
-            $self->setFactory(ServiceConfig::fromArray($config['factory']));
+            $self->setFactory(Service::fromArray($config['factory']));
         }
         if (array_key_exists('repository', $config)) {
-            $self->setRepository(ServiceConfig::fromArray($config['repository']));
+            $self->setRepository(Service::fromArray($config['repository']));
         }
 
         if (array_key_exists('action', $config)) {

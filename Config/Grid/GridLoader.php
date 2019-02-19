@@ -1,46 +1,44 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Grid;
 
 use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
 
 /**
  * The loader for paginator
  */
-class PaginatorConfigLoader
+class GridLoader
 {
     /**
      * {@inheritdoc}
      */
     public function load(array $config)
     {
-        $paginatorConfig = new PaginatorConfig();
+        $grid = new Grid();
 
         if (array_key_exists('filters', $config)) {
             foreach ($config['filters'] as $filterName => $filterConfig) {
-                $paginatorConfig->addFilter($filterName, FilterConfig::fromArray($filterConfig));
+                $grid->addFilter($filterName, Filter::fromArray($filterConfig));
             }
         }
-        if (array_key_exists('sortings', $config)) {
-            foreach ($config['sortings'] as $sortingName => $sortingConfig) {
-                $paginatorConfig->addSorting($sortingName, SortingConfig::fromArray($sortingConfig));
-            }
+        foreach ($configuration['fields'] as $name => $fieldConfiguration) {
+            $grid->addField($this->convertField($name, $fieldConfiguration));
         }
         if (array_key_exists('class', $config)) {
-            $paginatorConfig->setClass($config['class']);
+            $grid->setClass($config['class']);
         }
         if (array_key_exists('max_results', $config)) {
-            $paginatorConfig->setMaxResults($config['max_results']);
+            $grid->setMaxResults($config['max_results']);
         }
         if (array_key_exists('disable_sorting', $config)) {
-            $paginatorConfig->setDisableSorting($config['disable_sorting']);
+            $grid->setDisableSorting($config['disable_sorting']);
         }
 
         foreach ($config['actions'] as $name => $actionGroupConfiguration) {
-            $paginatorConfig->addActionGroup($this->convertActionGroup($name, $actionGroupConfiguration));
+            $grid->addActionGroup($this->convertActionGroup($name, $actionGroupConfiguration));
         }
 
-        return $paginatorConfig;
+        return $grid;
     }
 
     /**
@@ -87,5 +85,37 @@ class PaginatorConfigLoader
         }
 
         return $action;
+    }
+
+    /**
+     * @param string $name
+     * @param array $configuration
+     *
+     * @return Field
+     */
+    private function convertField(string $name, array $configuration): Field
+    {
+        $field = Field::fromNameAndType($name, $configuration['type']);
+
+        if (array_key_exists('property_path', $configuration)) {
+            $field->setPath($configuration['path']);
+        }
+        if (array_key_exists('label', $configuration)) {
+            $field->setLabel($configuration['label']);
+        }
+        if (array_key_exists('enabled', $configuration)) {
+            $field->setEnabled($configuration['enabled']);
+        }
+        if (array_key_exists('sorting', $configuration)) {
+            $field->setSorting($configuration['sorting']);
+        }
+        if (array_key_exists('position', $configuration)) {
+            $field->setPosition($configuration['position']);
+        }
+        if (array_key_exists('options', $configuration)) {
+            $field->setOptions($configuration['options']);
+        }
+
+        return $field;
     }
 }

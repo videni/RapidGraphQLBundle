@@ -1,21 +1,19 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Config\Paginator;
+namespace Videni\Bundle\RestBundle\Config\Grid;
 
 /**
  * Represents the configuration of  paginator
  */
-class PaginatorConfig
+class Grid
 {
     private $maxResults;
     private $disableSorting;
     private $class;
 
-    /** @var FilterConfig[] */
+    /** @var Filter[] */
     protected $filters = [];
-
-    protected $sortings =  [];
-
+    protected $fields =  [];
     protected $actionGroups;
 
     /**
@@ -71,7 +69,7 @@ class PaginatorConfig
     /**
      * Gets the configuration for all filters.
      *
-     * @return FilterConfig[] [filter name => config, ...]
+     * @return Filter[] [filter name => config, ...]
      */
     public function getFilters()
     {
@@ -95,7 +93,7 @@ class PaginatorConfig
      *
      * @param string $filterName
      *
-     * @return FilterConfig|null
+     * @return Filter|null
      */
     public function getFilter($filterName)
     {
@@ -110,14 +108,14 @@ class PaginatorConfig
      * Adds the configuration of the filter.
      *
      * @param string                 $filterName
-     * @param FilterConfig|null $filter
+     * @param Filter|null $filter
      *
-     * @return FilterConfig
+     * @return Filter
      */
     public function addFilter($filterName, $filter = null)
     {
         if (null === $filter) {
-            $filter = new FilterConfig();
+            $filter = new Filter();
         }
 
         $this->filters[$filterName] = $filter;
@@ -133,83 +131,6 @@ class PaginatorConfig
     public function removeFilter($filterName)
     {
         unset($this->filters[$filterName]);
-    }
-
-    /**
-     * Checks whether the configuration of at least one filter exists.
-     *
-     * @return bool
-     */
-    public function hasSortings()
-    {
-        return !empty($this->sortings);
-    }
-
-    /**
-     * Gets the configuration for all Sortings.
-     *
-     * @return SortingConfig[] [Sorting name => config, ...]
-     */
-    public function getSortings()
-    {
-        return $this->sortings;
-    }
-
-    /**
-     * Checks whether the configuration of the Sorting exists.
-     *
-     * @param string $sortingName
-     *
-     * @return bool
-     */
-    public function hasSorting($sortingName)
-    {
-        return isset($this->sortings[$sortingName]);
-    }
-
-    /**
-     * Gets the configuration of the Sorting.
-     *
-     * @param string $sortingName
-     *
-     * @return SortingConfig|null
-     */
-    public function getSorting($sortingName)
-    {
-        if (!isset($this->sortings[$sortingName])) {
-            return null;
-        }
-
-        return $this->sortings[$sortingName];
-    }
-
-    /**
-     * Adds the configuration of the Sorting.
-     *
-     * @param string                 $sortingName
-     * @param SortingConfig|null $sorting
-     *
-     * @return SortingConfig
-     */
-    public function addSorting($sortingName, $sorting = null)
-    {
-        if (null === $sorting) {
-            $sorting = new SortingConfig();
-        }
-
-        $this->sortings[$sortingName] = $sorting;
-
-        return $sorting;
-    }
-
-    /**
-     * Removes the configuration of the Sorting.
-     *
-     * @param string $sortingName
-     */
-    public function removeSorting($sortingName)
-    {
-        unset($this->sortings[$sortingName]);
     }
 
     /**
@@ -320,5 +241,105 @@ class PaginatorConfig
     public function hasActionGroup(string $name): bool
     {
         return array_key_exists($name, $this->actionGroups);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnabledFields(): array
+    {
+        return $this->getEnabledItems($this->getFields());
+    }
+
+    public function getSortings()
+    {
+       $fields = $this->getEnabledFields();
+
+       return array_filter($fields, function($field) {
+            return true === $field->getSorting();
+        });
+    }
+
+    /**
+     * @param Field $field
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addField(Field $field): void
+    {
+        $name = $field->getName();
+
+        Assert::false($this->hasField($name), sprintf('Field "%s" already exists.', $name));
+
+        $this->fields[$name] = $field;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function removeField(string $name): void
+    {
+        if ($this->hasField($name)) {
+            unset($this->fields[$name]);
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Field
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function getField(string $name): Field
+    {
+        Assert::true($this->hasField($name), sprintf('Field "%s" does not exist.', $name));
+
+        return $this->fields[$name];
+    }
+
+    /**
+     * @param Field $field
+     */
+    public function setField(Field $field): void
+    {
+        $name = $field->getName();
+
+        $this->fields[$name] = $field;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasField(string $name): bool
+    {
+        return array_key_exists($name, $this->fields);
+    }
+
+    /**
+     * @param array $items
+     *
+     * @return array
+     */
+    private function getEnabledItems(array $items): array
+    {
+        $filteredItems = [];
+        foreach ($items as $item) {
+            if ($item->isEnabled()) {
+                $filteredItems[] = $item;
+            }
+        }
+
+        return $filteredItems;
     }
 }

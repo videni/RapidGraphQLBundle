@@ -5,8 +5,8 @@ namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
@@ -46,7 +46,7 @@ class NewResourceProvider implements ResourceProviderInterface
     {
         $resourceConfig = $context->getResourceConfig();
 
-        /** @var ServiceConfig  */
+        /** @var Service  */
         $factoryConfig = $context->getOperationConfig()->getFactory();
         if (null === $factoryConfig) {
             throw new \RuntimeException(sprintf('No resource factory found for class %s', $context->getClassName()));

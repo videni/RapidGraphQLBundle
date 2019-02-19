@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Videni\Bundle\RestBundle\Filter\ComparisonFilter;
@@ -11,7 +11,7 @@ use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Videni\Bundle\RestBundle\Filter\FilterCollection;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Grid;
 
 /**
  * Registers filters according to the "filters" configuration section.
@@ -60,7 +60,7 @@ class RegisterConfiguredFilter extends RegisterFilters
      * {@inheritdoc}
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function getFilters(ResourceContext $context, PaginatorConfig $paginatorConfig)
+    public function getFilters(ResourceContext $context, Grid $grid)
     {
         $resourceConfig = $context->getResourceConfig();
 
@@ -76,7 +76,7 @@ class RegisterConfiguredFilter extends RegisterFilters
         $associationNames = $this->getAssociationNames($metadata);
         $filters = new FilterCollection();
 
-        $filtersConfig = $paginatorConfig->getFilters();
+        $filtersConfig = $grid->getFilters();
         foreach ($filtersConfig as $filterKey => $filterConfig) {
             if ($filters->has($filterKey)) {
                 continue;

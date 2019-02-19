@@ -2,7 +2,7 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
-class SerializationConfig extends \ArrayObject
+class Serialization extends \ArrayObject
 {
     private $groups = null;
 

@@ -4,14 +4,14 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider:
+    Videni\Bundle\RestBundle\Config\Resource\ResourceProvider:
         public: true
         arguments:
-            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceLoader'
             - '%videni_rest.resource_config%'
 
-    Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader: ~
+    Videni\Bundle\RestBundle\Config\Grid\GridLoader: ~
 
-    Videni\Bundle\RestBundle\Config\Resource\ResourceConfigLoader:
+    Videni\Bundle\RestBundle\Config\Resource\ResourceLoader:
         arguments:
-            - '@Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader'
+            - '@Videni\Bundle\RestBundle\Config\Grid\GridLoader'

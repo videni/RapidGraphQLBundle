@@ -12,11 +12,11 @@ use Doctrine\ORM\QueryBuilder;
 use Hateoas\Representation\Factory\PagerfantaFactory;
 use Hateoas\Configuration\Route;
 use Videni\Bundle\RestBundle\Filter\FilterNames;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Grid;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
-use Videni\Bundle\RestBundle\Paginator\PaginatorApplicator;
+use Videni\Bundle\RestBundle\Grid\GridApplicator;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 class CollectionResourceProvider implements ResourceProviderInterface
@@ -27,19 +27,19 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
     private $pagerfantaRepresentationFactory;
 
-    private $paginatorApplicator;
+    private $gridApplicator;
 
     private $filterValueAccessorFactory;
 
     public function __construct(
         PagerfantaFactory $pagerfantaRepresentationFactory,
         FilterNames $filterNames,
-        PaginatorApplicator $paginatorApplicator,
+        GridApplicator $gridApplicator,
         FilterValueAccessorFactory $filterValueAccessorFactory
     ) {
         $this->pagerfantaRepresentationFactory = $pagerfantaRepresentationFactory;
         $this->filterNames = $filterNames;
-        $this->paginatorApplicator = $paginatorApplicator;
+        $this->gridApplicator = $gridApplicator;
         $this->filterValueAccessorFactory = $filterValueAccessorFactory;
     }
 
@@ -51,17 +51,17 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
         $filterValues = $this->filterValueAccessorFactory->create($request);
 
-        $query = $this->paginatorApplicator->apply($context, $filterValues, $request);
+        $query = $this->gridApplicator->apply($context, $filterValues, $request);
 
-        $paginatorConfig = $context->getPaginatorConfig();
-        if(self::UNLIMITED_RESULT === $paginatorConfig->getMaxResults()) {
+        $grid = $context->getGrid();
+        if(self::UNLIMITED_RESULT === $grid->getMaxResults()) {
             return $query->getQuery()->getResult();
         }
 
         $paginator = $this->getPaginator($query);
 
         //we have to add paging filter here for we have to set pagination info for Pagerfanta
-        $this->addPaging($filterValues, $paginator, $paginatorConfig);
+        $this->addPaging($filterValues, $paginator, $grid);
 
         $route = new Route($request->attributes->get('_route'), array_merge($request->attributes->get('_route_params'), $request->query->all()));
 
@@ -84,11 +84,11 @@ class CollectionResourceProvider implements ResourceProviderInterface
         return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, false, false));
     }
 
-    protected function addPaging(FilterValueAccessor $filterValues, Pagerfanta $paginator, PaginatorConfig $paginatorConfig)
+    protected function addPaging(FilterValueAccessor $filterValues, Pagerfanta $paginator, Grid $grid)
     {
         $paginator
             ->setAllowOutOfRangePages(true)
-            ->setMaxPerPage($paginatorConfig->getMaxResults())
+            ->setMaxPerPage($grid->getMaxResults())
         ;
 
         $pageNumberFilterName = $this->filterNames->getPageNumberFilterName();
@@ -100,7 +100,7 @@ class CollectionResourceProvider implements ResourceProviderInterface
         if ($filterValues->has($pageSizeFilterName)) {
             $customPageSize = $filterValues->get($pageSizeFilterName)->getValue();
 
-            $paginator->setMaxPerPage($customPageSize > $paginatorConfig->getMaxResults() ? $paginatorConfig->getMaxResults(): $customPageSize);
+            $paginator->setMaxPerPage($customPageSize > $grid->getMaxResults() ? $grid->getMaxResults(): $customPageSize);
         }
     }
 }

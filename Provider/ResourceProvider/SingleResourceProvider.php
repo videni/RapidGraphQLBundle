@@ -11,8 +11,8 @@ use Videni\Bundle\RestBundle\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
@@ -48,7 +48,7 @@ class SingleResourceProvider implements ResourceProviderInterface
         return $this->load($request, $context->getOperationConfig()->getRepository(), $context->getClassName(), $context->getResourceConfig());
     }
 
-    protected function load(Request $request, ServiceConfig $repositoryConfig, $className, ResourceConfig $resourceConfig)
+    protected function load(Request $request, Service $repositoryConfig, $className, Resource $resourceConfig)
     {
         $repositoryInstance = $this->container->get($repositoryConfig->getId());
 
@@ -66,7 +66,7 @@ class SingleResourceProvider implements ResourceProviderInterface
 
         $id = $request->attributes->get('id', null);
         if (null !== $id ) {
-            $result =  $repositoryInstance->find((int)$id);
+            $result =  $repositoryInstance->find($id);
         }
 
         if (null === $result) {

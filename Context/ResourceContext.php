@@ -121,7 +121,7 @@ class ResourceContext
         return $this->resourceConfig->hasOperation($this->operationName) ? $this->resourceConfig->getOperation($this->operationName) : null;
     }
 
-    public function getPaginatorConfig()
+    public function getGrid()
     {
         $this->assure();
 
@@ -140,7 +140,7 @@ class ResourceContext
         }
 
         if (null === $this->resourceConfig) {
-            throw new \RuntimeException('ResourceConfig must be set in the context before operation config is requested');
+            throw new \RuntimeException('Resource must be set in the context before operation config is requested');
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Videni\Bundle\RestBundle\Model\DataType;
 use Videni\Bundle\RestBundle\Filter\Normalizer\FilterValueNormalizer;

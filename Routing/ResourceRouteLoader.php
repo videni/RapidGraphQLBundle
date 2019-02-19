@@ -15,9 +15,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolverInterface;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use Videni\Bundle\RestBundle\Config\Resource\OperationConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Operation;
 use Videni\Bundle\RestBundle\Exception\InvalidResourceException;
 
 /**
@@ -33,7 +33,7 @@ final class ResourceRouteLoader extends Loader
     private $container;
 
     public function __construct(
-        ResourceConfigProvider $resourceConfigProvider,
+        ResourceProvider $resourceConfigProvider,
         OperationPathResolverInterface $operationPathResolver,
         ContainerInterface $container
     ) {
@@ -74,7 +74,7 @@ final class ResourceRouteLoader extends Loader
      *
      * @throws RuntimeException
      */
-    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, OperationConfig $operationConfig, ResourceConfig $resourceConfig)
+    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, Operation $operationConfig, Resource $resourceConfig)
     {
         $resourceShortName = $resourceConfig->getShortName();
 

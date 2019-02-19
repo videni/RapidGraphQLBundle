@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Doctrine\Common\Collections\Criteria;
 use Videni\Bundle\RestBundle\Filter\FilterCollection;
@@ -9,7 +9,7 @@ use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Model\DataType;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Videni\Bundle\RestBundle\Filter\FilterNames;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Grid;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
@@ -35,33 +35,33 @@ class AddSorting
     /**
      * {@inheritdoc}
      */
-    public function process($entityClass, PaginatorConfig $paginatorConfig, FilterCollection $filters)
+    public function process($entityClass, Grid $grid, FilterCollection $filters)
     {
         $metadata = $this->doctrineHelper->getEntityMetadataForClass($entityClass);
-        if (empty($paginatorConfig->getSortings())) {
+        if (empty($grid->getSortings())) {
             $this->addDefaultSortFilter(
                 $this->filterNames->getSortFilterName(),
                 $filters,
                 $metadata,
-                $paginatorConfig
+                $grid
             );
         } else {
-            $this->addConfiguredSortFilter($filters, $paginatorConfig);
+            $this->addConfiguredSortFilter($filters, $grid);
         }
     }
 
-    protected function addConfiguredSortFilter(FilterCollection $filters, PaginatorConfig $paginatorConfig)
+    protected function addConfiguredSortFilter(FilterCollection $filters, Grid $grid)
     {
         $filters->add(
             $this->filterNames->getSortFilterName(),
             new SortFilter(
                 DataType::ORDER_BY,
                 $this->getSortFilterDescription(),
-                function () use ($paginatorConfig) {
+                function () use ($grid) {
                     $orderBy = [];
-                    foreach ($paginatorConfig->getSortings() as $sortingName => $sortingConfig) {
-                        $fieldName = $sortingConfig->getPropertyPath();
-                        $orderBy[$fieldName] = $sortingConfig->getOrder();
+                    foreach ($grid->getSortings() as $field) {
+                        $fieldName = $field->getPropertyPath();
+                        $orderBy[$fieldName] = $field->getSorting();
                     }
 
                     return $orderBy;
@@ -76,13 +76,13 @@ class AddSorting
     /**
      * @param string                 $filterName
      * @param ClassMetadata       $filters
-     * @param PaginatorConfig $config
+     * @param Grid $config
      */
     protected function addDefaultSortFilter(
         string $filterName,
         FilterCollection $filters,
         ClassMetadata  $metadata,
-        PaginatorConfig  $paginatorConfig
+        Grid  $grid
     ): void {
         if (!$filters->has($filterName)) {
             $filters->add(
@@ -90,8 +90,8 @@ class AddSorting
                 new SortFilter(
                     DataType::ORDER_BY,
                     $this->getSortFilterDescription(),
-                    function () use ($paginatorConfig, $metadata) {
-                        return $this->getDefaultValue($metadata, $paginatorConfig);
+                    function () use ($grid, $metadata) {
+                        return $this->getDefaultValue($metadata, $grid);
                     },
                     function ($value) {
                         return $this->convertDefaultValueToString($value);
@@ -114,13 +114,13 @@ class AddSorting
      *
      * @return array [field name => direction, ...]
      */
-    protected function getDefaultValue(ClassMetadata $metadata, PaginatorConfig $paginatorConfig): array
+    protected function getDefaultValue(ClassMetadata $metadata, Grid $grid): array
     {
         $orderBy = [];
         $idFieldNames = $metadata->getIdentifierFieldNames();
         if (!empty($idFieldNames)) {
             foreach ($idFieldNames as $fieldName) {
-                $filterConfig = $paginatorConfig->getFilter($fieldName);
+                $filterConfig = $grid->getFilter($fieldName);
                 if (null !== $filterConfig) {
                     $fieldName = $filterConfig->getPropertyPath($fieldName);
                 }

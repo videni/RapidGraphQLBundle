@@ -3,16 +3,16 @@
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
 use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfigLoader;
+use Videni\Bundle\RestBundle\Config\Grid\GridLoader;
 
 /**
  * The loader for resource
  */
-class ResourceConfigLoader
+class ResourceLoader
 {
     private $paginatorConfigLoader;
 
-    public function __construct(PaginatorConfigLoader $paginatorConfigLoader)
+    public function __construct(GridLoader $paginatorConfigLoader)
     {
         $this->paginatorConfigLoader = $paginatorConfigLoader;
     }
@@ -22,13 +22,13 @@ class ResourceConfigLoader
      */
     public function load(array $config)
     {
-        $resourceConfig = new ResourceConfig();
+        $resourceConfig = new Resource();
 
         if (array_key_exists('denormalization_context', $config)) {
-            $resourceConfig->setDenormalizationContext(SerializationConfig::fromArray($config['denormalization_context']));
+            $resourceConfig->setDenormalizationContext(Serialization::fromArray($config['denormalization_context']));
         }
         if (array_key_exists('normalization_context', $config)) {
-            $resourceConfig->setNormalizationContext(SerializationConfig::fromArray($config['normalization_context']));
+            $resourceConfig->setNormalizationContext(Serialization::fromArray($config['normalization_context']));
         }
         if (array_key_exists('validation_groups', $config)) {
             $resourceConfig->setValidationGroups($config['validation_groups']);
@@ -70,14 +70,14 @@ class ResourceConfigLoader
         return $resourceConfig;
     }
 
-    private function loadOperation(ResourceConfig $resourceConfig, array $config = [])
+    private function loadOperation(Resource $resourceConfig, array $config = [])
     {
         foreach ($config as $configName => $configValue) {
-            $resourceConfig->addOperation($configName, OperationConfig::fromArray($configValue));
+            $resourceConfig->addOperation($configName, Operation::fromArray($configValue));
         }
     }
 
-    private function loadPaginator(ResourceConfig $resourceConfig, array $config = [])
+    private function loadPaginator(Resource $resourceConfig, array $config = [])
     {
         foreach ($config as $configName => $configValue) {
             $resourceConfig->addPaginator($configName, $this->paginatorConfigLoader->load($configValue));

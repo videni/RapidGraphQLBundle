@@ -1,12 +1,12 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
-use Videni\Bundle\RestBundle\Config\SortingConfig;
+use Videni\Bundle\RestBundle\Config\Sorting;
 use Videni\Bundle\RestBundle\Processor\Context;
 use Videni\Bundle\RestBundle\Filter\FilterNames;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValue;
-use Videni\Bundle\RestBundle\Config\Paginator\PaginatorConfig;
+use Videni\Bundle\RestBundle\Config\Grid\Grid;
 use Doctrine\Common\Collections\Criteria;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
 use Videni\Bundle\RestBundle\Filter\FilterCollection;
@@ -31,7 +31,7 @@ class ValidateSorting
     /**
      * {@inheritdoc}
      */
-    public function validate(FilterCollection $filters, FilterValueAccessor $filterValues, PaginatorConfig $paginatorConfig)
+    public function validate(FilterCollection $filters, FilterValueAccessor $filterValues, Grid $grid)
     {
         $sortFilterName = $this->filterNames->getSortFilterName();
         if (!$filters->has($sortFilterName)) {
@@ -45,7 +45,7 @@ class ValidateSorting
             return;
         }
 
-        $unsupportedFields = $this->validateSortValues($sortFilterValue, $paginatorConfig);
+        $unsupportedFields = $this->validateSortValues($sortFilterValue, $grid);
         if (!empty($unsupportedFields)) {
              throw new \RuntimeException($this->getValidationErrorMessage($unsupportedFields));
         }
@@ -71,7 +71,7 @@ class ValidateSorting
      *
      * @return string[] The list of fields that cannot be used for sorting
      */
-    private function validateSortValues(FilterValue $filterValue, PaginatorConfig $paginatorConfig): array
+    private function validateSortValues(FilterValue $filterValue, Grid $grid): array
     {
         $orderBy = $filterValue->getValue();
         if (empty($orderBy)) {
@@ -84,10 +84,10 @@ class ValidateSorting
 
         $unsupportedFields = [];
         foreach ($orderBy as $fieldName => $direction) {
-            if (!$paginatorConfig->hasSorting($fieldName)) {
+            if (!$grid->hasSorting($fieldName)) {
                 $unsupportedFields[] = $fieldName;
             } else {
-                $sortingConfig = $paginatorConfig->getSorting($fieldName);
+                $sortingConfig = $grid->getSorting($fieldName);
                 $propertyPath = $sortingConfig->getPropertyPath();
                 if ($propertyPath) {
                     $this->renameSortField($filterValue, $fieldName, $propertyPath);

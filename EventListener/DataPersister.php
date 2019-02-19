@@ -8,6 +8,8 @@ use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 
 class DataPersister
 {
+    protected $doctrineHelper;
+
     public function __construct(DoctrineHelper $doctrineHelper)
     {
         $this->doctrineHelper = $doctrineHelper;

@@ -4,9 +4,9 @@ namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfig;
-use Videni\Bundle\RestBundle\Config\Resource\ServiceConfig;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Factory\Factory;
 use Symfony\Component\DependencyInjection\Definition;
@@ -23,7 +23,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
         $bundleConifig = DependencyInjectionUtil::getConfig($container);
 
-        $resourceConfigProvider = $container->get(ResourceConfigProvider::class);
+        $resourceConfigProvider = $container->get(ResourceProvider::class);
 
         $resourceConfigs = $resourceConfigProvider->getAll();
         foreach ($resourceConfigs as $className => $resourceConfig) {
@@ -35,7 +35,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function registerFactory($className, ResourceConfig $resourceConfig, $container)
+    private function registerFactory($className, Resource $resourceConfig, $container)
     {
         $factoryClass = $resourceConfig->getFactoryClass();
 
@@ -61,7 +61,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function registerRepository($className, ResourceConfig $resourceConfig, $container)
+    private function registerRepository($className, Resource $resourceConfig, $container)
     {
         $repositoryClass = $resourceConfig->getRepositoryClass();
 
@@ -101,7 +101,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
          return sprintf('%s.%s.%s', $scope, $key, $name);
     }
 
-    protected function getClassMetadataDefinition($className, ResourceConfig $resourceConfig): Definition
+    protected function getClassMetadataDefinition($className, Resource $resourceConfig): Definition
     {
         $definition = new Definition($this->getClassMetadataClassname());
         $definition
@@ -124,7 +124,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
      /**
      * {@inheritdoc}
      */
-    protected function getManagerServiceId(ResourceConfig $resourceConfig): string
+    protected function getManagerServiceId(Resource $resourceConfig): string
     {
         return 'doctrine.orm.entity_manager';
     }

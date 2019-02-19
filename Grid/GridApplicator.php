@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Paginator;
+namespace Videni\Bundle\RestBundle\Grid;
 
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessor;
@@ -10,7 +10,7 @@ use Videni\Bundle\RestBundle\Collection\Criteria;
 use Videni\Bundle\RestBundle\Filter\StandaloneFilterWithDefaultValue;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 
-class PaginatorApplicator
+class GridApplicator
 {
      /** @var DoctrineHelper */
     protected $doctrineHelper;
@@ -61,23 +61,23 @@ class PaginatorApplicator
 
     protected function applyFilters(Criteria $criteria, ResourceContext $resourceContext,FilterValueAccessor $filterValues)
     {
-        $paginatorConfig = $resourceContext->getPaginatorConfig();
-        if (null === $paginatorConfig) {
+        $grid = $resourceContext->getGrid();
+        if (null === $grid) {
             return;
         }
 
         /** @var FilterInterface[] $filters */
-        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $paginatorConfig);
+        $filters = $this->registerConfiguredFilter->getFilters($resourceContext, $grid);
 
-        $this->addSorting->process($resourceContext->getClassName(), $paginatorConfig, $filters);
-        $this->validateSorting->validate($filters, $filterValues, $paginatorConfig);
+        $this->addSorting->process($resourceContext->getClassName(), $grid, $filters);
+        $this->validateSorting->validate($filters, $filterValues, $grid);
         $this->normalizeFilterValues->normalize($resourceContext, $filters, $filterValues);
 
         /**
          * it is important to iterate by $filters, not by $filterValues,
          * because the the order of filters is matter,
          * e.g. "page size" filter should be processed before "page number" filter
-         * @see \Videni\Bundle\RestBundle\Paginator\SetDefaultPaging::addPageNumberFilter
+         * @see \Videni\Bundle\RestBundle\Grid\SetDefaultPaging::addPageNumberFilter
          */
         foreach ($filters as $filterKey => $filter) {
             if ($filterValues->has($filterKey)) {

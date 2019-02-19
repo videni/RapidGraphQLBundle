@@ -4,7 +4,7 @@ namespace Videni\Bundle\RestBundle\EventListener;
 
 use Videni\Bundle\RestBundle\Request\RestRequestHeaders;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceConfigProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
@@ -16,7 +16,7 @@ class ResourceContextListener
 
     public function __construct(
         ResourceContextStorage $resourceContextStorage,
-        ResourceConfigProvider $resourceConfigProvider
+        ResourceProvider $resourceConfigProvider
     ) {
         $this->resourceContextStorage = $resourceContextStorage;
         $this->resourceConfigProvider = $resourceConfigProvider;
