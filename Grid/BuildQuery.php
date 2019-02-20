@@ -32,8 +32,6 @@ class BuildQuery
 
     private $filterValueAccessorFactory;
 
-    private $aclHelper;
-
     /**
      * @param DoctrineHelper    $doctrineHelper
      * @param CriteriaConnector $criteriaConnector
@@ -42,14 +40,12 @@ class BuildQuery
         DoctrineHelper $doctrineHelper,
         CriteriaConnector $criteriaConnector,
         ContainerInterface $container,
-        ParametersParserInterface $parametersParser,
-        AclHelperInterface $aclHelper = null
+        ParametersParserInterface $parametersParser
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->criteriaConnector = $criteriaConnector;
         $this->container = $container;
         $this->parametersParser = $parametersParser;
-        $this->aclHelper = $aclHelper;
     }
 
     /**
@@ -57,14 +53,14 @@ class BuildQuery
      */
     public function build(Criteria $criteria, ResourceContext $context, Request $request)
     {
-        $query = $this->resolveQueryBuilder(
+        $queryBuilder = $this->resolveQueryBuilder(
             $request,
             $context
         );
 
-        $this->criteriaConnector->applyCriteria($query, $criteria);
+        $this->criteriaConnector->applyCriteria($queryBuilder, $criteria);
 
-        return $query;
+        return $queryBuilder;
     }
 
     protected function resolveQueryBuilder(Request $request, ResourceContext $context)
@@ -96,15 +92,6 @@ class BuildQuery
             }
         }
 
-        if (null === $this->aclHelper) {
-            return $query;
-        }
-
-        $query = $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
-        if ($context->getOperationConfig()->isAclEnabled()) {
-            return $this->aclHelper->apply($query);
-        }
-
-        return $query;
+        return $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
     }
 }

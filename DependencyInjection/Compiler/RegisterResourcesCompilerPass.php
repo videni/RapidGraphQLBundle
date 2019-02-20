@@ -16,6 +16,7 @@ use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
+use Symfony\Component\DependencyInjection\Alias;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {
@@ -39,13 +40,13 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
         $factoryClass = $resourceConfig->getFactoryClass();
 
-        $alias =  self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'factory');
+        $aliasId =  self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'factory');
         if ($container->has($factoryClass)) {
              //don't register if a factory is associated with this resource
             return;
         }
 
-        $container->setParameter(sprintf('%s.class', $alias), $factoryClass);
+        $container->setParameter(sprintf('%s.class', $aliasId), $factoryClass);
 
         $factoryDef = (new Definition($factoryClass))
             ->addArgument($className)
@@ -55,9 +56,9 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         //register it with class name as service name and also add an alias
         if ($factoryClass !== Factory::class) {
             $container->setDefinition($factoryClass, $factoryDef);
-            $container->setAlias($alias, $factoryClass);
+            $container->setAlias($aliasId, $factoryClass);
         } else {
-            $container->setDefinition($alias, $factoryDef);
+            $container->setDefinition($aliasId, $factoryDef);
         }
     }
 
@@ -65,21 +66,25 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
     {
         $repositoryClass = $resourceConfig->getRepositoryClass();
 
-        $alias = self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'repository');
-        $container->setParameter(sprintf('%s.class', $alias), $repositoryClass);
+        $aliasId = self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'repository');
+        $container->setParameter(sprintf('%s.class', $aliasId), $repositoryClass);
+
+        $alias = new Alias($repositoryClass);
+        $alias->setPublic(true);
 
         if ($container->has($repositoryClass)) {
-            $container->setAlias($alias, $repositoryClass);
+            $container->setAlias($aliasId, $alias);
 
             return;
         }
 
         if (is_a($repositoryClass, ServiceEntityRepositoryInterface::class, true) && !$container->has($repositoryClass)) {
-            throw new \RuntimeException('The repository %s is an instance of %1, please register it into service container yourself', $repositoryClass);
+            throw new \RuntimeException(sprintf('The repository %s is an instance of %s, please register it into service container yourself', $repositoryClass, ServiceEntityRepositoryInterface::class));
         }
 
         $definition = new Definition($repositoryClass);
-        $definition->setArguments([
+        $definition
+            ->setArguments([
                 new Reference($this->getManagerServiceId($resourceConfig)),
                 $this->getClassMetadataDefinition($className, $resourceConfig),
             ])
@@ -88,9 +93,9 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
 
         if (!in_array($repositoryClass, [ServiceEntityRepository::class, EntityRepository::class])) {
             $container->setDefinition($repositoryClass, $definition);
-            $container->setAlias($alias, $repositoryClass);
+            $container->setAlias($aliasId, $alias);
         } else {
-            $container->setDefinition($alias, $definition);
+            $container->setDefinition($aliasId, $definition);
         }
     }
 

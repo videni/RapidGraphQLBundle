@@ -56,7 +56,7 @@ class GridApplicator
 
         $this->applyFilters($criteria, $resourceContext, $filterValues);
 
-        return $this->buildQuery->build($criteria, $resourceContext, $request);
+        return $this->buildQuery->build($criteria, $resourceContext, $request)->getQuery();
     }
 
     protected function applyFilters(Criteria $criteria, ResourceContext $resourceContext,FilterValueAccessor $filterValues)

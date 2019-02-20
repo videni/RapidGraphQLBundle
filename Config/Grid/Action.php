@@ -26,6 +26,8 @@ class Action
      */
     private $enabled = true;
 
+    private $accessControl;
+
     /**
      * @var string
      */
@@ -159,5 +161,25 @@ class Action
     public function setPosition(int $position): void
     {
         $this->position = $position;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessControl()
+    {
+        return $this->accessControl;
+    }
+
+    /**
+     * @param mixed $accessControl
+     *
+     * @return self
+     */
+    public function setAccessControl($accessControl)
+    {
+        $this->accessControl = $accessControl;
+
+        return $this;
     }
 }

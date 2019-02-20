@@ -2,6 +2,8 @@
 
 namespace Videni\Bundle\RestBundle\Config\Grid;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Represents the configuration of  paginator
  */
@@ -14,7 +16,7 @@ class Grid
     /** @var Filter[] */
     protected $filters = [];
     protected $fields =  [];
-    protected $actionGroups;
+    protected $actionGroups = [];
 
     /**
      * @return mixed

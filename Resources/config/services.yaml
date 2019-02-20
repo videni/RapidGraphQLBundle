@@ -64,3 +64,13 @@ services:
     Videni\Bundle\RestBundle\Doctrine\EventListener\ORMRepositoryClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}
+
+    videni_rest.grid_relation_provider:
+        public: true
+        class: Videni\Bundle\RestBundle\Hateoas\GridRelationProvider
+        arguments:
+            - '@Videni\Bundle\RestBundle\Context\ResourceContextStorage'
+            - '@Videni\Bundle\RestBundle\Security\ResourceAccessChecker'
+            - '@jms_serializer.expression_evaluator'
+
+

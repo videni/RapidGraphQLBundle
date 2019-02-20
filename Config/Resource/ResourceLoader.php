@@ -10,11 +10,11 @@ use Videni\Bundle\RestBundle\Config\Grid\GridLoader;
  */
 class ResourceLoader
 {
-    private $paginatorConfigLoader;
+    private $gridLoader;
 
-    public function __construct(GridLoader $paginatorConfigLoader)
+    public function __construct(GridLoader $gridLoader)
     {
-        $this->paginatorConfigLoader = $paginatorConfigLoader;
+        $this->gridLoader = $gridLoader;
     }
 
     /**
@@ -63,8 +63,8 @@ class ResourceLoader
         if (array_key_exists('operations', $config)) {
             $this->loadOperation($resourceConfig, $config['operations']);
         }
-        if (array_key_exists('paginators', $config)) {
-            $this->loadPaginator($resourceConfig, $config['paginators']);
+        if (array_key_exists('grids', $config)) {
+            $this->loadGrid($resourceConfig, $config['grids']);
         }
 
         return $resourceConfig;
@@ -77,10 +77,10 @@ class ResourceLoader
         }
     }
 
-    private function loadPaginator(Resource $resourceConfig, array $config = [])
+    private function loadGrid(Resource $resourceConfig, array $config = [])
     {
         foreach ($config as $configName => $configValue) {
-            $resourceConfig->addPaginator($configName, $this->paginatorConfigLoader->load($configValue));
+            $resourceConfig->addGrid($configName, $this->gridLoader->load($configValue));
         }
     }
 }

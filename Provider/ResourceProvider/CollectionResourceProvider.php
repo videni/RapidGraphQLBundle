@@ -18,6 +18,7 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 use Videni\Bundle\RestBundle\Grid\GridApplicator;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Util\AclHelperInterface;
 
 class CollectionResourceProvider implements ResourceProviderInterface
 {
@@ -31,16 +32,21 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
     private $filterValueAccessorFactory;
 
+    private $aclHelper;
+
     public function __construct(
         PagerfantaFactory $pagerfantaRepresentationFactory,
         FilterNames $filterNames,
         GridApplicator $gridApplicator,
-        FilterValueAccessorFactory $filterValueAccessorFactory
+        FilterValueAccessorFactory $filterValueAccessorFactory,
+        AclHelperInterface $aclHelper = null
+
     ) {
         $this->pagerfantaRepresentationFactory = $pagerfantaRepresentationFactory;
         $this->filterNames = $filterNames;
         $this->gridApplicator = $gridApplicator;
         $this->filterValueAccessorFactory = $filterValueAccessorFactory;
+        $this->aclHelper = $aclHelper;
     }
 
     public function get(ResourceContext $context, Request $request)
@@ -53,9 +59,12 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
         $query = $this->gridApplicator->apply($context, $filterValues, $request);
 
+        if ($context->getOperationConfig()->isAclEnabled() &&  null !== $this->aclHelper) {
+            $query = $this->aclHelper->apply($query);
+        }
         $grid = $context->getGrid();
         if(self::UNLIMITED_RESULT === $grid->getMaxResults()) {
-            return $query->getQuery()->getResult();
+            return $query->getResult();
         }
 
         $paginator = $this->getPaginator($query);
@@ -74,14 +83,14 @@ class CollectionResourceProvider implements ResourceProviderInterface
     }
 
       /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder|Query $query
      *
      * @return Pagerfanta
      */
-    protected function getPaginator(QueryBuilder $queryBuilder): Pagerfanta
+    protected function getPaginator($query): Pagerfanta
     {
         // Use output walkers option in DoctrineORMAdapter should be false as it affects performance greatly (see #3775)
-        return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, false, false));
+        return new Pagerfanta(new DoctrineORMAdapter($query, false, false));
     }
 
     protected function addPaging(FilterValueAccessor $filterValues, Pagerfanta $paginator, Grid $grid)

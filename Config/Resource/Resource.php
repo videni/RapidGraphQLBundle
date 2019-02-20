@@ -21,7 +21,7 @@ class Resource
     private $form = null;
 
     private $operations = [];
-    private $paginators = [];
+    private $grids = [];
 
      /**
      * A string that unique identify this instance of entity definition config.
@@ -255,76 +255,76 @@ class Resource
      *
      * @return bool
      */
-    public function hasPaginators()
+    public function hasGrids()
     {
-        return !empty($this->paginators);
+        return !empty($this->grids);
     }
 
     /**
-     * Gets the configuration for all paginators.
+     * Gets the configuration for all grids.
      *
-     * @return Grid[] [paginator name => config, ...]
+     * @return Grid[] [grid name => config, ...]
      */
-    public function getPaginators()
+    public function getGrids()
     {
-        return $this->paginators;
+        return $this->grids;
     }
 
     /**
-     * Checks whether the configuration of the paginator exists.
+     * Checks whether the configuration of the grid exists.
      *
-     * @param string $paginatorName
+     * @param string $gridName
      *
      * @return bool
      */
-    public function hasPaginator($paginatorName)
+    public function hasGrid($gridName)
     {
-        return isset($this->paginators[$paginatorName]);
+        return isset($this->grids[$gridName]);
     }
 
     /**
-     * Gets the configuration of the paginator.
+     * Gets the configuration of the grid.
      *
-     * @param string $paginatorName
+     * @param string $gridName
      *
      * @return Grid|null
      */
-    public function getPaginator($paginatorName)
+    public function getGrid($gridName)
     {
-        if (!isset($this->paginators[$paginatorName])) {
+        if (!isset($this->grids[$gridName])) {
             return null;
         }
 
-        return $this->paginators[$paginatorName];
+        return $this->grids[$gridName];
     }
 
      /**
-     * Adds the configuration of the paginator.
+     * Adds the configuration of the grid.
      *
-     * @param string                 $paginatorName
-     * @param Grid|null $paginator
+     * @param string                 $gridName
+     * @param Grid|null $grid
      *
      * @return Grid
      */
-    public function addPaginator($paginatorName, $paginator = null)
+    public function addGrid($gridName, $grid = null)
     {
-        if (null === $paginator) {
-            $paginator = new Grid();
+        if (null === $grid) {
+            $grid = new Grid();
         }
 
-        $this->paginators[$paginatorName] = $paginator;
+        $this->grids[$gridName] = $grid;
 
-        return $paginator;
+        return $grid;
     }
 
     /**
-     * Removes the configuration of the paginator.
+     * Removes the configuration of the grid.
      *
-     * @param string $paginatorName
+     * @param string $gridName
      */
-    public function removePaginator($paginatorName)
+    public function removeGrid($gridName)
     {
-        unset($this->paginators[$paginatorName]);
+        unset($this->grids[$gridName]);
     }
 
     /**

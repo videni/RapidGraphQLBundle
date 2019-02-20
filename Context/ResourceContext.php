@@ -125,12 +125,12 @@ class ResourceContext
     {
         $this->assure();
 
-        $paginatorName = $this->resourceConfig->getOperation($this->operationName)->getPaginator();
-        if (!$paginatorName || !$this->resourceConfig->hasPaginator($paginatorName)) {
+        $gridName = $this->resourceConfig->getOperation($this->operationName)->getGrid();
+        if (!$gridName || !$this->resourceConfig->hasGrid($gridName)) {
             return null;
         }
 
-        return $this->resourceConfig->getPaginator($paginatorName);
+        return $this->resourceConfig->getGrid($gridName);
     }
 
     private function assure()

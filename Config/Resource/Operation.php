@@ -7,7 +7,7 @@ class Operation
     private $action;
     private $defaults;
     private $path;
-    private $paginator;
+    private $grid;
     private $methods;
     private $routeName;
     private $resourceProvider;
@@ -287,8 +287,8 @@ class Operation
         if (array_key_exists('formats', $config)) {
             $self->setFormats($config['formats']);
         }
-        if (array_key_exists('paginator', $config)) {
-            $self->setPaginator($config['paginator']);
+        if (array_key_exists('grid', $config)) {
+            $self->setGrid($config['grid']);
         }
         if (array_key_exists('factory', $config)) {
             $self->setFactory(Service::fromArray($config['factory']));
@@ -337,19 +337,19 @@ class Operation
     /**
      * @return mixed
      */
-    public function getPaginator()
+    public function getGrid()
     {
-        return $this->paginator;
+        return $this->grid;
     }
 
     /**
-     * @param mixed $paginator
+     * @param mixed $grid
      *
      * @return self
      */
-    public function setPaginator($paginator)
+    public function setGrid($grid)
     {
-        $this->paginator = $paginator;
+        $this->grid = $grid;
 
         return $this;
     }

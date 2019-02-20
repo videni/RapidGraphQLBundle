@@ -23,9 +23,11 @@ use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RestBundle\Factory\FactoryInterface;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
-class VideniRestExtension extends Extension
+class VideniRestExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -134,8 +136,29 @@ class VideniRestExtension extends Extension
             ->setPublic(true)
         ;
         $container
+            ->registerForAutoconfiguration(ServiceEntityRepository::class)
+            ->setPublic(true)
+        ;
+        $container
             ->registerForAutoconfiguration(FactoryInterface::class)
             ->setPublic(true)
         ;
+    }
+
+      /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('jms_serializer', [
+            'metadata'=> [
+                'directories' => [
+                    'Hateoas' => [
+                            "namespace_prefix" => 'Hateoas\Representation',
+                            "path" => __DIR__.'/../Resources/config/serializer',
+                        ]
+                ],
+            ]
+        ]);
     }
 }

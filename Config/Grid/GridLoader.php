@@ -21,7 +21,7 @@ class GridLoader
                 $grid->addFilter($filterName, Filter::fromArray($filterConfig));
             }
         }
-        foreach ($configuration['fields'] as $name => $fieldConfiguration) {
+        foreach ($config['fields'] as $name => $fieldConfiguration) {
             $grid->addField($this->convertField($name, $fieldConfiguration));
         }
         if (array_key_exists('class', $config)) {
