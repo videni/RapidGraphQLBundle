@@ -6,6 +6,7 @@ class Operation
 {
     private $action;
     private $defaults;
+    private $requirements;
     private $path;
     private $grid;
     private $methods;
@@ -303,6 +304,9 @@ class Operation
         if (array_key_exists('defaults', $config)) {
             $self->setDefaults($config['defaults']);
         }
+        if (array_key_exists('requirements', $config)) {
+            $self->setRequirements($config['requirements']);
+        }
         if (array_key_exists('path', $config)) {
             $self->setPath($config['path']);
         }
@@ -410,6 +414,26 @@ class Operation
     public function setAclEnabled($aclEnabled)
     {
         $this->aclEnabled = $aclEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequirements()
+    {
+        return $this->requirements;
+    }
+
+    /**
+     * @param mixed $requirements
+     *
+     * @return self
+     */
+    public function setRequirements($requirements)
+    {
+        $this->requirements = $requirements;
 
         return $this;
     }

@@ -112,7 +112,7 @@ final class ResourceRouteLoader extends Loader
                 '_api_resource_class' => $resourceClass,
                 '_api_operation_name' => $operationName,
             ] + $operationConfig->getDefaults(),
-            [],
+            $operationConfig->getRequirements() ?? [],
             [],
             '',
             [],

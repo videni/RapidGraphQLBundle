@@ -46,6 +46,8 @@ class VideniRestExtension extends Extension implements PrependExtensionInterface
         $this->configureResourceProvider($container, $config);
 
         DependencyInjectionUtil::setConfig($container, $config);
+
+        $container->setParameter('videni_rest.exception_to_status', $config['exception_to_status']);
     }
 
     /**
