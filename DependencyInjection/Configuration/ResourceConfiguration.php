@@ -366,7 +366,7 @@ class ResourceConfiguration implements ConfigurationInterface
             "id" =>  $this->getServiceId($scope, $resourceShortName, $key),
         ];
 
-        $actionConfig[$key] = isset($actionConfig[$key])?  array_merge($config, $actionConfig[$key]) : $config;
+        $actionConfig[$key] = isset($actionConfig[$key])? array_merge($config, is_array($actionConfig[$key]) ? $actionConfig[$key]: ['id' => $actionConfig[$key]]) : $config;
     }
 
     private function getServiceId($scope, $resourceShortName, $key)
