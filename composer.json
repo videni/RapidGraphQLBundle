@@ -23,11 +23,16 @@
         "willdurand/hateoas-bundle": "^1.4",
         "willdurand/negotiation": "^2.3",
         "zendframework/zend-stdlib": "^3.2",
+        "pintushi/grid-bundle": "^1.0@dev",
         "limenius/liform-bundle": "^0.13.0"
     },
     "repositories": [
         {
             "url": "https://github.com/videni/Config.git",
+            "type": "vcs"
+        },
+        {
+            "url": "https://github.com/pintushi/GridBundle.git",
             "type": "vcs"
         },
         {
