@@ -7,16 +7,16 @@ namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Doctrine\Common\Util\ClassUtils;
-use Videni\Bundle\RestBundle\Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
-use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Doctrine\Common\Inflector\Inflector;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Service;
+use Videni\Bundle\RestBundle\Exception;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 
 class SingleResourceProvider implements ResourceProviderInterface
 {

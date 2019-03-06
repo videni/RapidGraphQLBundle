@@ -125,12 +125,7 @@ class ResourceContext
     {
         $this->assure();
 
-        $gridName = $this->resourceConfig->getOperation($this->operationName)->getGrid();
-        if (!$gridName || !$this->resourceConfig->hasGrid($gridName)) {
-            return null;
-        }
-
-        return $this->resourceConfig->getGrid($gridName);
+        return $this->resourceConfig->getOperation($this->operationName)->getGrid();
     }
 
     private function assure()

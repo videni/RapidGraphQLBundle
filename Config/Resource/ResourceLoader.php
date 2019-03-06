@@ -3,20 +3,12 @@
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
 use Videni\Bundle\RestBundle\Config\AbstractConfigLoader;
-use Videni\Bundle\RestBundle\Config\Grid\GridLoader;
 
 /**
  * The loader for resource
  */
 class ResourceLoader
 {
-    private $gridLoader;
-
-    public function __construct(GridLoader $gridLoader)
-    {
-        $this->gridLoader = $gridLoader;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -63,9 +55,7 @@ class ResourceLoader
         if (array_key_exists('operations', $config)) {
             $this->loadOperation($resourceConfig, $config['operations']);
         }
-        if (array_key_exists('grids', $config)) {
-            $this->loadGrid($resourceConfig, $config['grids']);
-        }
+
 
         return $resourceConfig;
     }
@@ -74,13 +64,6 @@ class ResourceLoader
     {
         foreach ($config as $configName => $configValue) {
             $resourceConfig->addOperation($configName, Operation::fromArray($configValue));
-        }
-    }
-
-    private function loadGrid(Resource $resourceConfig, array $config = [])
-    {
-        foreach ($config as $configName => $configValue) {
-            $resourceConfig->addGrid($configName, $this->gridLoader->load($configValue));
         }
     }
 }

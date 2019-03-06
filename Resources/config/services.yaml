@@ -3,9 +3,7 @@ imports:
     - { resource: 'serializer.yaml'}
     - { resource: 'action.yaml'}
     - { resource: 'security.yaml'}
-    - { resource: 'filters.yaml'}
     - { resource: 'config.yaml'}
-    - { resource: 'utils.yaml'}
     - { resource: 'event_listener.yaml'}
 
 parameters:
@@ -18,16 +16,6 @@ services:
         autowire: true
         autoconfigure: true
         public: false
-
-    Videni\Bundle\RestBundle\:
-        resource: '../../{Grid}'
-        public: true
-
-    Videni\Bundle\RestBundle\Faker\EntityProvider:
-        arguments:
-            - '@doctrine.orm.entity_manager'
-        tags:
-            - { name: 'nelmio_alice.faker.provider' }
 
     Videni\Bundle\RestBundle\Factory\ResourceFactory: ~
 
@@ -55,8 +43,6 @@ services:
         arguments:
             - "@event_dispatcher"
 
-    Videni\Bundle\RestBundle\Filter\Normalizer\FilterValueNormalizerInterface: '@Videni\Bundle\RestBundle\Filter\Normalizer\CompositeNormalizer'
-
     Videni\Bundle\RestBundle\Doctrine\EventListener\ORMMappedSuperClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}
@@ -65,12 +51,9 @@ services:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}
 
-    videni_rest.grid_relation_provider:
-        public: true
-        class: Videni\Bundle\RestBundle\Hateoas\GridRelationProvider
-        arguments:
-            - '@Videni\Bundle\RestBundle\Context\ResourceContextStorage'
-            - '@Videni\Bundle\RestBundle\Security\ResourceAccessChecker'
-            - '@jms_serializer.expression_evaluator'
+    Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
+
+    Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
+
 
 

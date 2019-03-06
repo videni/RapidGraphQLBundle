@@ -6,28 +6,24 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Videni\Bundle\RestBundle\Processor\ActionProcessorBag;
-use Oro\Component\ChainProcessor\Debug\TraceLogger;
+use Symfony\Component\Config\Loader\GlobFileLoader;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
-use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
-use Videni\Bundle\RestBundle\Filter\FilterValue\FilterValueAccessorFactory;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
-use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
-use Symfony\Component\Config\Loader\GlobFileLoader;
-use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
-use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
+use Oro\Component\ChainProcessor\Debug\TraceLogger;
 use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RestBundle\Factory\FactoryInterface;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
 
-class VideniRestExtension extends Extension implements PrependExtensionInterface
+class VideniRestExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -40,7 +36,6 @@ class VideniRestExtension extends Extension implements PrependExtensionInterface
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $this->registerFilterOperators($container, $config);
         $this->loadResourceConfiguration($container);
         $this->configureBodyListener($container, $config);
         $this->configureResourceProvider($container, $config);
@@ -49,24 +44,6 @@ class VideniRestExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('videni_rest.exception_to_status', $config['exception_to_status']);
     }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function registerFilterOperators(ContainerBuilder $container, array $config)
-    {
-        $filterOperatorRegistryDef = $container->getDefinition(FilterOperatorRegistry::class);
-
-        if (null !== $filterOperatorRegistryDef) {
-            $filterOperatorRegistryDef->replaceArgument(0, $config['filter_operators']);
-        }
-        $restFilterValueAccessorFactoryDef = $container->getDefinition(FilterValueAccessorFactory::class);
-        if (null !== $restFilterValueAccessorFactoryDef) {
-            $restFilterValueAccessorFactoryDef->replaceArgument(1, $config['filter_operators']);
-        }
-    }
-
 
     /**
      * @param string $fileName
@@ -88,7 +65,7 @@ class VideniRestExtension extends Extension implements PrependExtensionInterface
         }
 
         $configs =  $this->processConfiguration(
-            new ResourceConfiguration($container->get(FilterOperatorRegistry::class)),
+            new ResourceConfiguration(),
             $config
         );
 
@@ -145,22 +122,5 @@ class VideniRestExtension extends Extension implements PrependExtensionInterface
             ->registerForAutoconfiguration(FactoryInterface::class)
             ->setPublic(true)
         ;
-    }
-
-      /**
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container): void
-    {
-        $container->prependExtensionConfig('jms_serializer', [
-            'metadata'=> [
-                'directories' => [
-                    'Hateoas' => [
-                            "namespace_prefix" => 'Hateoas\Representation',
-                            "path" => __DIR__.'/../Resources/config/serializer',
-                        ]
-                ],
-            ]
-        ]);
     }
 }

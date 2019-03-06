@@ -2,33 +2,18 @@
 
 namespace Videni\Bundle\RestBundle\DependencyInjection\Configuration;
 
-use Videni\Bundle\RestBundle\Filter\FilterOperatorRegistry;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Videni\Bundle\RestBundle\Factory\Factory;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
     public const ROOT_NODE = "api";
-    public const MAX_RESULTS = 50;
-
-    public const DEFAULT_PAGINATOR_NAME = 'default';
-
-    /** @var FilterOperatorRegistry */
-    private $filterOperatorRegistry;
-
-    /**
-     * @param FilterOperatorRegistry $filterOperatorRegistry
-     */
-    public function __construct(FilterOperatorRegistry $filterOperatorRegistry)
-    {
-        $this->filterOperatorRegistry = $filterOperatorRegistry;
-    }
 
     /**
      * {@inheritdoc}
@@ -62,24 +47,11 @@ class ResourceConfiguration implements ConfigurationInterface
                             $value['scope'] = 'videni_rest';
                         }
 
-                        $default = [
-                            self::DEFAULT_PAGINATOR_NAME => [
-                                'max_results' => self::MAX_RESULTS
-                            ]
-                        ];
-
                         if (isset($value['repository_class']) && !class_exists($value['repository_class'])) {
                             throw new \InvalidArgumentException(sprintf('repository_class %s of resource %s is not found', $value['repository_class'], $resourceClass));
                         }
                         if (isset($value['factory_class']) && !class_exists($value['factory_class'])) {
                             throw new \InvalidArgumentException(sprintf('factory_class %s of resource %s is not found', $value['factory_class'], $resourceClass));
-                        }
-
-                        //set 'default' grid for each resource
-                        if(!array_key_exists('grids', $value)) {
-                            $value['grids'] = $default;
-                        } else if (!array_key_exists('default', $value['grids'])) {
-                            $value['grids'] = $value['grids'] + $default;
                         }
 
                         $this->normalizeOperations($value['scope'], $value['short_name'], $value);
@@ -211,98 +183,6 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                    ->append($this->addGridConfigurationSection())
-                ->end()
-            ->end()
-        ->end()
-        ;
-
-        return $rootNode;
-    }
-
-    private function addGridConfigurationSection()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('grids');
-
-        $rootNode
-            ->useAttributeAsKey('name')
-            ->arrayPrototype()
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('max_results')->defaultValue(self::MAX_RESULTS)->end()
-                    ->scalarNode('disable_sorting')->defaultValue(false)->end()
-                    ->arrayNode('fields')
-                        ->useAttributeAsKey('name')
-                        ->arrayPrototype()
-                            ->children()
-                                ->scalarNode('type')->isRequired()->cannotBeEmpty()->end()
-                                ->scalarNode('label')->cannotBeEmpty()->end()
-                                ->scalarNode('property_path')->cannotBeEmpty()->end()
-                                ->enumNode('sorting')->values(['asc', 'desc', false])->defaultFalse()->end()
-                                ->scalarNode('enabled')->defaultTrue()->end()
-                                ->scalarNode('position')->defaultValue(100)->end()
-                                ->arrayNode('options')
-                                    ->performNoDeepMerging()
-                                    ->variablePrototype()->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                    ->arrayNode('filters')
-                        ->useAttributeAsKey('name')
-                        ->arrayPrototype()
-                            ->children()
-                                ->scalarNode('type')->isRequired()->cannotBeEmpty()->end()
-                                ->scalarNode('description')->end()
-                                ->scalarNode('allow_array')->defaultFalse()->end()
-                                ->scalarNode('allow_range')->defaultFalse()->end()
-                                ->scalarNode('property_path')->end()
-                                ->scalarNode('collection')->defaultFalse()->end()
-                                ->scalarNode('position')->defaultValue(100)->end()
-                                ->arrayNode('options')
-                                    ->performNoDeepMerging()
-                                    ->variablePrototype()->end()
-                                ->end()
-                                ->arrayNode('operators')
-                                    ->validate()
-                                        ->always(function ($value) {
-                                            if (\is_array($value) && !empty($value)) {
-                                                $operators = [];
-                                                foreach ($value as $val) {
-                                                    $operators[] = $this->filterOperatorRegistry->resolveOperator($val);
-                                                }
-                                                $value = $operators;
-                                            }
-
-                                            return $value;
-                                        })
-                                    ->end()
-                                    ->prototype('scalar')->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                    ->arrayNode('actions')
-                        ->useAttributeAsKey('name')
-                        ->arrayPrototype()
-                            ->useAttributeAsKey('name')
-                            ->arrayPrototype()
-                                ->children()
-                                    ->scalarNode('type')->isRequired()->end()
-                                    ->scalarNode('label')->end()
-                                    ->scalarNode('access_control')->end()
-                                    ->scalarNode('enabled')->defaultTrue()->end()
-                                    ->scalarNode('icon')->end()
-                                    ->scalarNode('position')->defaultValue(100)->end()
-                                    ->arrayNode('options')
-                                        ->performNoDeepMerging()
-                                        ->variablePrototype()->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
                 ->end()
             ->end()
         ->end()
@@ -352,7 +232,7 @@ class ResourceConfiguration implements ConfigurationInterface
             }
 
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
-                $actionConfig['grid'] =  self::DEFAULT_PAGINATOR_NAME;
+                throw new \LogicException(sprintf('Grid is missing for resource %s %s operation %, Grid is required for index action.', $resourceShortName,  $operationName));
             }
 
             $this->setDefaultServiceConfig($scope, $resourceShortName, 'repository', $actionConfig);

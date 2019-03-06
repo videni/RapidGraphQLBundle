@@ -1,5 +1,5 @@
 {
-    "name": "videni/simple-rest-bundle",
+    "name": "videni/rest-bundle",
     "description": "A rapid RESTfull API bundle for Symfony4",
     "type": "symfony-bundle",
     "keywords": [ "rest", "rapid CRUD" ],
@@ -7,7 +7,8 @@
     "authors": [
         {
             "name": "Vidy Videni",
-            "email": "vidy.videni@gmail.com"
+            "email": "vidy.videni@gmail.com",
+            "homepage": "https://github.com/videni"
         }
     ],
     "require": {
@@ -25,10 +26,6 @@
         "limenius/liform-bundle": "^0.13.0"
     },
     "repositories": [
-        {
-            "url": "https://github.com/videni/ChainProcessor.git",
-            "type": "vcs"
-        },
         {
             "url": "https://github.com/videni/Config.git",
             "type": "vcs"

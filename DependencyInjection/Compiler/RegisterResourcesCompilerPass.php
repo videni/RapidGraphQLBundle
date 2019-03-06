@@ -4,19 +4,19 @@ namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Alias;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
+use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Config\Resource\Service;
-use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RestBundle\Factory\Factory;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
-use Symfony\Component\DependencyInjection\Alias;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {

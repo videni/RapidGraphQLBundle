@@ -10,8 +10,5 @@ services:
             - '@Videni\Bundle\RestBundle\Config\Resource\ResourceLoader'
             - '%videni_rest.resource_config%'
 
-    Videni\Bundle\RestBundle\Config\Grid\GridLoader: ~
+    Videni\Bundle\RestBundle\Config\Resource\ResourceLoader: ~
 
-    Videni\Bundle\RestBundle\Config\Resource\ResourceLoader:
-        arguments:
-            - '@Videni\Bundle\RestBundle\Config\Grid\GridLoader'
