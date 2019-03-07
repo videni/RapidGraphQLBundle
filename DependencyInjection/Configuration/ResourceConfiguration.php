@@ -114,7 +114,6 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->scalarNode('route_name')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
-                                ->scalarNode('acl_enabled')->defaultValue(false)->end()
                                 ->scalarNode('resource_provider')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
@@ -232,7 +231,7 @@ class ResourceConfiguration implements ConfigurationInterface
             }
 
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
-                throw new \LogicException(sprintf('Grid is missing for resource %s %s operation %, Grid is required for index action.', $resourceShortName,  $operationName));
+                throw new \LogicException(sprintf('Grid is missing for resource %s %s operation, index action must have a grid defined.', $resourceShortName,  $operationName));
             }
 
             $this->setDefaultServiceConfig($scope, $resourceShortName, 'repository', $actionConfig);

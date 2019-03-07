@@ -15,8 +15,6 @@ A rapid RESTfull API bundle, it can help you build your API extremely faster.
 
 * willdurand/hateoas-bundle
 * lexik/jwt-authentication-bundle
-* oro/chain-processor
-
 
 ## Usage
 

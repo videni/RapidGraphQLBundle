@@ -40,7 +40,10 @@ class CollectionResourceProvider implements ResourceProviderInterface
 
         $grid = $this->gridManager->getGrid($gridName, $request->request->all());
 
-        $route = new Route($request->attributes->get('_route'), array_merge($request->attributes->get('_route_params'), $request->query->all()));
+        $route = new Route(
+            $request->attributes->get('_route'),
+            array_merge($request->attributes->get('_route_params'), $request->query->all())
+        );
 
         /** @var ResultsObject */
         $resultsObject = $grid->getData();

@@ -14,7 +14,6 @@ class Operation
     private $resourceProvider;
     private $accessControl;
     private $accessControlMessage;
-    private $aclEnabled = false;
     private $controller;
 
     private $formats = null;
@@ -331,9 +330,6 @@ class Operation
         if (array_key_exists('route_name', $config)) {
             $self->setRouteName($config['route_name']);
         }
-        if (array_key_exists('acl_enabled', $config)) {
-            $self->setAclEnabled($config['acl_enabled']);
-        }
 
         return $self;
     }
@@ -394,26 +390,6 @@ class Operation
     public function setResourceProvider($resourceProvider)
     {
         $this->resourceProvider = $resourceProvider;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isAclEnabled()
-    {
-        return $this->aclEnabled;
-    }
-
-    /**
-     * @param mixed $aclEnabled
-     *
-     * @return self
-     */
-    public function setAclEnabled($aclEnabled)
-    {
-        $this->aclEnabled = $aclEnabled;
 
         return $this;
     }

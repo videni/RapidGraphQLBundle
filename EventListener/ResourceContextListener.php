@@ -2,7 +2,6 @@
 
 namespace Videni\Bundle\RestBundle\EventListener;
 
-use Videni\Bundle\RestBundle\Request\RestRequestHeaders;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
@@ -44,9 +43,7 @@ class ResourceContextListener
         }
 
         $resourceContext->setAction($resourceConfig->getOperation($operationName)->getAction());
-
         $resourceContext->setClassName($entityClass);
-        $resourceContext->setRequestHeaders(new RestRequestHeaders($request));
 
 
         $this->resourceContextStorage->setContext($resourceContext);
