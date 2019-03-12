@@ -11,17 +11,17 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RestBundle\Event\AfterFormResolveEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Videni\Bundle\RestBundle\Event\AfterFormResolveEvent;
 
 final class FormListener
 {
@@ -89,13 +89,7 @@ final class FormListener
             if (false === $isValid) {
                 $context->setAttribute('status_code', Response::HTTP_BAD_REQUEST);
 
-                $data = [
-                    $form,
-                    'initial_values' => $form->createView(),
-                    'form_schema' => $this->liform->transform($form),
-                ];
-
-                $this->setResponse($event, $data, Response::HTTP_BAD_REQUEST, $context);
+                $this->setResponse($event, $form, Response::HTTP_BAD_REQUEST, $context);
             }
         }
         //serialize form and its initial values
@@ -107,6 +101,8 @@ final class FormListener
 
             $this->setResponse($event, $data, Response::HTTP_OK, $context);
         }
+
+        $request->attributes->set('form', $form);
     }
 
     protected function setResponse($event, $data, $status, SerializationContext $context = null)

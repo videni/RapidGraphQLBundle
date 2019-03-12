@@ -61,7 +61,7 @@ class SingleResourceProvider implements ResourceProviderInterface
 
             $arguments = array_values($this->parametersParser->parseRequestValues($arguments, $request));
 
-            $result=  $repositoryInstance->$method(...$arguments);
+            $result = $repositoryInstance->$method(...$arguments);
         }
 
         $id = $request->attributes->get('id', null);

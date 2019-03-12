@@ -4,13 +4,13 @@ namespace Videni\Bundle\RestBundle\Serializer\Handler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 use Limenius\Liform\FormUtil;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\Context;
-use Symfony\Component\Form\FormInterface;
 
 class InitialValuesNormalizer implements SubscribingHandlerInterface
 {

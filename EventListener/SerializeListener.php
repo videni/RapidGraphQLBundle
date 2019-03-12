@@ -41,9 +41,9 @@ class SerializeListener
 
         if ($normailzationConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'normalization_context', true)) {
             $serializationContext
-                ->setGroups($normailzationConfig->getGroups())
                 ->setSerializeNull(true)
                 ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())
+                ->setGroups($normailzationConfig->getGroups())
             ;
         }
 

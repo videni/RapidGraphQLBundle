@@ -2,39 +2,70 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyAccess\PropertyPathInterface;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+
 class Serialization extends \ArrayObject
 {
-    private $groups = null;
+    /**
+     * @var SerializationGroup
+     */
+    private $serializationGroup;
+
+    private $properties = [];
 
     private $enableMaxDepth = null;
 
-    /**
-     * @return mixed
-     */
-    public function getGroups()
+    public function __construct(array $param = [])
     {
-        return $this->groups;
+        $this->serializationGroup = new SerializationGroup($param);
     }
 
-    /**
-     * @param mixed $groups
-     *
-     * @return self
-     */
-    public function setGroups($groups)
+    public function addGroup($group)
     {
-        $this->groups = $groups;
+        $this->serializationGroup[] = $group;
+    }
 
-        return $this;
+    public function removeGroup($group)
+    {
+        unset($this->serializationGroup[$group]);
+    }
+
+    public function addGroupByPath($path, $group)
+    {
+        $existedGroup = $this->serializationGroup->offsetGetByPath($path, []);
+
+        $this->serializationGroup->offsetSetByPath(
+            $path,
+            array_merge($existedGroup,  is_array($group)? $group : [$group])
+        );
+
+        return this;
+    }
+
+    public function removeGroupByPath($path)
+    {
+        $this->serializationGroup->offsetUnsetByPath($path);
+
+        return this;
+    }
+
+    public function getGroups()
+    {
+        return $this->serializationGroup->toArray();
     }
 
     public static function fromArray($config = [])
     {
-        $self = new self();
+        $initialGroups = [];
 
         if (isset($config['groups'])) {
-            $self->setGroups($config['groups']);
+           $initialGroups = $config['groups'];
         }
+
+        $self = new self($initialGroups);
+
         if (isset($config['enable_max_depth'])) {
             $self->setEnableMaxDepth($config['enable_max_depth']);
         }
@@ -45,7 +76,8 @@ class Serialization extends \ArrayObject
     public function toArray()
     {
         return [
-            'groups' => $this->getGroups()
+            'groups' => $this->getGroups(),
+            'enable_max_depth' => $this->getEnableMaxDepth(),
         ];
     }
 

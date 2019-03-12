@@ -435,12 +435,13 @@ class Resource
     private function mergeResourceLevelAttributes($key, $operationLevelAttribute)
     {
         $resourceLevelAttribute  = $this->getResourceLevelAttribute($key);
+
         if(null !== $resourceLevelAttribute) {
             return array_merge(
-                    $resourceLevelAttribute->toArray(),
-                    array_filter($operationLevelAttribute->toArray(),
+                $resourceLevelAttribute->toArray(),
+                array_filter($operationLevelAttribute->toArray(),
                     function($value) {
-                        return $value !== null;
+                        return !empty($value);
                     }
                 )
             );

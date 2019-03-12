@@ -11,7 +11,8 @@ services:
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider:  ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider:  ~
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider: ~
+
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\NewResourceProvider: ~
 
