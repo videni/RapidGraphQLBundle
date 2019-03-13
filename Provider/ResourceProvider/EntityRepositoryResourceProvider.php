@@ -9,6 +9,7 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Config\Resource\Service;
+use Doctrine\ORM\EntityRepository;
 
 class EntityRepositoryResourceProvider extends AbstractResourceProvider
 {
@@ -23,7 +24,6 @@ class EntityRepositoryResourceProvider extends AbstractResourceProvider
     public function getResource(ResourceContext $context, Request $request)
     {
         $result = parent::getResource($context, $request);
-
         if (null === $result) {
             throw new NotFoundHttpException('The resource you requested is not found');
         }
@@ -31,9 +31,14 @@ class EntityRepositoryResourceProvider extends AbstractResourceProvider
         return $result;
     }
 
-    public function getMethod(Service $providerConfig): string
+    protected function getMethod($providerInstance, Service $providerConfig): string
     {
-       return  $providerConfig->getMethod() ?? 'find';
+        $method =  $providerConfig->getMethod();
+        if ($providerInstance instanceof EntityRepository) {
+            $method = 'find';
+        }
+
+        return  $method;
     }
 
     protected function getArguments(Request $request, Service $providerConfig): array

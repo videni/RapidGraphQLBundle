@@ -34,15 +34,19 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
             throw new \RuntimeException(sprintf('No resource provider found for class %s', $context->getClassName()));
         }
 
+        if (!$this->container->has($providerConfig->getId())) {
+            throw new \RuntimeException('Service %s is existed in service container, please make sure it defined.', $providerConfig->getId());
+        }
+
         $providerInstance = $this->container->get($providerConfig->getId());
 
-        $method = $this->getMethod($providerConfig);
+        $method = $this->getMethod($providerInstance, $providerConfig);
         $arguments = $this->getArguments($request, $providerConfig);
 
         return $providerConfig->getSpreadArguments() ? $providerInstance->$method(...array_values($arguments)) : $providerInstance->$method($arguments);
     }
 
-    protected function getMethod(Service $providerConfig): string
+    protected function getMethod($providerInstance, Service $providerConfig): string
     {
         return $providerConfig->getMethod();
     }

@@ -6,6 +6,7 @@ use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RestBundle\FactoryInterface;
 
 class FactoryResourceProvider extends AbstractResourceProvider
 {
@@ -19,8 +20,13 @@ class FactoryResourceProvider extends AbstractResourceProvider
         return $context->getAction() === ActionTypes::CREATE;
     }
 
-    public function getMethod(Service $providerConfig): string
+    protected function getMethod($providerInstance, Service $providerConfig): string
     {
-       return  $providerConfig->getMethod() ?? 'createNew';
+        $method =  $providerConfig->getMethod();
+        if ($providerInstance instanceof FactoryInterface) {
+            $method = 'createNew';
+        }
+
+        return $method;
     }
 }

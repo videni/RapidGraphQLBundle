@@ -29,10 +29,6 @@ class ExpressionResourceProvider implements ResourceProviderInterface
 
     public function getResource(ResourceContext $context, Request $request)
     {
-        if (!$this->supports($context, $request)) {
-            return null;
-        }
-
         $providerConfig = $context->getOperationConfig()->getResourceProvider();
         $id = $providerConfig->getId();
 
