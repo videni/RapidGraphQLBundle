@@ -15,6 +15,8 @@ class ResourceConfiguration implements ConfigurationInterface
 {
     public const ROOT_NODE = "api";
 
+    public const RESOURCE_PROVIDER_KEY = 'resource_provider';
+
     /**
      * {@inheritdoc}
      */
@@ -114,7 +116,6 @@ class ResourceConfiguration implements ConfigurationInterface
                                 ->scalarNode('route_name')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
-                                ->scalarNode('resource_provider')->end()
                                 ->scalarNode('form')->end()
                                 ->scalarNode('access_control_message')->end()
                                 ->scalarNode('action')->end()
@@ -129,7 +130,7 @@ class ResourceConfiguration implements ConfigurationInterface
                                     ->performNoDeepMerging()
                                     ->variablePrototype()->end()
                                 ->end()
-                                ->arrayNode('repository')
+                                ->arrayNode(self::RESOURCE_PROVIDER_KEY)
                                         ->beforeNormalization()
                                             ->ifString()
                                             ->then(function ($v) {
@@ -233,19 +234,28 @@ class ResourceConfiguration implements ConfigurationInterface
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
                 throw new \LogicException(sprintf('Grid is missing for resource %s %s operation, index action must have a grid defined.', $resourceShortName,  $operationName));
             }
-
-            $this->setDefaultServiceConfig($scope, $resourceShortName, 'repository', $actionConfig);
-            $this->setDefaultServiceConfig($scope, $resourceShortName, 'factory', $actionConfig);
+            if (ActionTypes::CREATE === $actionConfig['action']) {
+                $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceShortName, 'factory'), $actionConfig);
+            } else {
+                $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceShortName, 'repository'), $actionConfig);
+            }
         }
     }
 
-    private function setDefaultServiceConfig($scope, $resourceShortName, $key, &$actionConfig)
+    private function setDefaultResourceProviderConfig($serviceId, &$actionConfig)
     {
         $config = [
-            "id" =>  $this->getServiceId($scope, $resourceShortName, $key),
+            "id" => $serviceId,
         ];
 
-        $actionConfig[$key] = isset($actionConfig[$key])? array_merge($config, is_array($actionConfig[$key]) ? $actionConfig[$key]: ['id' => $actionConfig[$key]]) : $config;
+        $key = self::RESOURCE_PROVIDER_KEY;
+
+        $actionConfig[$key] = isset($actionConfig[$key]) ?
+            array_merge(
+                $config,
+                is_array($actionConfig[$key]) ? $actionConfig[$key]: ['id' => $actionConfig[$key]]
+            ) : $config
+        ;
     }
 
     private function getServiceId($scope, $resourceShortName, $key)

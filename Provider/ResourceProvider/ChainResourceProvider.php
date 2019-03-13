@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Zend\Stdlib\PriorityQueue;
 
-class ChainResourceProvider implements ResourceProviderInterface
+class ChainResourceProvider
 {
     private $providers;
 
@@ -29,12 +29,15 @@ class ChainResourceProvider implements ResourceProviderInterface
         $this->providers->insert($orderProcessor, $priority);
     }
 
-    public function get(ResourceContext $context, Request $request)
+    public function getResource(ResourceContext $context, Request $request)
     {
         foreach($this->providers as $provider) {
-            $data = $provider->get($context, $request);
-            if(null !== $data) {
-                return $data;
+            if (!$provider->supports($context, $request)) {
+                continue;
+            }
+            $resource = $provider->getResource($context, $request);
+            if(null !== $resource) {
+                return $resource;
             }
         }
 

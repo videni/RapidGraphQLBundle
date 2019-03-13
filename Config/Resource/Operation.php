@@ -11,17 +11,15 @@ class Operation
     private $grid;
     private $methods;
     private $routeName;
-    private $resourceProvider;
     private $accessControl;
     private $accessControlMessage;
     private $controller;
 
     private $formats = null;
-    private $factory = null;
-    private $repository = null;
     private $normalizationContext = null;
     private $denormalizationContext = null;
     private $validationGroups = null;
+    private $resourceProvider = null;
     private $form = null;
 
     /**
@@ -184,29 +182,6 @@ class Operation
         return $this;
     }
 
-    public function setFactory(?Service $factory)
-    {
-        $this->factory = $factory;
-        return $this;
-    }
-
-    public function getFactory(): ?Service
-    {
-        return $this->factory;
-    }
-
-    public function setRepository(?Service $repostory)
-    {
-        $this->repository = $repostory;
-
-        return $this;
-    }
-
-    public function getRepository(): ?Service
-    {
-        return $this->repository;
-    }
-
     public function setNormalizationContext(?Serialization $normalizationContext)
     {
         $this->normalizationContext = $normalizationContext;
@@ -325,7 +300,7 @@ class Operation
             $self->setController($config['controller']);
         }
         if (array_key_exists('resource_provider', $config)) {
-            $self->setResourceProvider($config['resource_provider']);
+            $self->setResourceProvider(Service::fromArray($config['resource_provider']));
         }
         if (array_key_exists('route_name', $config)) {
             $self->setRouteName($config['route_name']);
@@ -387,7 +362,7 @@ class Operation
      *
      * @return self
      */
-    public function setResourceProvider($resourceProvider)
+    public function setResourceProvider(Service $resourceProvider)
     {
         $this->resourceProvider = $resourceProvider;
 

@@ -13,20 +13,23 @@ services:
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider: ~
 
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\NewResourceProvider: ~
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider:
+        arguments:
+            - '@service_container'
+            - '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage'
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider:
         calls:
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider', 10]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\NewResourceProvider', 5]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider', 0]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider', -5]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider', 5]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider', 0]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider', -5]]
             - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CollectionResourceProvider', -10]]
+            # CustomResourceProvider must be the last
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\CustomResourceProvider', -20]]
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface: '@Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider'
-
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\SingleResourceProvider:
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider:
         arguments:
             - '@service_container'
             - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'

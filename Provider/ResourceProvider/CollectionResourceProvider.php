@@ -27,9 +27,14 @@ class CollectionResourceProvider implements ResourceProviderInterface
         $this->gridManager = $gridManager;
     }
 
-    public function get(ResourceContext $context, Request $request)
+    public function supports(ResourceContext $context, Request $request)
     {
-        if (!in_array($context->getAction(), [ActionTypes::INDEX])) {
+      return in_array($context->getAction(), [ActionTypes::INDEX]);
+    }
+
+    public function getResource(ResourceContext $context, Request $request)
+    {
+        if (!$this->supports($context, $request)) {
             return;
         }
 

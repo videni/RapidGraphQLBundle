@@ -9,5 +9,7 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 interface ResourceProviderInterface
 {
-    public function get(ResourceContext $context, Request $request);
+    public function supports(ResourceContext $context, Request $request);
+
+    public function getResource(ResourceContext $context, Request $request);
 }
