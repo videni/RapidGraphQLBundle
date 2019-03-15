@@ -6,7 +6,7 @@ use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RestBundle\FactoryInterface;
+use Videni\Bundle\RestBundle\Factory\FactoryInterface;
 
 class FactoryResourceProvider extends AbstractResourceProvider
 {

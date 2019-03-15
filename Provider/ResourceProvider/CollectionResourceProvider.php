@@ -12,17 +12,32 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Pintushi\Bundle\GridBundle\Grid\Common\ResultsObject;
 use Pintushi\Bundle\GridBundle\Grid\Manager;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
+use Doctrine\ORM\EntityRepository;
+use Pintushi\Bundle\GridBundle\Datasource\Orm\OrmDatasource;
+use Pintushi\Bundle\GridBundle\Datasource\ArrayDatasource\ArrayDatasource;
+use Videni\Bundle\RestBundle\Config\Resource\Service;
 
-class CollectionResourceProvider implements ResourceProviderInterface
+/**
+ *  Set default method and arguments of resource provider for index action, this will
+ *  also override query builder from grid.
+ */
+class CollectionResourceProvider extends AbstractResourceProvider
 {
     private $gridManager;
 
     private $pagerfantaRepresentationFactory;
 
     public function __construct(
+        ContainerInterface $container,
+        ParametersParserInterface $parametersParser,
         PagerfantaFactory $pagerfantaRepresentationFactory,
         Manager $gridManager
     ) {
+        parent::__construct($container, $parametersParser);
+
         $this->pagerfantaRepresentationFactory = $pagerfantaRepresentationFactory;
         $this->gridManager = $gridManager;
     }
@@ -51,6 +66,17 @@ class CollectionResourceProvider implements ResourceProviderInterface
             )
         );
 
+        $data = parent::getResource($context, $request);
+        if ($grid->getDatasource() instanceof OrmDatasource) {
+            if (!$data instanceof QueryBuilder) {
+                throw new \LogicException(sprintf('Resource provider for resource %s  operation %s must return %s', $context->getClassName(), $context->getOperationName(), QueryBuilder::class));
+            }
+
+            $grid->getDatasource()->setQueryBuilder($data);
+        } else if($grid->getDatasource() instanceof ArrayDatasource && is_array($data)) {
+            $grid->getDatasource()->setArraySource($data);
+        }
+
         $route = new Route(
             $request->attributes->get('_route'),
             array_merge($request->attributes->get('_route_params'), $request->query->all())
@@ -60,5 +86,31 @@ class CollectionResourceProvider implements ResourceProviderInterface
         $resultsObject = $grid->getData();
 
         return $this->pagerfantaRepresentationFactory->createRepresentation($resultsObject->getData(), $route);
+    }
+
+    /**
+     * Set createQueryBuilder as default method
+     */
+    protected function getMethod($providerInstance, Service $providerConfig): string
+    {
+        $method =  $providerConfig->getMethod();
+        if ($providerInstance instanceof EntityRepository) {
+            $method = 'createQueryBuilder';
+        }
+
+        return  $method;
+    }
+
+
+    /**
+     * $repository->createQueryBuilder('o')
+     */
+    protected function getArguments(Request $request, Service $providerConfig): array
+    {
+        if (!$providerConfig->getMethod()) {
+            return ['o'];
+        }
+
+        return parent::getArguments($request, $providerConfig);
     }
 }
