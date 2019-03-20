@@ -33,14 +33,11 @@ class ResourceProviderListener
         if (null === $resourceContext) {
             return;
         }
+
         $request = $event->getRequest();
-
-        if(!$request->attributes->get('_api_receive', false)) {
-            return;
+        if ($request->attributes->get('_api_receive', true)) {
+            $data = $this->resourceProvider->getResource($resourceContext, $request);
+            $request->attributes->set('data', $data);
         }
-
-        $data = $this->resourceProvider->getResource($resourceContext, $request);
-
-        $request->attributes->set('data', $data);
     }
 }
