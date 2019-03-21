@@ -16,5 +16,6 @@ class VideniRestBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
+        $container->addCompilerPass(new Compiler\HateoasConfigurationExtensionPass());
     }
 }
