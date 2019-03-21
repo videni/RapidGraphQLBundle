@@ -94,7 +94,7 @@ class CollectionResourceProvider extends AbstractResourceProvider
     protected function getMethod($providerInstance, Service $providerConfig): string
     {
         $method =  $providerConfig->getMethod();
-        if ($providerInstance instanceof EntityRepository) {
+        if (!$method && $providerInstance instanceof EntityRepository) {
             $method = 'createQueryBuilder';
         }
 

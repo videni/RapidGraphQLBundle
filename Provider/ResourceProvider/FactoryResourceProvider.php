@@ -23,7 +23,7 @@ class FactoryResourceProvider extends AbstractResourceProvider
     protected function getMethod($providerInstance, Service $providerConfig): string
     {
         $method =  $providerConfig->getMethod();
-        if ($providerInstance instanceof FactoryInterface) {
+        if (!$method && $providerInstance instanceof FactoryInterface) {
             $method = 'createNew';
         }
 
