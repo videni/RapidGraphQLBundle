@@ -8,15 +8,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use Videni\Bundle\RestBundle\Event\SerializationContextEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SerializeListener
 {
     private $resourceContextStorage;
 
-    public function __construct(SerializerInterface $serializer, ResourceContextStorage $resourceContextStorage)
-    {
+    private $eventDispatcher;
+
+    public function __construct(
+        SerializerInterface $serializer,
+        ResourceContextStorage $resourceContextStorage,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->serializer = $serializer;
         $this->resourceContextStorage = $resourceContextStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -47,7 +55,13 @@ class SerializeListener
             ;
         }
 
-        $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $serializationContext));
+        $event = new SerializationContextEvent(
+            $serializationContext,
+            $resourceConfig
+        );
+        $this->eventDispatcher->dispatch(SerializationContextEvent::EVENT_NAME, $event);
+
+        $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $event->getContext()));
 
         $request->attributes->set('_api_respond', true);
     }
