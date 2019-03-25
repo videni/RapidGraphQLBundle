@@ -4,10 +4,11 @@ namespace Videni\Bundle\RestBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use JMS\Serializer\Context;
+use Videni\Bundle\RestBundle\Context\ResourceContext;
 
 class SerializationContextEvent extends Event
 {
-    const NAME = 'videni_rest.serialization_context';
+    const EVENT_NAME = 'videni_rest.serialization_context';
 
     protected $context;
 

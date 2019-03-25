@@ -55,13 +55,17 @@ class SerializeListener
             ;
         }
 
-        $event = new SerializationContextEvent(
-            $serializationContext,
-            $resourceConfig
-        );
-        $this->eventDispatcher->dispatch(SerializationContextEvent::EVENT_NAME, $event);
+        $serializationEvent = new SerializationContextEvent($serializationContext,$context);
 
-        $event->setControllerResult($this->serializer->serialize($controllerResult, $request->getRequestFormat(), $event->getContext()));
+        $this->eventDispatcher->dispatch(SerializationContextEvent::EVENT_NAME, $serializationEvent);
+
+        $event->setControllerResult(
+            $this->serializer->serialize(
+                $controllerResult,
+                $request->getRequestFormat(),
+                $serializationEvent->getContext()
+            )
+        );
 
         $request->attributes->set('_api_respond', true);
     }
