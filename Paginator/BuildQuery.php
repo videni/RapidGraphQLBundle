@@ -96,12 +96,11 @@ class BuildQuery
             }
         }
 
-        if (null === $this->aclHelper) {
-            return $query;
+        if (!$query) {
+            $query = $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
         }
 
-        $query = $this->doctrineHelper->getEntityRepositoryForClass($context->getClassName())->createQueryBuilder('o');
-        if ($context->getOperationConfig()->isAclEnabled()) {
+        if ($context->getOperationConfig()->isAclEnabled() && $this->aclHelper) {
             return $this->aclHelper->apply($query);
         }
 
