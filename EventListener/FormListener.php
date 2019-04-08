@@ -18,15 +18,13 @@ use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Event\AfterFormResolveEvent;
+use Videni\Bundle\RestBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 
 final class FormListener
 {
-    const AFTER_FORM_RESOLVE = 'videni.form_listener.after_form_resolve';
-
     private $formFactory;
     private $validator;
     private $resourceContextStorage;
@@ -71,13 +69,16 @@ final class FormListener
         $data = $request->attributes->get('data');
 
         $form = $this->resolveForm($context, $data);
-        $afterFormResolveEvent = new AfterFormResolveEvent($form, $data, $context, $request);
-        $this->eventDispatcher->dispatch(self::AFTER_FORM_RESOLVE, $afterFormResolveEvent);
-        if ($afterFormResolveEvent->getResponse()) {
-            $event->setResponse($afterFormResolveEvent->getResponse());
+
+        $resolveFormEvent = new ResolveFormEvent($form, $data, $context, $request);
+
+        $this->eventDispatcher->dispatch(ResolveFormEvent::AFTER_RESOLVE, $resolveFormEvent);
+        if ($resolveFormEvent->getResponse()) {
+            $event->setResponse($resolveFormEvent->getResponse());
 
             return;
         }
+
         $context = new SerializationContext();
         $context->setAttribute('form', $form);
 
@@ -132,7 +133,7 @@ final class FormListener
 
         $options = [
             'validation_groups' => $resourceConfig->getOperationAttribute($context->getOperationName(), 'validation_groups', true),
-            'data_class' =>  $this->getFormDataClass($context, $data),
+            'data_class' => $this->getFormDataClass($context, $data),
             'csrf_protection' => false,
         ];
 

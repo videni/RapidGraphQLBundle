@@ -8,8 +8,11 @@ use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-final class AfterFormResolveEvent extends Event
+final class ResolveFormEvent extends Event
 {
+    const BEFORE_RESOLVE = 'videni_rest.resolve_form.before';
+    const AFTER_RESOLVE  = 'videni_rest.resolve_form.after';
+
     protected $context;
 
     protected $data;
