@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
@@ -79,49 +80,13 @@ final class FormListener
             return;
         }
 
-        $context = new SerializationContext();
-        $context->setAttribute('form', $form);
-
-        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
-            /**
-             * always use $clearMissing = false
-             */
-            $isValid = $form->submit($this->prepareRequestData($request->request->all()), false)->isValid();
-            if (false === $isValid) {
-                $context->setAttribute('status_code', Response::HTTP_BAD_REQUEST);
-
-                $this->setResponse($event, $form, Response::HTTP_BAD_REQUEST, $context);
-            }
-        }
-        //serialize form and its initial values
-        else {
-             $data = [
-                'form' => [
-                    'data' => $form->createView(),
-                    'schema' => $this->liform->transform($form),
-                ],
-            ];
-
-            $this->setResponse($event, $data, Response::HTTP_OK, $context);
+        $response = $this->processForm($request, $form);
+        if ($response) {
+            $event->setResponse($response);
         }
 
+        //pass form to controller
         $request->attributes->set('form', $form);
-    }
-
-    protected function setResponse($event, $data, $status, SerializationContext $context = null)
-    {
-        $request = $event->getRequest();
-
-        $event->setResponse(new Response(
-            $this->serializer->serialize($data, $request->getRequestFormat(), $context),
-            $status,
-            [
-                'Content-Type' => sprintf('%s; charset=utf-8', $request->getMimeType($request->getRequestFormat())),
-                'Vary' => 'Accept',
-                'X-Content-Type-Options' => 'nosniff',
-                'X-Frame-Options' => 'deny',
-            ]
-        ));
     }
 
     protected function resolveForm(ResourceContext $context, $data)
@@ -140,6 +105,37 @@ final class FormListener
         ];
 
         return $this->formFactory->create($formType, $data, $options);
+    }
+
+    protected function processForm(Request $request, FormInterface $form)
+    {
+        $context = new SerializationContext();
+        $context->setAttribute('form', $form);
+
+        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
+            /**
+             * always use $clearMissing = false
+             */
+            $isValid = $form->submit($this->prepareRequestData($request->request->all()), false)->isValid();
+            if (false === $isValid) {
+                $context->setAttribute('status_code', Response::HTTP_BAD_REQUEST);
+
+                return $this->createResponse($request, $form, Response::HTTP_BAD_REQUEST, $context);
+            }
+        }
+        //serialize form and its initial values
+        else {
+             $data = [
+                'form' => [
+                    'data' => $form->createView(),
+                    'schema' => $this->liform->transform($form),
+                ],
+            ];
+
+            return $this->createResponse($request, $data, Response::HTTP_OK, $context);
+        }
+
+        return null;
     }
 
     /**
@@ -182,5 +178,21 @@ final class FormListener
         );
 
         return $requestData;
+    }
+
+    protected function createResponse(Request $request, $data, $status, SerializationContext $context = null)
+    {
+        $format = $request->getRequestFormat();
+
+        return new Response(
+            $this->serializer->serialize($data, $format, $context),
+            $status,
+            [
+                'Content-Type' => sprintf('%s; charset=utf-8', $request->getMimeType($format)),
+                'Vary' => 'Accept',
+                'X-Content-Type-Options' => 'nosniff',
+                'X-Frame-Options' => 'deny',
+            ]
+        );
     }
 }
