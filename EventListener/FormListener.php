@@ -95,9 +95,11 @@ final class FormListener
         }
         //serialize form and its initial values
         else {
-            $data = [
-                'initial_values' => $form->createView(),
-                'form_schema' => $this->liform->transform($form)
+             $data = [
+                'form' => [
+                    'data' => $form->createView(),
+                    'schema' => $this->liform->transform($form),
+                ],
             ];
 
             $this->setResponse($event, $data, Response::HTTP_OK, $context);
