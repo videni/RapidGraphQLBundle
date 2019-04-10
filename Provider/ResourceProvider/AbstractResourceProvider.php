@@ -35,7 +35,12 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
         }
 
         if (!$this->container->has($providerConfig->getId())) {
-            throw new \RuntimeException('Service %s is existed in service container, please make sure it defined.', $providerConfig->getId());
+            throw new \RuntimeException(
+                sprintf(
+                    'Service %s is not existed in service container, please make sure it is defined.',
+                    $providerConfig->getId()
+                )
+            );
         }
 
         $providerInstance = $this->container->get($providerConfig->getId());

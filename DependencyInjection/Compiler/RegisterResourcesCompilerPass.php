@@ -41,7 +41,11 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $factoryClass = $resourceConfig->getFactoryClass();
 
         $aliasId =  self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'factory');
+
+        $alias = new Alias($factoryClass);
+        $alias->setPublic(true);
         if ($container->has($factoryClass)) {
+            $container->setAlias($aliasId, $alias);
              //don't register if a factory is associated with this resource
             return;
         }
@@ -56,7 +60,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         //register it with class name as service name and also add an alias
         if ($factoryClass !== Factory::class) {
             $container->setDefinition($factoryClass, $factoryDef);
-            $container->setAlias($aliasId, $factoryClass);
+            $container->setAlias($aliasId, $alias);
         } else {
             $container->setDefinition($aliasId, $factoryDef);
         }

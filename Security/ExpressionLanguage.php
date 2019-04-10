@@ -7,6 +7,7 @@ namespace Videni\Bundle\RestBundle\Security;
 use Symfony\Component\Security\Core\Authorization\ExpressionLanguage as BaseExpressionLanguage;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\DependencyInjection\ExpressionLanguageProvider;
+use Videni\Bundle\RestBundle\ExpressionLanguage\NotNullExpressionFunctionProvider;
 
 /**
  * Adds some function to the default Symfony Security ExpressionLanguage.
@@ -25,6 +26,7 @@ class ExpressionLanguage extends BaseExpressionLanguage
     {
         // prepend the default provider to let users override it easily
         array_unshift($providers, new ExpressionLanguageProvider());
+        array_unshift($providers, new NotNullExpressionFunctionProvider());
 
         parent::__construct($cache, $providers);
     }
