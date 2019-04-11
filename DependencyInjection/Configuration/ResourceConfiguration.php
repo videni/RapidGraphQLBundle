@@ -218,7 +218,13 @@ class ResourceConfiguration implements ConfigurationInterface
         foreach($value['operations'] as $operationName => &$actionConfig) {
             if (!isset($actionConfig['action'])) {
                 if (!in_array($operationName, $defaultActions)) {
-                    throw new \LogicException(sprintf('There is no action type defined for operation %s, None default operation must have action type defined', $operationName));
+                    throw new \LogicException(
+                        sprintf(
+                            'There is no action type defined for operation %s of resource %s, none default operation must have action type defined',
+                            $operationName,
+                            $resourceShortName
+                        )
+                    );
                 }
 
                $actionConfig = array_merge(
@@ -228,11 +234,24 @@ class ResourceConfiguration implements ConfigurationInterface
                     ]
                 );
             } else if(!in_array($actionConfig['action'], $defaultActions)) {
-                throw new \LogicException(sprintf('Action type %s of operation %s is not existed, only %s are supported', $actionConfig['action'], $operationName, implode(',', $defaultActions)));
+                throw new \LogicException(
+                    sprintf(
+                        'Action type %s of operation %s of resource %s is not existed, only %s are supported', $actionConfig['action'],
+                        $operationName,
+                        $resourceShortName,
+                        implode(',', $defaultActions)
+                    )
+                );
             }
 
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
-                throw new \LogicException(sprintf('Grid is missing for resource %s %s operation, index action must have a grid defined.', $resourceShortName,  $operationName));
+                throw new \LogicException(
+                    sprintf(
+                        'Grid is missing for resource %s %s operation, index action must have a grid defined.',
+                        $resourceShortName,
+                        $operationName
+                    )
+                );
             }
             if (ActionTypes::CREATE === $actionConfig['action']) {
                 $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceShortName, 'factory'), $actionConfig);

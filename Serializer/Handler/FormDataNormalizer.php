@@ -12,7 +12,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\Context;
 
-class InitialValuesNormalizer implements SubscribingHandlerInterface
+class FormDataNormalizer implements SubscribingHandlerInterface
 {
     public static function getSubscribingMethods()
     {

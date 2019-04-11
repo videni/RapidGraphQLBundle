@@ -55,7 +55,7 @@ class SerializeListener
             ;
         }
 
-        $serializationEvent = new SerializationContextEvent($serializationContext,$context);
+        $serializationEvent = new SerializationContextEvent($serializationContext, $context);
 
         $this->eventDispatcher->dispatch(SerializationContextEvent::EVENT_NAME, $serializationEvent);
 

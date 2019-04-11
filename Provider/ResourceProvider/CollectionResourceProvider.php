@@ -66,15 +66,25 @@ class CollectionResourceProvider extends AbstractResourceProvider
             )
         );
 
-        $data = parent::getResource($context, $request);
+        $qb = parent::getResource($context, $request);
         if ($grid->getDatasource() instanceof OrmDatasource) {
-            if (!$data instanceof QueryBuilder) {
-                throw new \LogicException(sprintf('Resource provider for resource %s  operation %s must return %s', $context->getClassName(), $context->getOperationName(), QueryBuilder::class));
+            if (!$qb instanceof QueryBuilder) {
+                throw new \LogicException(
+                    sprintf(
+                        'Resource provider for resource %s  operation %s must return %s',
+                        $context->getClassName(),
+                        $context->getOperationName(),
+                        QueryBuilder::class
+                    )
+                );
             }
-
-            $grid->getDatasource()->setQueryBuilder($data);
-        } else if($grid->getDatasource() instanceof ArrayDatasource && is_array($data)) {
-            $grid->getDatasource()->setArraySource($data);
+            $grid->getDatasource()->setQueryBuilder($qb);
+        } else if($grid->getDatasource() instanceof ArrayDatasource) {
+            if ($qb instanceof QueryBuilder) {
+                $grid->getDatasource()->setArraySource($qb->getQuery()->getArrayResult());
+            } elseif(is_array($qb)) {
+                $grid->getDatasource()->setArraySource($qb);
+            }
         }
 
         $route = new Route(

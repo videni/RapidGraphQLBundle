@@ -52,7 +52,10 @@ class VideniRestExtension extends Extension
      */
     private function loadResourceConfiguration($container)
     {
-        $configFileLoaders = [new YamlCumulativeFileLoader('Resources/config/app/api.yaml')];
+        $configFileLoaders = [
+            new YamlCumulativeFileLoader('Resources/config/app/api.yaml'),
+            new YamlCumulativeFileLoader('Resources/config/app/api.yml')
+        ];
 
         $config = [];
 

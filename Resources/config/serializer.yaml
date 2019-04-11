@@ -8,6 +8,6 @@ services:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }
 
-    Videni\Bundle\RestBundle\Serializer\Handler\InitialValuesNormalizer:
+    Videni\Bundle\RestBundle\Serializer\Handler\FormDataNormalizer:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }

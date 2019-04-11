@@ -10,6 +10,7 @@ use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class EntityRepositoryResourceProvider extends AbstractResourceProvider
 {
@@ -26,6 +27,10 @@ class EntityRepositoryResourceProvider extends AbstractResourceProvider
         $result = parent::getResource($context, $request);
         if (null === $result) {
             throw new NotFoundHttpException('The resource you requested is not found');
+        }
+
+        if ($result instanceof QueryBuilder) {
+            return $result->getQuery()->getResult();
         }
 
         return $result;
