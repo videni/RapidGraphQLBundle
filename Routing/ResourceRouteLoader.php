@@ -95,7 +95,13 @@ final class ResourceRouteLoader extends Loader
             list($controllerId, $method) = explode('::', $controller);
         }
         if (!$this->container->has($controllerId)) {
-            throw new \RuntimeException(sprintf('There is no builtin action for the %s action. You need to define the controller yourself.', $action));
+            throw new \RuntimeException(
+                sprintf(
+                    'There is no builtin action or controller defined for operation %s of resource %s. You need to define the controller yourself.',
+                    $operationName,
+                    $resourceShortName
+                )
+            );
         }
 
         $path = $resourceConfig->getRoutePrefix() ? trim(trim($resourceConfig->getRoutePrefix()), '/'): '/';

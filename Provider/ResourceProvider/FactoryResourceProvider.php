@@ -12,11 +12,6 @@ class FactoryResourceProvider extends AbstractResourceProvider
 {
     public function supports(ResourceContext $context, Request $request)
     {
-        $force = $request->attributes->get('_treat_as_new', false);
-        if ($force) {
-            return true;
-        }
-
         return $context->getAction() === ActionTypes::CREATE;
     }
 

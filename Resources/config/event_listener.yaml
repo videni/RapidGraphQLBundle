@@ -92,10 +92,6 @@ services:
             - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView', priority: 8 }
 
 # kernel.exception event
-    Videni\Bundle\RestBundle\Validator\EventListener\ValidationExceptionListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException'}
-
     Videni\Bundle\RestBundle\Action\ExceptionAction:
         arguments:
             - '@jms_serializer'
