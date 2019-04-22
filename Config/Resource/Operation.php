@@ -4,165 +4,133 @@ namespace Videni\Bundle\RestBundle\Config\Resource;
 
 class Operation
 {
-    private $action;
-    private $defaults;
-    private $requirements;
-    private $path;
-    private $grid;
-    private $methods;
-    private $routeName;
-    private $accessControl;
-    private $accessControlMessage;
-    private $controller;
+    private $actions = [];
+    private $resource;
 
     private $formats = null;
-    private $normalizationContext = null;
-    private $denormalizationContext = null;
+    private $routePrefix;
+
     private $validationGroups = null;
-    private $resourceProvider = null;
-    private $form = null;
+    private $normalizationContext = null;
 
     /**
      * @return mixed
      */
-    public function getAction()
+    public function getResource()
     {
-        return $this->action;
+        return $this->resource;
     }
 
     /**
-     * @param mixed $action
+     * @param mixed $resource
      *
      * @return self
      */
-    public function setAction($action)
+    public function setResource($resource)
     {
-        $this->action = $action;
+        $this->resource = $resource;
 
         return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getDefaults()
-    {
-        return $this->defaults;
-    }
-
-    /**
-     * @param mixed $defaults
+     * Checks whether the configuration of at least one action exists.
      *
-     * @return self
+     * @return bool
      */
-    public function setDefaults($defaults)
+    public function hasActions()
     {
-        $this->defaults = $defaults;
-
-        return $this;
+        return !empty($this->actions);
     }
 
     /**
-     * @return mixed
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param mixed $path
+     * Gets the configuration for all actions.
      *
-     * @return self
+     * @return Operation[] [action name => config, ...]
      */
-    public function setPath($path)
+    public function getActions()
     {
-        $this->path = $path;
-
-        return $this;
+        return $this->actions;
     }
 
     /**
-     * @return mixed
-     */
-    public function getMethods()
-    {
-        return $this->methods;
-    }
-
-    /**
-     * @param mixed $methods
+     * Checks whether the configuration of the action exists.
      *
-     * @return self
-     */
-    public function setMethods($methods)
-    {
-        $this->methods = $methods;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRouteName()
-    {
-        return $this->routeName;
-    }
-
-    /**
-     * @param mixed $routeName
+     * @param string $actionName
      *
-     * @return self
+     * @return bool
      */
-    public function setRouteName($routeName)
+    public function hasAction($actionName)
     {
-        $this->routeName = $routeName;
+        return isset($this->actions[$actionName]);
+    }
 
-        return $this;
+    /**
+     * Gets the configuration of the action.
+     *
+     * @param string $actionName
+     *
+     * @return Action|null
+     */
+    public function getAction($actionName)
+    {
+        if (!isset($this->actions[$actionName])) {
+            return null;
+        }
+
+        return $this->actions[$actionName];
+    }
+
+     /**
+     * Adds the configuration of the action.
+     *
+     * @param string                 $actionName
+     * @param Action|null $action
+     *
+     * @return Action
+     */
+    public function addAction($actionName, $action = null)
+    {
+        if (null === $action) {
+            $action = new Action();
+        }
+
+        $this->actions[$actionName] = $action;
+
+        return $action;
+    }
+
+    /**
+     * Removes the configuration of the action.
+     *
+     * @param string $actionName
+     */
+    public function removeAction($actionName)
+    {
+        unset($this->actions[$actionName]);
     }
 
     /**
      * @return mixed
      */
-    public function getController()
+    public function getRoutePrefix()
     {
-        return $this->controller;
+        return $this->routePrefix;
     }
 
     /**
-     * @param mixed $controller
+     * @param mixed $routePrefix
      *
      * @return self
      */
-    public function setController($controller)
+    public function setRoutePrefix($routePrefix)
     {
-        $this->controller = $controller;
+        $this->routePrefix = $routePrefix;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValidationGroups()
-    {
-        return $this->validationGroups;
-    }
-
-    /**
-     * @param mixed $validationGroups
-     *
-     * @return self
-     */
-    public function setValidationGroups($validationGroups)
-    {
-        $this->validationGroups = $validationGroups;
-
-        return $this;
-    }
-
-    /**
+        /**
      * @return mixed
      */
     public function getFormats()
@@ -182,6 +150,26 @@ class Operation
         return $this;
     }
 
+     /**
+     * @param mixed $validationGroups
+     *
+     * @return self
+     */
+    public function setValidationGroups($validationGroups)
+    {
+        $this->validationGroups = $validationGroups;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidationGroups()
+    {
+        return $this->validationGroups;
+    }
+
     public function setNormalizationContext(?Serialization $normalizationContext)
     {
         $this->normalizationContext = $normalizationContext;
@@ -194,198 +182,118 @@ class Operation
         return $this->normalizationContext;
     }
 
-    public function setDenormalizationContext(?Serialization $denormalizationContext)
+    public function getActionAttribute(string $actionName, string $key, $fallback = false)
     {
-        $this->denormalizationContext = $denormalizationContext;
+        $actionAttribute = null;
 
-        return $this;
-    }
-
-    public function getDenormalizationContext(): ?Serialization
-    {
-        return $this->denormalizationContext;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAccessControl()
-    {
-        return $this->accessControl;
-    }
-
-    /**
-     * @param mixed $accessControl
-     *
-     * @return self
-     */
-    public function setAccessControl($accessControl)
-    {
-        $this->accessControl = $accessControl;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAccessControlMessage()
-    {
-        return $this->accessControlMessage;
-    }
-
-    /**
-     * @param mixed $accessControlMessage
-     *
-     * @return self
-     */
-    public function setAccessControlMessage($accessControlMessage)
-    {
-        $this->accessControlMessage = $accessControlMessage;
-
-        return $this;
-    }
-
-    public static function fromArray($config)
-    {
-        $self = new self();
-
-        if (array_key_exists('denormalization_context', $config)) {
-            $self->setDenormalizationContext(Serialization::fromArray($config['denormalization_context']));
+        if ($this->hasAction($actionName)) {
+            $operation = $this->getAction($actionName);
+            if ($operation && $getter = $this->getGetter($operation, $key)) {
+                $actionAttribute = $operation->$getter();
+            }
         }
+
+        if($actionAttribute instanceof Serialization) {
+            $mergedAttribtues = $this->mergeOperationLevelAttributes($key, $actionAttribute);
+            if($mergedAttribtues !== false) {
+                return Serialization::fromArray($mergedAttribtues);
+            }
+        };
+
+        //empty array
+        if (is_array($actionAttribute) && empty($actionAttribute)) {
+            $actionAttribute = null;
+        }
+        if (null !== $actionAttribute) {
+            return $actionAttribute;
+        }
+
+        if($fallback) {
+            return $this->getOperationLevelAttribute($key);
+        }
+
+        return null;
+    }
+
+    public static function fromArray(array $config)
+    {
+        $operationConfig = new self();
+
         if (array_key_exists('normalization_context', $config)) {
-            $self->setNormalizationContext(Serialization::fromArray($config['normalization_context']));
+            $operationConfig->setNormalizationContext(Serialization::fromArray($config['normalization_context']));
         }
         if (array_key_exists('validation_groups', $config)) {
-            $self->setValidationGroups($config['validation_groups']);
+            $operationConfig->setValidationGroups($config['validation_groups']);
         }
         if (array_key_exists('formats', $config)) {
-            $self->setFormats($config['formats']);
+            $operationConfig->setFormats($config['formats']);
         }
-        if (array_key_exists('grid', $config)) {
-            $self->setGrid($config['grid']);
+        if (array_key_exists('resource', $config)) {
+            $operationConfig->setResource($config['resource']);
         }
-        if (array_key_exists('factory', $config)) {
-            $self->setFactory(Service::fromArray($config['factory']));
+        if (array_key_exists('route_prefix', $config)) {
+            $operationConfig->setRoutePrefix($config['route_prefix']);
         }
-        if (array_key_exists('repository', $config)) {
-            $self->setRepository(Service::fromArray($config['repository']));
-        }
-
-        if (array_key_exists('action', $config)) {
-            $self->setAction($config['action']);
-        }
-        if (array_key_exists('defaults', $config)) {
-            $self->setDefaults($config['defaults']);
-        }
-        if (array_key_exists('requirements', $config)) {
-            $self->setRequirements($config['requirements']);
-        }
-        if (array_key_exists('path', $config)) {
-            $self->setPath($config['path']);
-        }
-        if (array_key_exists('form', $config)) {
-            $self->setForm($config['form']);
-        }
-        if (array_key_exists('methods', $config)) {
-            $self->setMethods($config['methods']);
-        }
-        if (array_key_exists('access_control_message', $config)) {
-            $self->setAccessControlMessage($config['access_control_message']);
-        }
-        if (array_key_exists('access_control', $config)) {
-            $self->setAccessControl($config['access_control']);
-        }
-        if (array_key_exists('controller', $config)) {
-            $self->setController($config['controller']);
-        }
-        if (array_key_exists('resource_provider', $config)) {
-            $self->setResourceProvider(Service::fromArray($config['resource_provider']));
-        }
-        if (array_key_exists('route_name', $config)) {
-            $self->setRouteName($config['route_name']);
+        if (array_key_exists('actions', $config)) {
+            foreach ($config['actions'] as $actionName => $actionConfig) {
+                $operationConfig->addAction($actionName, Action::fromArray($actionConfig));
+            }
         }
 
-        return $self;
+        return $operationConfig;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGrid()
-    {
-        return $this->grid;
-    }
 
-    /**
-     * @param mixed $grid
+     /**
+     * @param object $config
+     * @param string $key
      *
-     * @return self
+     * @return string|string[]|null
      */
-    public function setGrid($grid)
+    protected function getGetter($config, $key)
     {
-        $this->grid = $grid;
+        $setter = 'get' . $this->camelize($key);
 
-        return $this;
+        return \method_exists($config, $setter)
+            ? $setter
+            : null;
+    }
+
+    private function mergeOperationLevelAttributes($key, $operationLevelAttribute)
+    {
+        $resourceLevelAttribute  = $this->getOperationLevelAttribute($key);
+
+        if(null !== $resourceLevelAttribute) {
+            return array_merge(
+                $resourceLevelAttribute->toArray(),
+                array_filter($operationLevelAttribute->toArray(),
+                    function($value) {
+                        return !empty($value);
+                    }
+                )
+            );
+        }
+
+        return false;
+    }
+
+    private function getOperationLevelAttribute($key)
+    {
+        $resourceLevelAttribute = null;
+        if ($getter = $this->getGetter($this, $key)){
+            $resourceLevelAttribute = $this->$getter();
+        }
+
+        return $resourceLevelAttribute;
     }
 
     /**
-     * @return mixed
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * @param mixed $form
+     * @param string $string
      *
-     * @return self
+     * @return string
      */
-    public function setForm($form)
+    protected function camelize($string)
     {
-        $this->form = $form;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResourceProvider()
-    {
-        return $this->resourceProvider;
-    }
-
-    /**
-     * @param mixed $resourceProvider
-     *
-     * @return self
-     */
-    public function setResourceProvider(Service $resourceProvider)
-    {
-        $this->resourceProvider = $resourceProvider;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequirements()
-    {
-        return $this->requirements;
-    }
-
-    /**
-     * @param mixed $requirements
-     *
-     * @return self
-     */
-    public function setRequirements($requirements)
-    {
-        $this->requirements = $requirements;
-
-        return $this;
+        return strtr(\ucwords(strtr($string, ['_' => ' '])), [' ' => '']);
     }
 }

@@ -58,7 +58,7 @@ final class FormListener
         if (null == $context) {
             return;
         }
-        if(!in_array($context->getAction(), [ActionTypes::UPDATE, ActionTypes::CREATE])) {
+        if(!in_array($context->getActionType(), [ActionTypes::UPDATE, ActionTypes::CREATE])) {
             return;
         }
 
@@ -91,15 +91,17 @@ final class FormListener
 
     protected function resolveForm(ResourceContext $context, $data)
     {
-        $resourceConfig = $context->getResourceConfig();
+        $operationConfig = $context->getOperation();
 
-        $formType = $resourceConfig->getOperationAttribute($context->getOperationName(), 'form', true);
+        $formType = $context->getAction()->getForm();
         if (null === $formType) {
-            return new \LogicException(sprintf('The form is required for operation %s of resource %s', $context->getOperationName(), $context->getClassName()));
+            return new \LogicException(
+                sprintf('The form is required for action %s of operation %s', $context->getActionName(), $context->getOperationName())
+            );
         }
 
         $options = [
-            'validation_groups' => $resourceConfig->getOperationAttribute($context->getOperationName(), 'validation_groups', true),
+            'validation_groups' => $operationConfig->getActionAttribute($context->getActionName(), 'validation_groups', true),
             'data_class' => $this->getFormDataClass($context, $data),
             'csrf_protection' => false,
         ];
@@ -145,7 +147,7 @@ final class FormListener
      */
     protected function getFormDataClass(ResourceContext $context, $entity)
     {
-        $dataClass = $context->getClassName();
+        $dataClass = $context->getResource()->getEntityClass();
         if (\is_object($entity)) {
             $entityClass = ClassUtils::getClass($entity);
             if ($entityClass !== $dataClass) {

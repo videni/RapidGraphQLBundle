@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Videni\Bundle\RestBundle\Provider;
 
 use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RestBundle\Config\Resource\Operation;
 
 /**
  * {@inheritdoc}
@@ -24,14 +24,14 @@ final class FormatsProvider implements FormatsProviderInterface
      *
      * @throws InvalidArgumentException
      */
-    public function getFormats(Resource $resourceConfig, string $operationName): array
+    public function getFormats(Operation $opeartionConfig, string $actionName, $operationName): array
     {
-        if (!$formats = $resourceConfig->getOperationAttribute($operationName, 'formats')) {
+        if (!$formats = $opeartionConfig->getActionAttribute($actionName, 'formats')) {
             return $this->configuredFormats;
         }
 
         if (!\is_array($formats)) {
-            throw new InvalidArgumentException(sprintf("The 'formats' attributes must be an array, %s given for resource class '%s'.", \gettype($formats), $attributes['resource_class']));
+            throw new InvalidArgumentException(sprintf("The 'formats' attributes must be an array, %s given for action '%s' of opeartion %s .", \gettype($formats), $actionName, $operationName));
         }
 
         return $this->getOperationFormats($formats);

@@ -34,7 +34,7 @@ final class ORMRepositoryClassSubscriber extends AbstractDoctrineSubscriber
     private function setCustomRepositoryClass(ClassMetadata $metadata): void
     {
         try {
-            $resourceConfig = $this->resourceConfigProvider->get($metadata->getName());
+            $resourceConfig = $this->resourceConfigProvider->getResourceByClassName($metadata->getName());
         } catch (\InvalidArgumentException $exception) {
             return;
         }

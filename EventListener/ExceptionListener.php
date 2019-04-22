@@ -18,7 +18,7 @@ final class ExceptionListener extends BaseExceptionListener
         // Normalize exceptions only for routes managed by VideniRestBundle
         if (
             'html' === $request->getRequestFormat('') ||
-            (!$request->attributes->has('_api_resource_class') && !$request->attributes->has('_api_respond'))
+            (!$request->attributes->has('_api_operation_name') && !$request->attributes->has('_api_respond'))
         ) {
             return;
         }

@@ -2,34 +2,48 @@
 
 namespace Videni\Bundle\RestBundle\Context;
 
+use Videni\Bundle\RestBundle\Config\Resource\Action;
+use Videni\Bundle\RestBundle\Config\Resource\Operation;
+use Videni\Bundle\RestBundle\Config\Resource\Resource;
+
 class ResourceContext
 {
-    private $className;
+    /** @var string */
+    private $actionName;
 
-    private $operationName = null;
+    /** @var string */
+    private $operationName;
 
+    /**
+     * @var Operation
+     */
     private $action;
 
-    private $resourceConfig;
+    /**
+     * @var Operation
+     */
+    private $operation;
+
+    /**
+     * @var Resource
+     */
+    private $resource;
+
+    public function __construct($operationName, Operation $operation, $actionName, Action $action, Resource $resource)
+    {
+        $this->operationName = $operationName;
+        $this->operation = $operation;
+        $this->actionName = $actionName;
+        $this->action = $action;
+        $this->resource = $resource;
+    }
 
     /**
      * @return mixed
      */
-    public function getClassName()
+    public function getActionName()
     {
-        return $this->className;
-    }
-
-    /**
-     * @param mixed $className
-     *
-     * @return self
-     */
-    public function setClassName($className)
-    {
-        $this->className = $className;
-
-        return $this;
+        return $this->actionName;
     }
 
     /**
@@ -41,18 +55,6 @@ class ResourceContext
     }
 
     /**
-     * @param mixed $operationName
-     *
-     * @return self
-     */
-    public function setOperationName($operationName)
-    {
-        $this->operationName = $operationName;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getAction()
@@ -60,60 +62,29 @@ class ResourceContext
         return $this->action;
     }
 
-    /**
-     * @param mixed $action
-     *
-     * @return self
-     */
-    public function setAction($action)
+    public function getActionType()
     {
-        $this->action = $action;
-
-        return $this;
+        return $this->getAction()->getAction();
     }
 
     /**
      * @return mixed
      */
-    public function getResourceConfig()
+    public function getOperation()
     {
-        return $this->resourceConfig;
-    }
-
-    /**
-     * @param mixed $resourceConfig
-     *
-     * @return self
-     */
-    public function setResourceConfig($resourceConfig)
-    {
-        $this->resourceConfig = $resourceConfig;
-
-        return $this;
-    }
-
-    public function getOperationConfig()
-    {
-        $this->assure();
-
-        return $this->resourceConfig->hasOperation($this->operationName) ? $this->resourceConfig->getOperation($this->operationName) : null;
+        return $this->operation;
     }
 
     public function getGrid()
     {
-        $this->assure();
-
-        return $this->resourceConfig->getOperation($this->operationName)->getGrid();
+        return $this->action->getGrid();
     }
 
-    private function assure()
+    /**
+     * @return mixed
+     */
+    public function getResource()
     {
-        if (null === $this->operationName) {
-            throw new \RuntimeException('Operation must be set in the context before operation config is requested');
-        }
-
-        if (null === $this->resourceConfig) {
-            throw new \RuntimeException('Resource must be set in the context before operation config is requested');
-        }
+        return $this->resource;
     }
 }

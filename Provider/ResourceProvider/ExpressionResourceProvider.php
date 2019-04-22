@@ -20,16 +20,16 @@ class ExpressionResourceProvider implements ResourceProviderInterface
         $this->expression = $expression;
     }
 
-    public function supports(ResourceContext $context,Request $request)
+    public function supports(ResourceContext $context, Request $request)
     {
-        $providerConfig = $context->getOperationConfig()->getResourceProvider();
+        $providerConfig = $context->getAction()->getResourceProvider();
 
         return 0 === strpos($providerConfig->getId(), 'expr:');
     }
 
     public function getResource(ResourceContext $context, Request $request)
     {
-        $providerConfig = $context->getOperationConfig()->getResourceProvider();
+        $providerConfig = $context->getAction()->getResourceProvider();
         $id = $providerConfig->getId();
 
         return $this->expression->evaluate(

@@ -3,7 +3,7 @@
 namespace Videni\Bundle\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
@@ -15,7 +15,7 @@ class ResourceContextListener
 
     public function __construct(
         ResourceContextStorage $resourceContextStorage,
-        ResourceProvider $resourceConfigProvider
+        ConfigProvider $resourceConfigProvider
     ) {
         $this->resourceContextStorage = $resourceContextStorage;
         $this->resourceConfigProvider = $resourceConfigProvider;
@@ -24,27 +24,26 @@ class ResourceContextListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if (!$request->attributes->has('_api_resource_class')) {
+        if (!$request->attributes->has('_api_operation_name')) {
             return;
         }
 
-        $resourceContext = new ResourceContext();
-
-        $entityClass = $request->attributes->get('_api_resource_class');
-
-        $resourceConfig = $this->resourceConfigProvider->get($entityClass);
-        $resourceContext->setResourceConfig($resourceConfig);
-
         $operationName = $request->attributes->get('_api_operation_name');
-        $resourceContext->setOperationName($operationName);
 
-        if(!$resourceConfig->hasOperation($operationName)) {
-            throw new \LogicException(sprintf('Operation %s is not found for resource %s', $operationName, $entityClass));
+        $operation = $this->resourceConfigProvider->getOperation($operationName);
+
+        $actionName = $request->attributes->get('_api_action_name');
+        if(!$operation->hasAction($actionName)) {
+            throw new \LogicException(sprintf('Action %s is not found for operation %s', $actionName, $operationName));
         }
 
-        $resourceContext->setAction($resourceConfig->getOperation($operationName)->getAction());
-        $resourceContext->setClassName($entityClass);
-
+        $resourceContext = new ResourceContext(
+            $operationName,
+            $operation,
+            $actionName,
+            $operation->getAction($actionName),
+            $this->resourceConfigProvider->getResource($operation->getResource())
+        );
 
         $this->resourceContextStorage->setContext($resourceContext);
     }

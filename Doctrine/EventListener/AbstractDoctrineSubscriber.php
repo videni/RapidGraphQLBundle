@@ -8,7 +8,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\Mapping\ReflectionService;
 use Doctrine\Common\Persistence\Mapping\RuntimeReflectionService;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RestBundle\Model\ResourceInterface;
 
 abstract class AbstractDoctrineSubscriber implements EventSubscriber
@@ -20,7 +20,7 @@ abstract class AbstractDoctrineSubscriber implements EventSubscriber
      */
     private $reflectionService;
 
-    public function __construct(ResourceProvider $resourceConfigProvider)
+    public function __construct(ConfigProvider $resourceConfigProvider)
     {
         $this->resourceConfigProvider = $resourceConfigProvider;
     }

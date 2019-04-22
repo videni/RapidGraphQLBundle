@@ -29,7 +29,7 @@ class WriteListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->isMethodSafe(false) || !$request->attributes->has('_api_resource_class') || !$request->attributes->getBoolean('_api_persist', true)) {
+        if ($request->isMethodSafe(false) || !$request->attributes->has('_api_operation_class') || !$request->attributes->getBoolean('_api_persist', true)) {
             return;
         }
 
@@ -39,17 +39,17 @@ class WriteListener
 
         $context = $this->resourceContextStorage->getContext();
 
-        $action = $context->getAction();
+        $actionType = $context->getActionType();
 
-        $this->eventDispatcher->dispatchPreEvent($context->getAction(), $context->getResourceConfig(), $data);
+        $this->eventDispatcher->dispatchPreEvent($actionType, $context->getResource(), $data);
 
-        if (in_array($action, [ActionTypes::UPDATE, ActionTypes::CREATE])) {
+        if (in_array($actionType, [ActionTypes::UPDATE, ActionTypes::CREATE])) {
             $this->dataPersister->persist($controllerResult);
         }
-        if (in_array($action, [ActionTypes::DELETE, ActionTypes::BULK_DELETE])) {
+        if (in_array($actionType, [ActionTypes::DELETE, ActionTypes::BULK_DELETE])) {
             $this->dataPersister->remove($data);
         }
 
-        $this->eventDispatcher->dispatchPostEvent($context->getAction(), $context->getResourceConfig(), $data);
+        $this->eventDispatcher->dispatchPostEvent($actionType, $context->getResource(), $data);
     }
 }

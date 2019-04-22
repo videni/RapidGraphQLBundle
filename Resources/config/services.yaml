@@ -3,7 +3,6 @@ imports:
     - { resource: 'serializer.yaml'}
     - { resource: 'action.yaml'}
     - { resource: 'security.yaml'}
-    - { resource: 'config.yaml'}
     - { resource: 'event_listener.yaml'}
 
 parameters:
@@ -54,6 +53,11 @@ services:
     Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
 
     Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
+
+    Videni\Bundle\RestBundle\Config\Resource\ConfigProvider:
+        public: true
+        arguments: []
+
 
 
 

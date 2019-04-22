@@ -16,7 +16,7 @@ class EntityRepositoryResourceProvider extends AbstractResourceProvider
 {
     public function supports(ResourceContext $context, Request $request)
     {
-        return in_array($context->getAction(), [ActionTypes::VIEW, ActionTypes::UPDATE, ActionTypes::DELETE]);
+        return in_array($context->getActionType(), [ActionTypes::VIEW, ActionTypes::UPDATE, ActionTypes::DELETE]);
     }
 
     /**

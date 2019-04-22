@@ -10,37 +10,39 @@ use Symfony\Component\DependencyInjection\Alias;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\Common\Inflector\Inflector;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Videni\Bundle\RestBundle\Factory\Factory;
 use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
-use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RestBundle\Form\Type\AbstractResourceType;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $bundleConifig = DependencyInjectionUtil::getConfig($container);
+        $resourceProvider = $container->get(ConfigProvider::class);
 
-        $resourceConfigProvider = $container->get(ResourceProvider::class);
-
-        $resourceConfigs = $resourceConfigProvider->getAll();
-        foreach ($resourceConfigs as $className => $resourceConfig) {
+        $resources = $resourceProvider->getAllResources();
+        foreach ($resources as $resourceName => $resource) {
             //register entity class parameter
-            $container->setParameter(sprintf('%s.class', $this->getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'entity')), $className);
+            $container->setParameter(sprintf('%s.class', $this->getServiceId($resource->getScope(), $resourceName, 'entity')), $resource->getEntityClass());
 
-            $this->registerFactory($className, $resourceConfig, $container);
-            $this->registerRepository($className, $resourceConfig, $container);
+            $this->registerFactory($resourceName, $resource, $container);
+            $this->registerRepository($resourceName, $resource, $container);
+            $this->registerForm($resourceName, $resource, $container);
         }
     }
 
-    private function registerFactory($className, Resource $resourceConfig, $container)
+    private function registerFactory($resourceName, Resource $resource, $container)
     {
-        $factoryClass = $resourceConfig->getFactoryClass();
+        $factoryClass = $resource->getFactoryClass();
+        if(null === $factoryClass) {
+            return;
+        }
 
-        $aliasId =  self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'factory');
+        $aliasId =  self::getServiceId($resource->getScope(), $resourceName, 'factory');
 
         $alias = new Alias($factoryClass);
         $alias->setPublic(true);
@@ -53,7 +55,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $container->setParameter(sprintf('%s.class', $aliasId), $factoryClass);
 
         $factoryDef = (new Definition($factoryClass))
-            ->addArgument($className)
+            ->addArgument($resource->getEntityClass())
             ->setPublic(true)
         ;
 
@@ -66,11 +68,14 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function registerRepository($className, Resource $resourceConfig, $container)
+    private function registerRepository($resourceName, Resource $resource, $container)
     {
-        $repositoryClass = $resourceConfig->getRepositoryClass();
+        $repositoryClass = $resource->getRepositoryClass();
+        if(null === $repositoryClass) {
+            return;
+        }
 
-        $aliasId = self::getServiceId($resourceConfig->getScope(), $resourceConfig->getShortName(), 'repository');
+        $aliasId = self::getServiceId($resource->getScope(), $resourceName, 'repository');
         $container->setParameter(sprintf('%s.class', $aliasId), $repositoryClass);
 
         $alias = new Alias($repositoryClass);
@@ -89,8 +94,8 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $definition = new Definition($repositoryClass);
         $definition
             ->setArguments([
-                new Reference($this->getManagerServiceId($resourceConfig)),
-                $this->getClassMetadataDefinition($className, $resourceConfig),
+                new Reference($this->getManagerServiceId($resource)),
+                $this->getClassMetadataDefinition($resource->getEntityClass(), $resource),
             ])
             ->setPublic(true)
         ;
@@ -103,19 +108,47 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function getServiceId($scope, $resourceShortName, $key)
+    public function registerForm($resourceName, Resource $resource, $container)
     {
-         $name = Inflector::tableize($resourceShortName);
+        $formClass = $resource->getFormClass();
+        if(null === $formClass) {
+            return;
+        }
 
-         return sprintf('%s.%s.%s', $scope, $key, $name);
+        $aliasId = self::getServiceId($resource->getScope(), $resourceName, 'form.type');
+        $container->setParameter(sprintf('%s.class', $aliasId), $formClass);
+
+        $alias = new Alias($formClass);
+        $alias->setPublic(true);
+
+        if ($container->has($formClass)) {
+            $container->setAlias($aliasId, $alias);
+
+            return;
+        }
+
+        $formDef = (new Definition($formClass))
+            ->addTag('form.type')
+            ->setPublic(true)
+        ;
+
+        if (is_a($formClass, AbstractResourceType::class, true)) {
+            $formDef
+                ->addArgument($resource->getEntityClass())
+                ->addArgument($resource->getFormValidationGroups())
+           ;
+        }
+
+        $container->setDefinition($formClass, $formDef);
+        $container->setAlias($aliasId, $alias);
     }
 
-    protected function getClassMetadataDefinition($className, Resource $resourceConfig): Definition
+    protected function getClassMetadataDefinition($entityClass, Resource $resource): Definition
     {
         $definition = new Definition($this->getClassMetadataClassname());
         $definition
-            ->setFactory([new Reference($this->getManagerServiceId($resourceConfig)), 'getClassMetadata'])
-            ->setArguments([$className])
+            ->setFactory([new Reference($this->getManagerServiceId($resource)), 'getClassMetadata'])
+            ->setArguments([$entityClass])
             ->setPublic(false)
         ;
 
@@ -133,8 +166,15 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
      /**
      * {@inheritdoc}
      */
-    protected function getManagerServiceId(Resource $resourceConfig): string
+    protected function getManagerServiceId(Resource $resource): string
     {
         return 'doctrine.orm.entity_manager';
+    }
+
+    private function getServiceId($scope, $resourceShortName, $key)
+    {
+         $name = Inflector::tableize($resourceShortName);
+
+         return sprintf('%s.%s.%s', $scope, $key, $name);
     }
 }

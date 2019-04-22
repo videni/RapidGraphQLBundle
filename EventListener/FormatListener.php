@@ -40,7 +40,7 @@ class FormatListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if (!$request->attributes->has('_api_resource_class') && !$request->attributes->has('_api_respond')) {
+        if (!$request->attributes->has('_api_operation_name') && !$request->attributes->has('_api_respond')) {
             return;
         }
 
@@ -49,7 +49,7 @@ class FormatListener
             return;
         }
 
-        $this->formats = $this->formatsProvider->getFormats($resourceContext->getResourceConfig(), $resourceContext->getOperationName());
+        $this->formats = $this->formatsProvider->getFormats($resourceContext->getOperation(), $resourceContext->getActionName(), $resourceContext->getOperationName());
 
         $this->populateMimeTypes();
 

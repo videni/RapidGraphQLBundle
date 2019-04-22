@@ -15,9 +15,10 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolverInterface;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Config\Resource\ResourceProvider;
+use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Config\Resource\Operation;
+use Videni\Bundle\RestBundle\Config\Resource\Action;
 use Videni\Bundle\RestBundle\Exception\InvalidResourceException;
 
 /**
@@ -33,7 +34,7 @@ final class ResourceRouteLoader extends Loader
     private $container;
 
     public function __construct(
-        ResourceProvider $resourceConfigProvider,
+        ConfigProvider $resourceConfigProvider,
         OperationPathResolverInterface $operationPathResolver,
         ContainerInterface $container
     ) {
@@ -49,11 +50,10 @@ final class ResourceRouteLoader extends Loader
     {
         $routeCollection = new RouteCollection();
 
-        foreach ($this->resourceConfigProvider->getAll() as $resourceClass => $resourceConfig) {
-            $resourceShortName = $resourceConfig->getShortName();
-            if (null !== $operations = $resourceConfig->getOperations()) {
-                foreach ($operations as $operationName => $operationConfig) {
-                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operationConfig, $resourceConfig);
+        foreach ($this->resourceConfigProvider->getAllOperations() as $operationName => $operationConfig) {
+            if (null !== $actions = $operationConfig->getActions()) {
+                foreach ($actions as $actionName => $actionConfig) {
+                    $this->addRoute($routeCollection, $actionName, $operationName, $actionConfig, $operationConfig);
                 }
             }
         }
@@ -74,38 +74,42 @@ final class ResourceRouteLoader extends Loader
      *
      * @throws RuntimeException
      */
-    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, Operation $operationConfig, Resource $resourceConfig)
+    private function addRoute(RouteCollection $routeCollection, string $actionName, string $operationName, Action $actionConfig, Operation $operationConfig)
     {
-        $resourceShortName = $resourceConfig->getShortName();
-
-        if ($operationConfig->getRouteName()) {
+        if ($actionConfig->getRouteName()) {
             return;
         }
-        if (!$operationConfig->getAction()) {
-            throw new \RuntimeException(sprintf('Either a "route_name" or a "action" operation attribute must exist for the operation "%s" of the resource "%s".', $operationName, $resourceClass));
+        if (!$actionConfig->getAction()) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Either a "route_name" or a "action" operation attribute must exist for the action "%s" of the operation "%s".',
+                    $actionName,
+                    $operationName
+                )
+            );
         }
 
-        $action = $operationConfig->getAction();
+        $action = $actionConfig->getAction();
         if (!ActionTypes::isSupport($action)) {
             throw new \RuntimeException(sprintf('%s is not a valid action', $action));
         }
 
-        $controllerId = $controller = $operationConfig->getController() ?? sprintf('%s.%s', self::DEFAULT_ACTION_PATTERN, strtolower($action));
+        $controllerId = $controller = $actionConfig->getController() ?? sprintf('%s.%s', self::DEFAULT_ACTION_PATTERN, strtolower($action));
         if (strpos($controller, '::')) {
             list($controllerId, $method) = explode('::', $controller);
         }
         if (!$this->container->has($controllerId)) {
             throw new \RuntimeException(
                 sprintf(
-                    'There is no builtin action or controller defined for operation %s of resource %s. You need to define the controller yourself.',
-                    $operationName,
-                    $resourceShortName
+                    'There is no builtin action or controller defined for action %s of opeartion %s. You need to define the controller yourself.',
+                    $actionName,
+                    $operationName
                 )
             );
         }
 
-        $path = $resourceConfig->getRoutePrefix() ? trim(trim($resourceConfig->getRoutePrefix()), '/'): '/';
-        $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operationConfig, $operationName);
+        $path = $operationConfig->getRoutePrefix() ? trim(trim($operationConfig->getRoutePrefix()), '/'): '/';
+        $path .= $this->operationPathResolver->resolveOperationPath($operationName, $actionConfig, $actionName);
 
         $defaultMethods = ActionTypes::getMethods($action);
 
@@ -115,16 +119,16 @@ final class ResourceRouteLoader extends Loader
                 '_controller' => $controller,
                 '_format' => null,
                 '_action' => $action,
-                '_api_resource_class' => $resourceClass,
                 '_api_operation_name' => $operationName,
-            ] + $operationConfig->getDefaults(),
-            $operationConfig->getRequirements() ?? [],
+                '_api_action_name' => $actionName,
+            ] + $actionConfig->getDefaults(),
+            $actionConfig->getRequirements() ?? [],
             [],
             '',
             [],
-            empty($operationConfig->getMethods()) ? $defaultMethods: $operationConfig->getMethods()
+            empty($actionConfig->getMethods()) ? $defaultMethods: $actionConfig->getMethods()
         );
 
-        $routeCollection->add(RouteNameGenerator::generate($operationName, $resourceShortName), $route);
+        $routeCollection->add(RouteNameGenerator::generate($actionName, $operationName), $route);
     }
 }

@@ -32,9 +32,9 @@ class DenyAccessListener
         if (null === $context) {
             return;
         }
-        $operationConfig = $context->getOperationConfig();
+        $actionConfig = $context->getAction();
 
-        $accessControl = $operationConfig->getAccessControl();
+        $accessControl = $actionConfig->getAccessControl();
         if (null === $accessControl) {
             return;
         }
@@ -47,7 +47,7 @@ class DenyAccessListener
 
         $isGranted = $this->resourceAccessChecker->isGranted($accessControl, $extraVariables);
         if (!$isGranted){
-            throw new AccessDeniedException($operationConfig->getAccessControlMessage() ?? 'Access Denied');
+            throw new AccessDeniedException($actionConfig->getAccessControlMessage() ?? 'Access Denied');
         }
     }
 }

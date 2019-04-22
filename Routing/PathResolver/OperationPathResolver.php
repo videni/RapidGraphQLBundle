@@ -7,7 +7,7 @@ namespace Videni\Bundle\RestBundle\Routing\PathResolver;
 use Videni\Bundle\RestBundle\Exception\InvalidArgumentException;
 use Videni\Bundle\RestBundle\Operation\PathSegmentNameGeneratorInterface;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Config\Resource\Operation;
+use Videni\Bundle\RestBundle\Config\Resource\Action;
 
 /**
  * Generates an operation path.
@@ -24,7 +24,7 @@ final class OperationPathResolver implements OperationPathResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveOperationPath(string $resourceShortName, Operation $operation, string $operationName = null): string
+    public function resolveOperationPath(string $resourceShortName, Action $operation, string $operationName = null): string
     {
         if ($path = $operation->getPath()) {
             return $path;

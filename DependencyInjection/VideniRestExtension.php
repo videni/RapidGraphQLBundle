@@ -22,6 +22,7 @@ use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RestBundle\Factory\FactoryInterface;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
+use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
 
 class VideniRestExtension extends Extension
 {
@@ -30,15 +31,17 @@ class VideniRestExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
+        $resourceConfigs = $this->loadResourceConfiguration($container);
+        $configuration = new Configuration($resourceConfigs['resources']);
+
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $this->loadResourceConfiguration($container);
         $this->configureBodyListener($container, $config);
-        $this->configureResourceProvider($container, $config);
+        $this->configureResourceProvider($container);
+        $this->configureResource($container, $config['operations'], $resourceConfigs['resources']);
 
         DependencyInjectionUtil::setConfig($container, $config);
 
@@ -53,8 +56,8 @@ class VideniRestExtension extends Extension
     private function loadResourceConfiguration($container)
     {
         $configFileLoaders = [
-            new YamlCumulativeFileLoader('Resources/config/app/api.yaml'),
-            new YamlCumulativeFileLoader('Resources/config/app/api.yml')
+            new YamlCumulativeFileLoader('Resources/config/app/resources.yaml'),
+            new YamlCumulativeFileLoader('Resources/config/app/resources.yml')
         ];
 
         $config = [];
@@ -72,7 +75,7 @@ class VideniRestExtension extends Extension
             $config
         );
 
-        $container->setParameter('videni_rest.resource_config', $configs);
+        return $configs;
     }
 
     private function configureBodyListener($container, $config)
@@ -125,5 +128,12 @@ class VideniRestExtension extends Extension
             ->registerForAutoconfiguration(FactoryInterface::class)
             ->setPublic(true)
         ;
+    }
+
+    public function configureResource($container, $operationConfigs, $resourceConfigs)
+    {
+        $configProviderDef = $container->getDefinition(ConfigProvider::class);
+        $configProviderDef->addArgument($resourceConfigs);
+        $configProviderDef->addArgument($operationConfigs);
     }
 }

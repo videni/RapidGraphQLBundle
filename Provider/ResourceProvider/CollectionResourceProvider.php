@@ -44,7 +44,7 @@ class CollectionResourceProvider extends AbstractResourceProvider
 
     public function supports(ResourceContext $context, Request $request)
     {
-      return in_array($context->getAction(), [ActionTypes::INDEX]);
+      return in_array($context->getActionType(), [ActionTypes::INDEX]);
     }
 
     public function getResource(ResourceContext $context, Request $request)
@@ -71,9 +71,9 @@ class CollectionResourceProvider extends AbstractResourceProvider
             if (!$qb instanceof QueryBuilder) {
                 throw new \LogicException(
                     sprintf(
-                        'Resource provider for resource %s  operation %s must return %s',
-                        $context->getClassName(),
+                        'Resource provider for operation %s action %s  must return %s',
                         $context->getOperationName(),
+                        $context->getActionName(),
                         QueryBuilder::class
                     )
                 );

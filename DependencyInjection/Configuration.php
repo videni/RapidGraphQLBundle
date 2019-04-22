@@ -8,9 +8,20 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Videni\Bundle\RestBundle\Decoder\JsonDecoder;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Inflector\Inflector;
+use Videni\Bundle\RestBundle\Operation\ActionTypes;
 
 class Configuration implements ConfigurationInterface
 {
+    public const RESOURCE_PROVIDER_KEY = 'resource_provider';
+
+    private $resourceConfigs;
+
+    public function __construct(array $resourceConfigs)
+    {
+        $this->resourceConfigs = $resourceConfigs;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -25,6 +36,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addBodyListenerSection($node);
         $this->addExceptionToStatusSection($node);
+        $node->append($this->addOpertaionConfigurationSection());
 
         return $treeBuilder;
     }
@@ -117,5 +129,212 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
+    }
+
+    public function addOpertaionConfigurationSection()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('operations');
+
+        $resourceConfigs = $this->resourceConfigs;
+        $resourceNames = array_keys($resourceConfigs);
+
+        $rootNode
+             ->beforeNormalization()
+                ->always(function ($v) use($resourceConfigs) {
+                    foreach ($v as $operationName => &$value) {
+                        $resourceConfig = $resourceConfigs[$value['resource']];
+                        $this->normalizeActions($resourceConfig['scope'], $value['resource'], $operationName, $value);
+                    }
+
+                    return $v;
+                })
+            ->end()
+            ->useAttributeAsKey('operationName')
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('route_prefix')->end()
+                    ->arrayNode('validation_groups')
+                            ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('normalization_context')
+                        ->children()
+                            ->arrayNode('groups')
+                                ->prototype('variable')->end()
+                            ->end()
+                            ->scalarNode('enable_max_depth')->end()
+                        ->end()
+                    ->end()
+                    ->scalarNode('resource')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                        ->validate()
+                            ->ifTrue(function($v) use ($resourceNames){
+                                return !in_array($v, $resourceNames);
+                            })
+                            ->thenInvalid('Resource %s is not defined')
+                        ->end()
+                    ->end()
+                    ->arrayNode('actions')
+                        ->useAttributeAsKey('name')
+                        ->cannotBeEmpty()
+                        ->arrayPrototype()
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(function ($v) {
+                                    return ['action' => $v];
+                                })
+                            ->end()
+                            ->children()
+                                ->scalarNode('path')->end()
+                                ->scalarNode('grid')->end()
+                                ->scalarNode('route_name')->end()
+                                ->scalarNode('controller')->end()
+                                ->scalarNode('access_control')->end()
+                                ->scalarNode('form')->end()
+                                ->scalarNode('access_control_message')->end()
+                                ->scalarNode('action')->end()
+                                ->arrayNode('methods')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('defaults')
+                                    ->performNoDeepMerging()
+                                    ->variablePrototype()->end()
+                                ->end()
+                                ->arrayNode('requirements')
+                                    ->performNoDeepMerging()
+                                    ->variablePrototype()->end()
+                                ->end()
+                                ->arrayNode(self::RESOURCE_PROVIDER_KEY)
+                                        ->beforeNormalization()
+                                            ->ifString()
+                                            ->then(function ($v) {
+                                                return ['id' => $v];
+                                            })
+                                        ->end()
+                                        ->children()
+                                            ->scalarNode('id')->end()
+                                            ->scalarNode('method')->end()
+                                            ->scalarNode('spread_arguments')->defaultValue(true)->end()
+                                            ->arrayNode('arguments')
+                                                ->prototype('scalar')->end()
+                                            ->end()
+                                        ->end()
+                                ->end()
+                                ->arrayNode('validation_groups')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('normalization_context')
+                                    ->children()
+                                        ->arrayNode('groups')
+                                            ->prototype('variable')->end()
+                                        ->end()
+                                        ->scalarNode('enable_max_depth')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $rootNode;
+    }
+
+
+    private function normalizeActions($scope, $resourceName, $operationName,  &$value)
+    {
+        if(!array_key_exists('actions', $value)) {
+            return;
+        }
+
+        foreach($value['actions'] as $actionName => &$actionConfig) {
+            $this->setDefaultAction($actionConfig, $actionName, $operationName);
+            if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
+                throw new \LogicException(
+                    sprintf(
+                        'Grid is missing for operation %s %s action, index action must have a grid defined.',
+                        $operationName,
+                        $actionName
+                    )
+                );
+            }
+
+            if (ActionTypes::CREATE === $actionConfig['action']) {
+                $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceName, 'factory'), $actionConfig);
+            } else {
+                $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceName, 'repository'), $actionConfig);
+            }
+
+            if (in_array($actionConfig['action'], [ActionTypes::CREATE, ActionTypes::UPDATE])) {
+                if(!isset($actionConfig['form'])) {
+                    $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']['class']: null;
+                }
+            }
+        }
+    }
+
+    private function setDefaultAction(&$actionConfig, $actionName, $operationName)
+    {
+        $defaultActions = [
+            ActionTypes::UPDATE,
+            ActionTypes::INDEX,
+            ActionTypes::CREATE,
+            ActionTypes::VIEW,
+            ActionTypes::DELETE,
+            ActionTypes::BULK_DELETE,
+        ];
+
+        if (!isset($actionConfig['action'])) {
+            if (!in_array($actionName, $defaultActions)) {
+                throw new \LogicException(
+                    sprintf(
+                        'There is no action type defined for operation %s of action %s, none default operation must have action type defined',
+                        $operationName,
+                        $actionName
+                    )
+                );
+            }
+
+           $actionConfig = array_merge(
+                $actionConfig,
+                [
+                    'action' => $actionName,
+                ]
+            );
+        } else if(!in_array($actionConfig['action'], $defaultActions)) {
+            throw new \LogicException(
+                sprintf(
+                    'Action type %s of operation %s of action %s is not existed, only %s are supported', $actionConfig['action'],
+                    $operationName,
+                    $actionName,
+                    implode(',', $defaultActions)
+                )
+            );
+        }
+    }
+
+    private function setDefaultResourceProviderConfig($serviceId, &$actionConfig)
+    {
+        $config = [
+            "id" => $serviceId,
+        ];
+
+        $key = self::RESOURCE_PROVIDER_KEY;
+
+        $actionConfig[$key] = isset($actionConfig[$key]) ?
+            array_merge(
+                $config,
+                is_array($actionConfig[$key]) ? $actionConfig[$key]: ['id' => $actionConfig[$key]]
+            ) : $config
+        ;
+    }
+
+    private function getServiceId($scope, $resourceName, $key)
+    {
+         $name = Inflector::tableize($resourceName);
+
+         return sprintf('%s.%s.%s', $scope, $key, $name);
     }
 }

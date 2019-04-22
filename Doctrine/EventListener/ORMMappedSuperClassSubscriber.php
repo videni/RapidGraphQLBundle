@@ -48,7 +48,7 @@ final class ORMMappedSuperClassSubscriber extends AbstractDoctrineSubscriber
         }
 
         try {
-            $resourceConfig = $this->resourceConfigProvider->get($metadata->getName());
+            $resourceConfig = $this->resourceConfigProvider->getResourceByClassName($metadata->getName());
         } catch (\InvalidArgumentException $exception) {
             return;
         }

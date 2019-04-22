@@ -43,11 +43,11 @@ class SerializeListener
             return;
         }
 
-        $resourceConfig = $context->getResourceConfig();
+        $operastionConfig = $context->getOperation();
 
         $serializationContext = new SerializationContext();
 
-        if ($normailzationConfig = $resourceConfig->getOperationAttribute($context->getOperationName(), 'normalization_context', true)) {
+        if ($normailzationConfig = $operastionConfig->getActionAttribute($context->getActionName(), 'normalization_context', true)) {
             $serializationContext
                 ->setSerializeNull(true)
                 ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())

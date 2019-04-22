@@ -45,7 +45,7 @@ final class RespondListener
 
         $context = $this->resourceContextStorage->getContext();
         if (null !== $context) {
-            $status = self::ACTION_TO_CODE[$context->getAction()]?? Response::HTTP_OK;
+            $status = self::ACTION_TO_CODE[$context->getActionType()]?? Response::HTTP_OK;
         }
 
         $headers = [

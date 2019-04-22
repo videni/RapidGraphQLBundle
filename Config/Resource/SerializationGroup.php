@@ -23,7 +23,9 @@ class SerializationGroup implements \ArrayAccess, \IteratorAggregate
      *          ]
      *      ]
      *  ]
-     * both the 'items' and 'auto` are class properties, the `items` attribute is in  group `Default`,  the `auto` atrribute is in group `Report`.  this features is provided by JMS serializer.  check https://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#overriding-groups-of-deeper-branches-of-the-graph for more details
+     * both the 'items' and 'auto` are class properties, the `items` attribute is in  group `Default`,
+     * the `auto` atrribute is in group `Report`.  this features is provided by JMS serializer.
+     * check https://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#overriding-groups-of-deeper-branches-of-the-graph for more details
      *
      * @var array
      */

@@ -6,7 +6,7 @@ services:
 
     Videni\Bundle\RestBundle\Routing\ResourceRouteLoader:
         arguments:
-            - '@Videni\Bundle\RestBundle\Config\Resource\ResourceProvider'
+            - '@Videni\Bundle\RestBundle\Config\Resource\ConfigProvider'
             - '@Videni\Bundle\RestBundle\Routing\PathResolver\OperationPathResolver'
             - '@service_container'
         tags: [ 'routing.loader' ]

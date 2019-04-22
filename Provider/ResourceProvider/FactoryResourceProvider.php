@@ -12,7 +12,7 @@ class FactoryResourceProvider extends AbstractResourceProvider
 {
     public function supports(ResourceContext $context, Request $request)
     {
-        return $context->getAction() === ActionTypes::CREATE;
+        return $context->getActionType() === ActionTypes::CREATE;
     }
 
     protected function getMethod($providerInstance, Service $providerConfig): string
