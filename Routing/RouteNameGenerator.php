@@ -28,13 +28,13 @@ final class RouteNameGenerator
      *
      * @throws InvalidArgumentException
      */
-    public static function generate(string $operationName, string $resourceShortName): string
+    public static function generate(string $resourceName, string $operationName, $actionName): string
     {
         return sprintf(
             '%s%s_%s',
             static::ROUTE_NAME_PREFIX,
-            self::inflector($resourceShortName),
-            $operationName
+            self::inflector($operationName),
+            $actionName
         );
     }
 

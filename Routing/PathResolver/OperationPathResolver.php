@@ -24,13 +24,13 @@ final class OperationPathResolver implements OperationPathResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveOperationPath(string $resourceShortName, Action $operation, string $operationName = null): string
+    public function resolveOperationPath(string $resourceName, Action $operation, string $actionName = null): string
     {
         if ($path = $operation->getPath()) {
             return $path;
         }
 
-        $path = '/'.$this->pathSegmentNameGenerator->getSegmentName($resourceShortName, true);
+        $path = '/'.$this->pathSegmentNameGenerator->getSegmentName($resourceName, true);
         if (ActionTypes::isSingleItemAction($operation->getAction())) {
             $path .= '/{id}';
         }

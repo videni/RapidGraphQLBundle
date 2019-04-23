@@ -109,7 +109,7 @@ final class ResourceRouteLoader extends Loader
         }
 
         $path = $operationConfig->getRoutePrefix() ? trim(trim($operationConfig->getRoutePrefix()), '/'): '/';
-        $path .= $this->operationPathResolver->resolveOperationPath($operationName, $actionConfig, $actionName);
+        $path .= $this->operationPathResolver->resolveOperationPath($operationConfig->getResource(), $actionConfig, $actionName);
 
         $defaultMethods = ActionTypes::getMethods($action);
 
@@ -129,6 +129,6 @@ final class ResourceRouteLoader extends Loader
             empty($actionConfig->getMethods()) ? $defaultMethods: $actionConfig->getMethods()
         );
 
-        $routeCollection->add(RouteNameGenerator::generate($actionName, $operationName), $route);
+        $routeCollection->add(RouteNameGenerator::generate($operationConfig->getResource(), $operationName, $actionName), $route);
     }
 }

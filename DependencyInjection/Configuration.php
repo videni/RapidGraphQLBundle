@@ -143,6 +143,14 @@ class Configuration implements ConfigurationInterface
              ->beforeNormalization()
                 ->always(function ($v) use($resourceConfigs) {
                     foreach ($v as $operationName => &$value) {
+                        if (!isset($value['resource'])) {
+                            throw new \LogicException(sprintf('The resource key is missing for operation %s', $operationName));
+                        }
+
+                        if (!isset($resourceConfigs[$value['resource']])) {
+                            throw new \LogicException(sprintf('Resource %s is not registered', $value['resource']));
+                        }
+
                         $resourceConfig = $resourceConfigs[$value['resource']];
                         $this->normalizeActions($resourceConfig['scope'], $value['resource'], $operationName, $value);
                     }
