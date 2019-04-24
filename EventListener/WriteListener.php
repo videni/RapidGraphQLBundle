@@ -29,7 +29,7 @@ class WriteListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->isMethodSafe(false) || !$request->attributes->has('_api_operation_class') || !$request->attributes->getBoolean('_api_persist', true)) {
+        if ($request->isMethodSafe(false) || !$request->attributes->has('_api_operation_name') || !$request->attributes->getBoolean('_api_persist', true)) {
             return;
         }
 
