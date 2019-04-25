@@ -17,6 +17,8 @@ class Serialization extends \ArrayObject
 
     private $enableMaxDepth = null;
 
+    private $section = null;
+
     public function __construct(array $param = [])
     {
         $this->serializationGroup = new SerializationGroup($param);
@@ -69,6 +71,9 @@ class Serialization extends \ArrayObject
         if (isset($config['enable_max_depth'])) {
             $self->setEnableMaxDepth($config['enable_max_depth']);
         }
+        if (isset($config['section'])) {
+            $self->setSection($config['section']);
+        }
 
         return $self;
     }
@@ -78,6 +83,7 @@ class Serialization extends \ArrayObject
         return [
             'groups' => $this->getGroups(),
             'enable_max_depth' => $this->getEnableMaxDepth(),
+            'section' => $this->getSection(),
         ];
     }
 
@@ -97,6 +103,26 @@ class Serialization extends \ArrayObject
     public function setEnableMaxDepth($enableMaxDepth)
     {
         $this->enableMaxDepth = $enableMaxDepth;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * @param mixed $section
+     *
+     * @return self
+     */
+    public function setSection($section)
+    {
+        $this->section = $section;
 
         return $this;
     }

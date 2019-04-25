@@ -43,15 +43,16 @@ class SerializeListener
             return;
         }
 
-        $operastionConfig = $context->getOperation();
+        $operationConfig = $context->getOperation();
 
         $serializationContext = new SerializationContext();
 
-        if ($normailzationConfig = $operastionConfig->getActionAttribute($context->getActionName(), 'normalization_context', true)) {
+        if ($normailzationConfig = $operationConfig->getActionAttribute($context->getActionName(), 'normalization_context', true)) {
             $serializationContext
                 ->setSerializeNull(true)
                 ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())
                 ->setGroups($normailzationConfig->getGroups())
+                ->setAttribute('section', $normailzationConfig->getSection())
             ;
         }
 
