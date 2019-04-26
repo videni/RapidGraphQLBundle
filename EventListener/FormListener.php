@@ -95,7 +95,7 @@ final class FormListener
 
         $formType = $context->getAction()->getForm();
         if (null === $formType) {
-            return new \LogicException(
+            throw new \LogicException(
                 sprintf('The form is required for action %s of operation %s', $context->getActionName(), $context->getOperationName())
             );
         }

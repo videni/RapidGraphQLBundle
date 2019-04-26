@@ -53,7 +53,7 @@ class FormErrorNormalizer implements SubscribingHandlerInterface
             'errors' => $this->convertFormToArray($form),
         ];
 
-        $visitor->setRoot($data);
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null)
