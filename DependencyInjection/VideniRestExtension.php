@@ -14,6 +14,7 @@ use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\ChainProcessor\Debug\TraceLogger;
+use Oro\Component\Config\Loader\ContainerBuilderAdapter;
 use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
 use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
@@ -63,7 +64,7 @@ class VideniRestExtension extends Extension
         $config = [];
 
         $configLoader = new CumulativeConfigLoader('videni_rest', $configFileLoaders);
-        $resources = $configLoader->load($container);
+        $resources = $configLoader->load(new ContainerBuilderAdapter($container));
         foreach ($resources as $resource) {
             if (array_key_exists(ResourceConfiguration::ROOT_NODE, $resource->data)) {
                 $config[] = $resource->data[ResourceConfiguration::ROOT_NODE];
