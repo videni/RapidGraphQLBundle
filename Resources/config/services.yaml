@@ -30,7 +30,7 @@ services:
 
     Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
 
-    Hateoas\Representation\Factory\PagerfantaFactory: ~
+    Videni\Bundle\RestBundle\Hateoas\Representation\Factory\PagerfantaFactory: ~
 
     Videni\Bundle\RestBundle\Provider\FormatsProvider:
         arguments:

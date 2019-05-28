@@ -6,7 +6,7 @@ namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Pagerfanta\Pagerfanta;
-use Hateoas\Representation\Factory\PagerfantaFactory;
+use Videni\Bundle\RestBundle\Hateoas\Representation\Factory\PagerfantaFactory;
 use Hateoas\Configuration\Route;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
@@ -95,7 +95,7 @@ class CollectionResourceProvider extends AbstractResourceProvider
         /** @var ResultsObject */
         $resultsObject = $grid->getData();
 
-        return $this->pagerfantaRepresentationFactory->createRepresentation($resultsObject->getData(), $route);
+        return $this->pagerfantaRepresentationFactory->createRepresentation($resultsObject->getData(), $route, $grid);
     }
 
     /**

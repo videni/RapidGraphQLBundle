@@ -53,6 +53,7 @@ class SerializeListener
                 ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())
                 ->setGroups($normailzationConfig->getGroups())
                 ->setAttribute('section', $normailzationConfig->getSection())
+                ->setAttribute('extra_context', new \ArrayObject())
             ;
         }
 
