@@ -48,7 +48,6 @@ class FormErrorNormalizer implements SubscribingHandlerInterface
         }
 
         $data = [
-            'code' => $context->hasAttribute('status_code') ? $context->getAttribute('status_code') : null,
             'message' => 'Validation Failed',
             'errors' => $this->convertFormToArray($form),
         ];
@@ -82,7 +81,10 @@ class FormErrorNormalizer implements SubscribingHandlerInterface
         $children = [];
         foreach ($data->all() as $child) {
             if ($child instanceof FormInterface) {
-                $children[$child->getName()] = $this->convertFormToArray($child);
+                $childErrors = $this->convertFormToArray($child);
+                if ($childErrors !== []) {
+                    $children[$child->getName()] = $childErrors;
+                }
             }
         }
 
