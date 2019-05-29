@@ -137,7 +137,7 @@ class Resource
      */
     public function getFormValidationGroups()
     {
-        return isset($this->form['validation_groups']) ? $this->form['validation_groups']: [] ;
+        return isset($this->form['validation_groups']) ? $this->form['validation_groups']: null;
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Videni\Bundle\RestBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyEventDispatcherInterface;
 use Videni\Bundle\RestBundle\Config\Resource\Resource;
-use Doctrine\Common\Inflector\Inflector;
 
 final class EventDispatcher implements EventDispatcherInterface
 {
@@ -31,7 +30,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): ResourceEvent {
         $event = new ResourceEvent($resource);
 
-        $this->eventDispatcher->dispatch(sprintf('%s.%s.pre_%s', $resourceConifig->getScope(), Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
+        $this->eventDispatcher->dispatch(sprintf('%s.%s.pre_%s', $resourceConifig->getScope(), $resourceConifig->getShortName(), $eventName), $event);
 
         return $event;
     }
@@ -46,7 +45,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): ResourceEvent {
         $event = new ResourceEvent($resource);
 
-        $this->eventDispatcher->dispatch(sprintf('%s.%s.post_%s', $resourceConifig->getScope(), Inflector::tableize($resourceConifig->getShortName()), $eventName), $event);
+        $this->eventDispatcher->dispatch(sprintf('%s.%s.post_%s', $resourceConifig->getScope(), $resourceConifig->getShortName(), $eventName), $event);
 
         return $event;
     }
