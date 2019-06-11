@@ -9,6 +9,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Videni\Bundle\RestBundle\Hateoas\Representation\TotalDisabledPaginatedRepresentation;
 use Pagerfanta\Pagerfanta;
 use Pintushi\Bundle\GridBundle\Grid\GridInterface;
+use Hateoas\Representation\PaginatedRepresentation;
 
 class PagerfantaFactory
 {

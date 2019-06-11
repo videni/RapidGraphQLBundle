@@ -11,6 +11,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\Context;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class FormDataNormalizer implements SubscribingHandlerInterface
 {
@@ -58,12 +59,14 @@ class FormDataNormalizer implements SubscribingHandlerInterface
             // Force serialization as {} instead of []
             $data = array();
             foreach ($formView->children as $name => $child) {
-                // Skip empty values because
+                // Skip empty values(null, '', [], empty ArratCollection) because
                 // https://github.com/erikras/redux-form/issues/2149
-                if (empty($child->children) && ($child->vars['value'] === null || $child->vars['value'] === '')) {
+                $value = $child->vars['value'];
+                if (empty($child->children) && ($value === null || $value === '' || $value === [] || ($value instanceof ArrayCollection && $value->isEmpty()))) {
                     continue;
                 }
-                $data[$name] = $this->getValues($form[$name], $child);
+
+               $data[$name] = $this->getValues($form[$name], $child);
             }
 
             return $data;

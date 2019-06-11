@@ -63,6 +63,6 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
             $arguments = [$arguments];
         }
 
-        return array_values($this->parametersParser->parseRequestValues($arguments, $request));
+        return $this->parametersParser->parseRequestValues($arguments, $request);
     }
 }

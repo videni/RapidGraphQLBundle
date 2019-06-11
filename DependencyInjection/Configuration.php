@@ -306,13 +306,11 @@ class Configuration implements ConfigurationInterface
                     )
                 );
             }
+            $append = [
+                'action' => $actionName,
+            ];
 
-           $actionConfig = array_merge(
-                $actionConfig,
-                [
-                    'action' => $actionName,
-                ]
-            );
+            $actionConfig = is_null($actionConfig) ? $append:  array_merge($actionConfig, $append);
         } else if(!in_array($actionConfig['action'], $defaultActions)) {
             throw new \LogicException(
                 sprintf(
