@@ -59,14 +59,15 @@ class FormDataNormalizer implements SubscribingHandlerInterface
             // Force serialization as {} instead of []
             $data = array();
             foreach ($formView->children as $name => $child) {
-                // Skip empty values(null, '', [], empty ArratCollection) because
-                // https://github.com/erikras/redux-form/issues/2149
                 $value = $child->vars['value'];
-                if (empty($child->children) && ($value === null || $value === '' || $value === [] || ($value instanceof ArrayCollection && $value->isEmpty()))) {
+                if (empty($child->children) && $this->isEmpty($value)) {
                     continue;
                 }
 
-               $data[$name] = $this->getValues($form[$name], $child);
+                $childValues = $this->getValues($form[$name], $child);
+                if (!$this->isEmpty($childValues)) {
+                    $data[$name] = $childValues;
+                }
             }
 
             return $data;
@@ -79,6 +80,18 @@ class FormDataNormalizer implements SubscribingHandlerInterface
 
             return $formView->vars['value'];
         }
+    }
+
+    /**
+     * Skip empty values(null, '', [], empty ArratCollection) because
+     * https://github.com/erikras/redux-form/issues/2149
+     *
+     * @param  mix  $value
+     * @return boolean
+     */
+    private function isEmpty($value): bool
+    {
+        return $value === null || $value === '' || $value === [] || ($value instanceof ArrayCollection && $value->isEmpty());
     }
 
     private function normalizeMultipleExpandedChoice($formView)

@@ -13,6 +13,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\Context;
+use Limenius\Liform\Liform;
 
 class FormErrorNormalizer implements SubscribingHandlerInterface
 {
@@ -21,12 +22,15 @@ class FormErrorNormalizer implements SubscribingHandlerInterface
      */
     private $translator;
 
+    private $liform;
+
     /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, Liform $liform)
     {
         $this->translator = $translator;
+        $this->liform = $liform;
     }
 
     public static function getSubscribingMethods()
@@ -52,12 +56,24 @@ class FormErrorNormalizer implements SubscribingHandlerInterface
             'errors' => $this->convertFormToArray($form),
         ];
 
+        if ($context->hasAttribute('form_schema_on_validation_error') && $context->getAttribute('form_schema_on_validation_error')) {
+            return $data + ['form' => $this->createFormSchema($form, $context)];
+        }
+
         return $data;
     }
 
     public function supportsNormalization($data, $format = null)
     {
         return $data instanceof FormInterface && $data->isSubmitted() && !$data->isValid();
+    }
+
+    protected function createFormSchema(FormInterface $form, Context $context)
+    {
+       return [
+            'data' => $context->getNavigator()->accept($form->createView()),
+            'schema' => $this->liform->transform($form),
+        ];
     }
 
     /**

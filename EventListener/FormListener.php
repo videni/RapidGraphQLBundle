@@ -113,6 +113,7 @@ final class FormListener
     {
         $context = new SerializationContext();
         $context->setAttribute('form', $form);
+        $context->setAttribute('form_schema_on_validation_error', $request->query->get('_return_schema_on_error', false));
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
             /**
@@ -127,17 +128,20 @@ final class FormListener
         }
         //serialize form and its initial values
         else {
-             $data = [
-                'form' => [
-                    'data' => $form->createView(),
-                    'schema' => $this->liform->transform($form),
-                ],
-            ];
-
-            return $this->createResponse($request, $data, Response::HTTP_OK, $context);
+            return $this->createResponse($request, $this->createFormSchema($form), Response::HTTP_OK, $context);
         }
 
         return null;
+    }
+
+    protected function createFormSchema(FormInterface $form)
+    {
+       return [
+            'form' => [
+                'data' => $form->createView(),
+                'schema' => $this->liform->transform($form),
+            ],
+        ];
     }
 
     /**
