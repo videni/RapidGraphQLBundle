@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
 
         $node = $rootNode
             ->children()
+                ->scalarNode('api_version')->defaultValue(1)->end()
         ;
 
         $this->addBodyListenerSection($node);
@@ -240,6 +241,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->scalarNode('enable_max_depth')->end()
                                         ->scalarNode('section')->end()
+                                        ->scalarNode('version')->end()
                                     ->end()
                                 ->end()
                             ->end()

@@ -58,6 +58,7 @@ services:
         public: true
         arguments: []
 
+    Videni\Bundle\RestBundle\Form\FormHandler: ~
 
 
 

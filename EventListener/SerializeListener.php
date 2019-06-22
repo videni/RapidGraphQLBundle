@@ -44,9 +44,7 @@ class SerializeListener
         }
 
         $operationConfig = $context->getOperation();
-
         $serializationContext = new SerializationContext();
-
         if ($normailzationConfig = $operationConfig->getActionAttribute($context->getActionName(), 'normalization_context', true)) {
             $serializationContext
                 ->setSerializeNull(true)
@@ -55,6 +53,10 @@ class SerializeListener
                 ->setAttribute('section', $normailzationConfig->getSection())
                 ->setAttribute('extra_context', new \ArrayObject())
             ;
+
+            if($normailzationConfig->getVersion()) {
+                $serializationContext->setVersion($normailzationConfig->getVersion());
+            }
         }
 
         $serializationEvent = new SerializationContextEvent($serializationContext, $context);

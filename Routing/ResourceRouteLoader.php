@@ -113,15 +113,21 @@ final class ResourceRouteLoader extends Loader
 
         $defaultMethods = ActionTypes::getMethods($action);
 
-        $route = new Route(
-            $path,
+        $defaults = array_merge_recursive(
             [
+                'version' => $this->container->getParameter('videni_rest.api_version'),
                 '_controller' => $controller,
                 '_format' => null,
                 '_action' => $action,
                 '_api_operation_name' => $operationName,
                 '_api_action_name' => $actionName,
-            ] + $actionConfig->getDefaults(),
+            ],
+            $actionConfig->getDefaults()
+        );
+
+        $route = new Route(
+            $path,
+            $defaults,
             $actionConfig->getRequirements() ?? [],
             [],
             '',

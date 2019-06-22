@@ -19,6 +19,8 @@ class Serialization extends \ArrayObject
 
     private $section = null;
 
+    private $version = null;
+
     public function __construct(array $param = [])
     {
         $this->serializationGroup = new SerializationGroup($param);
@@ -74,6 +76,9 @@ class Serialization extends \ArrayObject
         if (isset($config['section'])) {
             $self->setSection($config['section']);
         }
+        if (isset($config['version'])) {
+            $self->setVersion($config['version']);
+        }
 
         return $self;
     }
@@ -123,6 +128,26 @@ class Serialization extends \ArrayObject
     public function setSection($section)
     {
         $this->section = $section;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     *
+     * @return self
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
 
         return $this;
     }

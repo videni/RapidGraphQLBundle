@@ -47,6 +47,7 @@ class VideniRestExtension extends Extension
         DependencyInjectionUtil::setConfig($container, $config);
 
         $container->setParameter('videni_rest.exception_to_status', $config['exception_to_status']);
+        $container->setParameter('videni_rest.api_version', $config['api_version']);
     }
 
     /**
