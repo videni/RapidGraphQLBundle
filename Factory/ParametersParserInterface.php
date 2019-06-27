@@ -15,4 +15,7 @@ interface ParametersParserInterface
      * @return array
      */
     public function parseRequestValues(array $parameters, Request $request): array;
+
+    public function parseRequestValueExpression(string $expression, Request $request);
 }
+

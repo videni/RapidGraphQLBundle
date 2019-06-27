@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage;
+use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
 
 class ExpressionResourceProvider implements ResourceProviderInterface
 {
-    private $container;
-    private $expression;
+    private $parser;
 
-    public function __construct(ContainerInterface $container, ExpressionLanguage $expression)
+    public function __construct(ParametersParserInterface $parser)
     {
-        $this->container = $container;
-        $this->expression = $expression;
+        $this->parser = $parser;
     }
 
     public function supports(ResourceContext $context, Request $request)
@@ -32,10 +29,6 @@ class ExpressionResourceProvider implements ResourceProviderInterface
         $providerConfig = $context->getAction()->getResourceProvider();
         $id = $providerConfig->getId();
 
-        return $this->expression->evaluate(
-            substr($id, 5), [
-                'container' => $this->container
-           ]
-       );
+        return $this->parser->parseRequestValueExpression(substr($id, 5), $request);
     }
 }

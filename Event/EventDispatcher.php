@@ -49,4 +49,19 @@ final class EventDispatcher implements EventDispatcherInterface
 
         return $event;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dispatchResourcePostResolveEvent(
+        string $eventName,
+        Resource $resourceConifig,
+        $resource
+    ): ResourceEvent {
+        $event = new ResourceEvent($resource);
+
+        $this->eventDispatcher->dispatch(sprintf('%s.%s.resource.post_resolve.%s', $resourceConifig->getScope(), $resourceConifig->getShortName(), $eventName), $event);
+
+        return $event;
+    }
 }

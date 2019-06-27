@@ -19,7 +19,9 @@ services:
     Videni\Bundle\RestBundle\Factory\ResourceFactory: ~
 
     Videni\Bundle\RestBundle\Factory\ParametersParser:
-        arguments: ['@service_container', '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage']
+        arguments:
+            - '@service_container'
+            - '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage'
 
     Videni\Bundle\RestBundle\Factory\ParametersParserInterface: '@Videni\Bundle\RestBundle\Factory\ParametersParser'
 
@@ -59,6 +61,3 @@ services:
         arguments: []
 
     Videni\Bundle\RestBundle\Form\FormHandler: ~
-
-
-

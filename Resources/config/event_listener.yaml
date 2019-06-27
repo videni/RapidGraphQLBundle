@@ -13,10 +13,7 @@ services:
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider:
-        arguments:
-            - '@service_container'
-            - '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage'
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider: ~
 
     Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider:
         calls:
