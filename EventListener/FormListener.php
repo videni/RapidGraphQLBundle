@@ -23,6 +23,7 @@ use Videni\Bundle\RestBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use Videni\Bundle\RestBundle\Serializer\UiSchema;
 
 final class FormListener
 {
@@ -136,13 +137,17 @@ final class FormListener
 
     protected function createFormSchema(FormInterface $form)
     {
-       return [
-            'form' => [
-                'data' => $form->createView(),
-                'schema' => $this->liform->transform($form),
-            ],
-        ];
+        $schema = $this->liform->transform($form);
+        $uiSchema = UiSchema::extract($schema);
+
+        return [ 'form' => [
+            'data' => $form->createView(),
+            'schema' => $schema,
+            'uiSchema' => $uiSchema,
+        ]];
     }
+
+
 
     /**
      * @param FormContext            $context
