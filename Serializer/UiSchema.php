@@ -3,6 +3,30 @@
 namespace Videni\Bundle\RestBundle\Serializer;
 
 class UiSchema {
+    /**
+     *  Extract ui schema from form schema, this will mutate the formSchema parameter.
+     *  for example:
+     * {
+     *    "title": "product",
+     *    "type": "object",
+     *    "properties": {
+     *        "name": {
+     *            "type": "string",
+     *            "title": "Name",
+     *            "propertyOrder": 1,
+     *            "ui": {
+     *                "disabled": true
+     *            }
+     *        }
+     *    }
+     * }
+     *
+     *  the ui key will be removed
+     *
+     * @param  array  &$formSchema
+     *
+     * @return array
+     */
     public static function extract(array &$formSchema) {
         $type = $formSchema['type'];
 
@@ -15,7 +39,7 @@ class UiSchema {
         }
 
         if (in_array($type, ['number', 'boolean', 'integer', 'number', 'string'])) {
-            return self::extractStringLike($formSchema);
+            return self::extractUiOptions($formSchema);
         }
 
         throw new \Exception(sprintf(
@@ -30,41 +54,41 @@ class UiSchema {
         $uiSchema = null;
 
         if (isset($formSchema['properties'])) {
-            foreach($formSchema['properties'] as $propertyName => $property) {
+            $properties = &$formSchema['properties'];
+            foreach($properties as $propertyName => &$property) {
                 $data = self::extract($property);
                 if (!empty($data)) {
                     $uiSchema[$propertyName] = $data;
                 }
             }
-        } else if (isset($formSchema['anyOf'])|| isset($formSchema['oneOf'])) {
-            $anyOf = $formSchema['anyOf'] || $formSchema['oneOf'];
-            foreach($anyOf as $any) {
-                $uiSchema[] = self::extract($any);
-            }
+        } else if (isset($formSchema['anyOf'])) {
+            $uiSchema = self::extractOneOf($formSchema['anyOf']);
+        }else if (isset($formSchema['oneOf'])) {
+            $uiSchema = self::extractOneOf($formSchema['oneOf']);
         }
 
-        return $uiSchema;
+        return self::extractUiOptions($formSchema)+ $uiSchema;
     }
 
     protected static function extractArray(array &$formSchema) {
         $uiSchema = [];
 
-        $items = $formSchema['items'];
-        if(self::isIndexedArray($items)) {
-            foreach($items as $item) {
-                $uiSchema[]= self::extract($item);
+        $items = &$formSchema['items'];
+        if(self::isIndexedArray($items)) { // json array schema
+            foreach($items as &$item) {
+                $uiSchema['items'][]= self::extract($item);
             }
         } else if (isset($items['$ref'])) {
             //@todo: array ref
             throw new \RuntimeException('$ref is not implemented yet');
-        } else {
-            $uiSchema = self::extract($formSchema['items']);
+        } else { // json object schema
+            $uiSchema['items'] = self::extract($formSchema['items']);
         }
 
-        return $uiSchema;
+        return self::extractUiOptions($formSchema) + $uiSchema;
     }
 
-    protected static function extractStringLike(array &$formSchema) {
+    protected static function extractUiOptions(array &$formSchema) {
         $uiSchema = [];
 
         if (isset($formSchema['widget'])) {
@@ -81,6 +105,16 @@ class UiSchema {
             }
 
             unset($formSchema['ui']);
+        }
+
+        return $uiSchema;
+    }
+
+    private static function extractOneOf(array &$oneOf) {
+        $uiSchema = [];
+
+        foreach($oneOf as &$any) {
+            $uiSchema[] = self::extract($any);
         }
 
         return $uiSchema;

@@ -140,11 +140,11 @@ final class FormListener
         $schema = $this->liform->transform($form);
         $uiSchema = UiSchema::extract($schema);
 
-        return [ 'form' => [
-            'data' => $form->createView(),
+        return [
+            'formData' => $form->createView(),
             'schema' => $schema,
             'uiSchema' => $uiSchema,
-        ]];
+        ];
     }
 
 
