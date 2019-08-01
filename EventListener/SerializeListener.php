@@ -51,6 +51,7 @@ class SerializeListener
                 ->enableMaxDepthChecks($normailzationConfig->getEnableMaxDepth())
                 ->setGroups($normailzationConfig->getGroups())
                 ->setAttribute('section', $normailzationConfig->getSection())
+                ->setAttribute('disable_hateoas', $normailzationConfig->getDisableHateoas())
                 ->setAttribute('extra_context', new \ArrayObject())
             ;
 

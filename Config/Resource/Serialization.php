@@ -21,6 +21,8 @@ class Serialization extends \ArrayObject
 
     private $version = null;
 
+    private $disableHateoas = false;
+
     public function __construct(array $param = [])
     {
         $this->serializationGroup = new SerializationGroup($param);
@@ -78,6 +80,9 @@ class Serialization extends \ArrayObject
         }
         if (isset($config['version'])) {
             $self->setVersion($config['version']);
+        }
+        if (isset($config['disable_hateoas'])) {
+            $self->setDisableHateoas($config['disable_hateoas']);
         }
 
         return $self;
@@ -148,6 +153,26 @@ class Serialization extends \ArrayObject
     public function setVersion($version)
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisableHateoas()
+    {
+        return $this->disableHateoas;
+    }
+
+    /**
+     * @param mixed $disableHateoas
+     *
+     * @return self
+     */
+    public function setDisableHateoas($disableHateoas)
+    {
+        $this->disableHateoas = $disableHateoas;
 
         return $this;
     }
