@@ -29,7 +29,6 @@ class UiSchema {
      */
     public static function extract(array &$formSchema) {
         $type = $formSchema['type'];
-
         if ('object' === $type) {
             return self::extractObject($formSchema);
         }
@@ -51,7 +50,7 @@ class UiSchema {
 
     protected static function extractObject(array &$formSchema)
     {
-        $uiSchema = null;
+        $uiSchema = [];
 
         if (isset($formSchema['properties'])) {
             $properties = &$formSchema['properties'];
@@ -67,7 +66,7 @@ class UiSchema {
             $uiSchema = self::extractOneOf($formSchema['oneOf']);
         }
 
-        return self::extractUiOptions($formSchema)+ $uiSchema;
+        return self::extractUiOptions($formSchema) + $uiSchema;
     }
 
     protected static function extractArray(array &$formSchema) {
@@ -92,8 +91,12 @@ class UiSchema {
         $uiSchema = [];
 
         if (isset($formSchema['widget'])) {
-            $uiSchema = ['ui:widget' => $formSchema['widget'] ];
+            $uiSchema['ui:widget'] = $formSchema['widget'];
             unset($formSchema['widget']);
+        }
+        if (isset($formSchema['propertyOrder'])) {
+            $uiSchema['ui:order'] = $formSchema['propertyOrder'];
+            unset($formSchema['propertyOrder']);
         }
 
         if(isset($formSchema['ui'])) {

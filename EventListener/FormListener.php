@@ -23,15 +23,18 @@ use Videni\Bundle\RestBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use Videni\Bundle\RestBundle\Serializer\UiSchema;
+use Videni\Bundle\RestBundle\Form\FormSchemaTrait;
 
 final class FormListener
 {
+    use FormSchemaTrait {
+        FormSchemaTrait::__construct as private formSchemaTraitConstructor;
+    }
+
     private $formFactory;
     private $validator;
     private $resourceContextStorage;
     private $eventDispatcher;
-    private $liform;
 
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -41,12 +44,13 @@ final class FormListener
         EventDispatcherInterface $eventDispatcher,
         Liform $liform
     ) {
+        $this->formSchemaTraitConstructor($liform);
+
         $this->formFactory = $formFactory;
         $this->validator = $validator;
         $this->resourceContextStorage = $resourceContextStorage;
         $this->serializer = $serializer;
         $this->eventDispatcher = $eventDispatcher;
-        $this->liform = $liform;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -134,20 +138,6 @@ final class FormListener
 
         return null;
     }
-
-    protected function createFormSchema(FormInterface $form)
-    {
-        $schema = $this->liform->transform($form);
-        $uiSchema = UiSchema::extract($schema);
-
-        return [
-            'formData' => $form->createView(),
-            'schema' => $schema,
-            'uiSchema' => $uiSchema,
-        ];
-    }
-
-
 
     /**
      * @param FormContext            $context

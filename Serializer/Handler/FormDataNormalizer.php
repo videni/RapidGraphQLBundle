@@ -78,7 +78,15 @@ class FormDataNormalizer implements SubscribingHandlerInterface
                 return $formView->vars['checked'];
             }
 
-            return $formView->vars['value'];
+            // don't convert string to numeric for autocomplete
+            if (isset($formView->vars['widget_options']) && isset($formView->vars['widget_options']['autocomplete_alias'])) {
+                return $formView->vars['value'];
+            }
+
+            $value = $formView->vars['value'];
+
+            // A simple way to convert string to numeric
+            return is_numeric($value)? $value + 0: $value;
         }
     }
 
