@@ -195,6 +195,7 @@ class Operation
 
         if($actionAttribute instanceof Serialization) {
             $mergedAttribtues = $this->mergeOperationLevelAttributes($key, $actionAttribute);
+
             if($mergedAttribtues !== false) {
                 return Serialization::fromArray($mergedAttribtues);
             }
@@ -259,16 +260,16 @@ class Operation
             : null;
     }
 
-    private function mergeOperationLevelAttributes($key, $operationLevelAttribute)
+    private function mergeOperationLevelAttributes($key, $actionLevelAttribute)
     {
-        $resourceLevelAttribute  = $this->getOperationLevelAttribute($key);
+        $operationLevelAttribute  = $this->getOperationLevelAttribute($key);
 
-        if(null !== $resourceLevelAttribute) {
+        if(null !== $actionLevelAttribute) {
             return array_merge(
-                $resourceLevelAttribute->toArray(),
-                array_filter($operationLevelAttribute->toArray(),
+                $operationLevelAttribute->toArray(),
+                array_filter($actionLevelAttribute->toArray(),
                     function($value) {
-                        return !empty($value);
+                        return $value !== null;
                     }
                 )
             );
@@ -279,12 +280,12 @@ class Operation
 
     private function getOperationLevelAttribute($key)
     {
-        $resourceLevelAttribute = null;
+        $operationLevelAttribute = null;
         if ($getter = $this->getGetter($this, $key)){
-            $resourceLevelAttribute = $this->$getter();
+            $operationLevelAttribute = $this->$getter();
         }
 
-        return $resourceLevelAttribute;
+        return $operationLevelAttribute;
     }
 
     /**
