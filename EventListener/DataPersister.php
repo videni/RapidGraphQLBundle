@@ -62,5 +62,7 @@ class DataPersister
         } else {
             $em->remove($data);
         }
+
+        $em->flush();
     }
 }

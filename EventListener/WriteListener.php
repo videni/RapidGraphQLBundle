@@ -48,6 +48,7 @@ class WriteListener
         }
         if (in_array($actionType, [ActionTypes::DELETE, ActionTypes::BULK_DELETE])) {
             $this->dataPersister->remove($data);
+            $event->setControllerResult(null);
         }
 
         $this->eventDispatcher->dispatchPostEvent($actionType, $context->getResource(), $data);
