@@ -46,48 +46,34 @@ class FormDataNormalizer implements SubscribingHandlerInterface
 
     private function getValues(FormInterface $form, FormView $formView)
     {
-        if (!empty($formView->children)) {
-            if (in_array('choice', FormUtil::typeAncestry($form)) &&
-                $formView->vars['expanded']
-            ) {
-                if ($formView->vars['multiple']) {
-                    return $this->normalizeMultipleExpandedChoice($formView);
-                } else {
-                    return $this->normalizeExpandedChoice($formView);
-                }
+        if (empty($formView->children)) {
+            return $this->getTypedValue($formView);
+        } 
+
+        if (in_array('choice', FormUtil::typeAncestry($form)) &&
+            $formView->vars['expanded']
+        ) {
+            if ($formView->vars['multiple']) {
+                return $this->normalizeMultipleExpandedChoice($formView);
+            } else {
+                return $this->normalizeExpandedChoice($formView);
             }
-            // Force serialization as {} instead of []
-            $data = array();
-            foreach ($formView->children as $name => $child) {
-                $value = $child->vars['value'];
-                if (empty($child->children) && $this->isEmpty($value)) {
-                    continue;
-                }
-
-                $childValues = $this->getValues($form[$name], $child);
-                if (!$this->isEmpty($childValues)) {
-                    $data[$name] = $childValues;
-                }
-            }
-
-            return $data;
-        } else {
-            // handle separatedly the case with checkboxes, so the result is
-            // true/false instead of 1/0
-            if (isset($formView->vars['checked'])) {
-                return $formView->vars['checked'];
-            }
-
-            // don't convert string to numeric for autocomplete
-            if (isset($formView->vars['widget_options']) && isset($formView->vars['widget_options']['autocomplete_alias'])) {
-                return $formView->vars['value'];
-            }
-
-            $value = $formView->vars['value'];
-
-            // A simple way to convert string to numeric
-            return is_numeric($value)? $value + 0: $value;
         }
+        // Force serialization as {} instead of []
+        $data = array();
+        foreach ($formView->children as $name => $child) {
+            $value = $child->vars['value'];
+            if (empty($child->children) && $this->isEmpty($value)) {
+                continue;
+            }
+
+            $childValues = $this->getValues($form[$name], $child);
+            if (!$this->isEmpty($childValues)) {
+                $data[$name] = $childValues;
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -121,5 +107,31 @@ class FormDataNormalizer implements SubscribingHandlerInterface
             }
         }
         return null;
+    }
+
+    /**
+     * Symfony form transforms scalar to string, but we need to keep it is,
+     * check normToView method of Form class for more details.
+     *
+     * @param FormView $formView
+     * @return mix
+     */
+    private function getTypedValue($formView)
+    {
+        // handle separatedly the case with checkboxes, so the result is
+        // true/false instead of 1/0
+        if (isset($formView->vars['checked'])) {
+            return $formView->vars['checked'];
+        }
+
+        // don't convert string to numeric for autocomplete and select
+        if (isset($formView->vars['widget_options']) && isset($formView->vars['widget_options']['autocomplete_alias']) || isset($formView->vars['choices'])) {
+            return $formView->vars['value'];
+        }
+
+        $value = $formView->vars['value'];
+
+        // A simple way to convert string to numeric
+        return is_numeric($value)? $value + 0: $value;
     }
 }
