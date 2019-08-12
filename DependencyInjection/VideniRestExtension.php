@@ -24,6 +24,7 @@ use Videni\Bundle\RestBundle\Factory\FactoryInterface;
 use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
 use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
 use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerInterface;
 
 class VideniRestExtension extends Extension
 {
@@ -48,6 +49,11 @@ class VideniRestExtension extends Extension
 
         $container->setParameter('videni_rest.exception_to_status', $config['exception_to_status']);
         $container->setParameter('videni_rest.api_version', $config['api_version']);
+
+        $container
+            ->registerForAutoconfiguration(FormViewNormalizerInterface::class)
+            ->addTag('videni_rest.form_view.normalizer')
+            ->setPublic(false);
     }
 
     /**

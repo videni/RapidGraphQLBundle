@@ -61,3 +61,11 @@ services:
         arguments: []
 
     Videni\Bundle\RestBundle\Form\FormHandler: ~
+
+    Videni\Bundle\RestBundle\Normalizer\FormView\ChoiceFormViewNormalizer:
+        tags:
+            - { name: 'videni_rest.form_view.normalizer', priority: 1 }
+
+    Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizer: ~
+
+    Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
