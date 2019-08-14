@@ -124,7 +124,7 @@ final class FormListener
             /**
              * always use $clearMissing = false
              */
-            $isValid = $form->submit($this->prepareRequestData($request->request->all()), false)->isValid();
+            $isValid = $form->submit($this->prepareRequestData($request), false)->isValid();
             if (false === $isValid) {
                 $context->setAttribute('status_code', Response::HTTP_BAD_REQUEST);
 
@@ -158,19 +158,21 @@ final class FormListener
     }
 
     /**
-     * @param array $requestData
+     * @param array $request
      *
      * @return array
      */
-    protected function prepareRequestData(array $requestData)
+    protected function prepareRequestData(Request $request)
     {
+        $params = $request->request->all();
+
         /**
          * as Symfony Form treats false as NULL due to checkboxes
          * @see \Symfony\Component\Form\Form::submit
          * we have to convert false to its string representation here
          */
         \array_walk_recursive(
-            $requestData,
+            $params,
             function (&$value) {
                 if (false === $value) {
                     $value = 'false';
@@ -178,7 +180,7 @@ final class FormListener
             }
         );
 
-        return $requestData;
+        return array_replace_recursive($params, $request->files->all());
     }
 
     protected function createResponse(Request $request, $data, $status, SerializationContext $context = null)
