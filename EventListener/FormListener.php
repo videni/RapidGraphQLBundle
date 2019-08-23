@@ -117,8 +117,11 @@ final class FormListener
     protected function processForm(Request $request, FormInterface $form)
     {
         $context = new SerializationContext();
-        $context->setAttribute('form', $form);
-        $context->setAttribute('form_schema_on_validation_error', $request->query->get('_return_schema_on_error', false));
+        $context
+            ->setAttribute('form', $form)
+            ->setAttribute('root_entity', $request->attributes->get('data'))
+            ->setAttribute('extra_context', new \ArrayObject())
+            ->setAttribute('form_schema_on_validation_error', $request->query->get('_return_schema_on_error', false));
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
             /**

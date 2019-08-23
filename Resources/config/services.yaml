@@ -69,3 +69,13 @@ services:
     Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizer: ~
 
     Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
+
+    Videni\Bundle\RestBundle\Hateoas\Factory\LinksFactory:
+        decorates: 'hateoas.links_factory'
+        public: false
+        autowire: true
+        autoconfigure: true
+        arguments:
+            - '@hateoas.configuration.metadata_factory'
+            - '@hateoas.link_factory'
+            - '@hateoas.serializer.exclusion_manager'

@@ -81,7 +81,7 @@ class UiSchema {
             //@todo: array ref
             throw new \RuntimeException('$ref is not implemented yet');
         } else { // json object schema
-            $uiSchema['items'] = self::extract($formSchema['items']);
+            $uiSchema['items'] = (object)self::extract($formSchema['items']);
         }
 
         return self::extractUiOptions($formSchema) + $uiSchema;
