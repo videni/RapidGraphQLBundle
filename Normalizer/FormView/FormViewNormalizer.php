@@ -11,7 +11,7 @@ use JMS\Serializer\Context;
 class FormViewNormalizer
 {
     private $formViewNormalizerResolver;
-    
+
     public function __construct(FormViewNormalizerResolver $formViewNormalizerResolver)
     {
         $this->formViewNormalizerResolver = $formViewNormalizerResolver;
@@ -27,7 +27,7 @@ class FormViewNormalizer
         if ($normalizer) {
             return $normalizer->normalize($form, $formView, $context);
         }
-    
+
         // Force serialization as {} instead of []
         $data = array();
         foreach ($formView->children as $name => $child) {
@@ -35,16 +35,16 @@ class FormViewNormalizer
             if (empty($child->children) && $this->isEmpty($value)) {
                 continue;
             }
-    
+
             $childValues = $this->normalize($form[$name], $child, $context);
             if (!$this->isEmpty($childValues)) {
                 $data[$name] = $childValues;
             }
         }
-    
+
         return $data;
     }
-    
+
     /**
      * Skip empty values(null, '', [], empty ArratCollection) because
      * https://github.com/erikras/redux-form/issues/2149

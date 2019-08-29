@@ -5,6 +5,7 @@ namespace Videni\Bundle\RestBundle\EventListener;
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
+use Videni\Bundle\RestBundle\Exception\DeleteHandlingException;
 
 class DataPersister
 {
@@ -62,7 +63,10 @@ class DataPersister
         } else {
             $em->remove($data);
         }
-
-        $em->flush();
+        try {
+            $em->flush();
+        } catch(\Exception $exception) {
+            throw new DeleteHandlingException();
+        }
     }
 }

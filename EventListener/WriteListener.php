@@ -6,6 +6,9 @@ use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
 use Videni\Bundle\RestBundle\Operation\ActionTypes;
 use Videni\Bundle\RestBundle\Event\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Videni\Bundle\RestBundle\Exception\DeleteHandlingException;
 
 class WriteListener
 {
@@ -47,8 +50,20 @@ class WriteListener
             $this->dataPersister->persist($controllerResult);
         }
         if (in_array($actionType, [ActionTypes::DELETE, ActionTypes::BULK_DELETE])) {
-            $this->dataPersister->remove($data);
-            $event->setControllerResult(null);
+            try {
+                $this->dataPersister->remove($data);
+            } catch (DeleteHandlingException $exception) {
+                $code = $exception->getApiResponseCode();
+                $response =  new JsonResponse([
+                        'code' => $code,
+                        'message' => $exception->getMessage()
+                    ] ,
+                    $exception->getApiResponseCode()
+                );
+
+                $event->setControllerResult($response);
+                $event->setResponse($response);
+            }
         }
 
         $this->eventDispatcher->dispatchPostEvent($actionType, $context->getResource(), $data);
