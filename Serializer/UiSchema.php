@@ -51,7 +51,6 @@ class UiSchema {
     protected static function extractObject(array &$formSchema)
     {
         $uiSchema = [];
-
         if (isset($formSchema['properties'])) {
             $properties = &$formSchema['properties'];
             foreach($properties as $propertyName => &$property) {
@@ -65,6 +64,7 @@ class UiSchema {
         }else if (isset($formSchema['oneOf'])) {
             $uiSchema = self::extractOneOf($formSchema['oneOf']);
         }
+
 
         return self::extractUiOptions($formSchema) + $uiSchema;
     }
@@ -81,7 +81,7 @@ class UiSchema {
             //@todo: array ref
             throw new \RuntimeException('$ref is not implemented yet');
         } else { // json object schema
-            $uiSchema['items'] = (object)self::extract($formSchema['items']);
+            $uiSchema['items'] = (object)self::extract($items);
         }
 
         return self::extractUiOptions($formSchema) + $uiSchema;

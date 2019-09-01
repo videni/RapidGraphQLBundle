@@ -18,15 +18,13 @@ class RegisterFormViewNormalizerPass implements CompilerPassInterface
         $taggedServiceIds = $container->findTaggedServiceIds('videni_rest.form_view.normalizer');
 
         foreach ($taggedServiceIds as $serviceId => $tags) {
-            foreach ($tags as $tag) {
-                $chainDefinition->addMethodCall(
-                    'addNormalizer',
-                    [
-                        new Reference($serviceId),
-                        isset($tag['priority'])? $tag['priority']: 0
-                    ]
-                );
-            }
+            $chainDefinition->addMethodCall(
+                'addNormalizer',
+                [
+                    new Reference($serviceId),
+                    isset($tags[0]['priority'])? $tags[0]['priority']: 0
+                ]
+            );
         }
     }
 }
