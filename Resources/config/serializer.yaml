@@ -11,3 +11,7 @@ services:
     Videni\Bundle\RestBundle\Serializer\Handler\FormErrorNormalizer:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }
+
+    JMS\Serializer\Handler\StdClassHandler:
+        tags:
+            - { name: 'jms_serializer.subscribing_handler' }
