@@ -26,10 +26,10 @@ final class FormViewNormalizerResolver
     /**
      * {@inheritdoc}
      */
-    public function resolve(FormInterface $form, FormView $formView): ?FormViewNormalizerInterface
+    public function resolve(FormInterface $form, FormView $formView, array $ancestries): ?FormViewNormalizerInterface
     {
         foreach ($this->normalizers as $normalizer) {
-            if($normalizer->support($form, $formView)) {
+            if($normalizer->support($form, $formView, $ancestries)) {
                 return $normalizer;
             }
         }

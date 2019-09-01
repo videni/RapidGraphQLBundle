@@ -8,7 +8,7 @@ use JMS\Serializer\Context;
 
 interface FormViewNormalizerInterface
 {
-    public function support(FormInterface $form, FormView $formView);
+    public function support(FormInterface $form, FormView $formView, array $ancestries);
 
     public function normalize(FormInterface $form, FormView $formView, Context $context);
 }

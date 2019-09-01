@@ -19,11 +19,13 @@ class FormViewNormalizer
 
     public function normalize(FormInterface $form, FormView $formView, Context $context)
     {
+        $ancestries = FormUtil::typeAncestry($form);
+
         if(empty($formView->children)) {
-            return $this->getTypedValue($formView);
+            return $this->getTypedValue($formView, $ancestries);
         }
 
-        $normalizer = $this->formViewNormalizerResolver->resolve($form, $formView);
+        $normalizer = $this->formViewNormalizerResolver->resolve($form, $formView, $ancestries);
         if ($normalizer) {
             return $normalizer->normalize($form, $formView, $context);
         }
@@ -64,7 +66,7 @@ class FormViewNormalizer
      * @param FormView $formView
      * @return mix
      */
-    private function getTypedValue(FormView $formView)
+    private function getTypedValue(FormView $formView, array $ancestries)
     {
         // handle separatedly the case with checkboxes, so the result is
         // true/false instead of 1/0
@@ -78,6 +80,9 @@ class FormViewNormalizer
         }
 
         $value = $formView->vars['value'];
+        if (in_array('text', $ancestries)) {
+            return $value;
+        }
 
         // A simple way to convert string to numeric
         return is_numeric($value)? $value + 0: $value;
