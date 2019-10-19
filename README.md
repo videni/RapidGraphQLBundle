@@ -11,11 +11,6 @@ A rapid RESTfull API bundle, it can help you build your API extremely faster.
 * HAL
 * Custom paginator(filter, sorting for pagination)
 
-## Ingredients
-
-* willdurand/hateoas-bundle
-* lexik/jwt-authentication-bundle
-
 ## Usage
 
 1.  Specify bundles for API resources descovery

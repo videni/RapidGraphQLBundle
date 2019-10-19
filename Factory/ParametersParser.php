@@ -6,7 +6,6 @@ namespace Videni\Bundle\RestBundle\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\HttpFoundation\Request;
 use Webmozart\Assert\Assert;
 
 final class ParametersParser implements ParametersParserInterface
@@ -34,27 +33,27 @@ final class ParametersParser implements ParametersParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parseRequestValues(array $parameters, Request $request): array
+    public function parseRequestValues(array $parameters, callable $getter): array
     {
-        return array_map(function ($parameter) use ($request) {
+        return array_map(function ($parameter) use ($getter) {
             if (is_array($parameter)) {
-                return $this->parseRequestValues($parameter, $request);
+                return $this->parseRequestValues($parameter, $getter);
             }
 
-            return $this->parseRequestValue($parameter, $request);
+            return $this->parseRequestValue($parameter, $getter);
         }, $parameters);
     }
 
      /**
      * @param string $expression
-     * @param Request $request
+     * @param callable $getter
      *
      * @return mixed
      */
-    public function parseRequestValueExpression(string $expression, Request $request)
+    public function parseRequestValueExpression(string $expression, callable $getter)
     {
-        $expression = preg_replace_callback('/(\$\w+)/', function ($matches) use ($request) {
-            $variable = $request->get(substr($matches[1], 1));
+        $expression = preg_replace_callback('/(\$\w+)/', function ($matches) use ($getter) {
+            $variable = \call_user_func($getter, substr($matches[1], 1));
 
             if (is_array($variable) || is_object($variable)) {
                 throw new \InvalidArgumentException(sprintf(
@@ -72,26 +71,26 @@ final class ParametersParser implements ParametersParserInterface
 
     /**
      * @param mixed $parameter
-     * @param Request $request
+     * @param callable $getter
      *
      * @return mixed
      */
-    private function parseRequestValue($parameter, Request $request)
+    private function parseRequestValue($parameter, callable $getter)
     {
         if (!is_string($parameter)) {
             return $parameter;
         }
 
         if (0 === strpos($parameter, '$')) {
-            return $request->get(substr($parameter, 1));
+            return \call_user_func($getter, substr($parameter, 1));
         }
 
         if (0 === strpos($parameter, 'expr:')) {
-            return $this->parseRequestValueExpression(substr($parameter, 5), $request);
+            return $this->parseRequestValueExpression(substr($parameter, 5), $getter);
         }
 
         if (0 === strpos($parameter, '!!')) {
-            return $this->parseRequestValueTypecast($parameter, $request);
+            return $this->parseRequestValueTypecast($parameter, $getter);
         }
 
         return $parameter;
@@ -99,11 +98,11 @@ final class ParametersParser implements ParametersParserInterface
 
     /**
      * @param mixed $parameter
-     * @param Request $request
+     * @param callable $getter
      *
      * @return mixed
      */
-    private function parseRequestValueTypecast($parameter, Request $request)
+    private function parseRequestValueTypecast($parameter, callable $getter)
     {
         [$typecast, $castedValue] = explode(' ', $parameter, 2);
 
@@ -111,6 +110,6 @@ final class ParametersParser implements ParametersParserInterface
 
         Assert::oneOf($castFunctionName, ['intval', 'floatval', 'boolval'], 'Variable can be casted only to int, float or bool.');
 
-        return $castFunctionName($this->parseRequestValue($castedValue, $request));
+        return $castFunctionName($this->parseRequestValue($castedValue, $getter));
     }
 }

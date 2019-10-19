@@ -26,14 +26,8 @@ final class ResolveFormEvent extends Event
      */
     protected $form;
 
-    /**
-     * @param FormInterface $form
-     * @param mixed         $data
-     * @param ResourceContext         $context
-     */
-    public function __construct(FormInterface $form, $data, ResourceContext $context, Request $request)
+    public function __construct($data, ResourceContext $context, Request $request)
     {
-        $this->form = $form;
         $this->data = $data;
         $this->context = $context;
         $this->request = $request;
@@ -89,5 +83,17 @@ final class ResolveFormEvent extends Event
     public function getRequest(): Request
     {
         return $this->request;
+    }
+
+    /**
+     * @param  FormInterface  $form
+     *
+     * @return  self
+     */
+    public function setForm(FormInterface $form)
+    {
+        $this->form = $form;
+
+        return $this;
     }
 }

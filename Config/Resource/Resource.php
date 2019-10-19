@@ -2,8 +2,6 @@
 
 namespace Videni\Bundle\RestBundle\Config\Resource;
 
-use Videni\Bundle\RestBundle\Config\Form\FormFieldConfig;
-
 class Resource
 {
     private $scope;

@@ -17,6 +17,5 @@ class VideniRestBundle extends Bundle
 
         $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
         $container->addCompilerPass(new Compiler\RegisterFormViewNormalizerPass());
-        $container->addCompilerPass(new Compiler\HateoasConfigurationExtensionPass());
     }
 }

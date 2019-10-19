@@ -1,10 +1,9 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\EventListener;
+namespace Videni\Bundle\RestBundle\Resolver;
 
 use Videni\Bundle\RestBundle\Util\DoctrineHelper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\Common\Persistence\ObjectManager as DoctrineObjectManager;
 use Videni\Bundle\RestBundle\Exception\DeleteHandlingException;
 
 class DataPersister

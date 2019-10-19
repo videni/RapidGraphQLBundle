@@ -1,14 +1,9 @@
 imports:
-    - { resource: 'routing.yaml'}
     - { resource: 'serializer.yaml'}
-    - { resource: 'action.yaml'}
     - { resource: 'security.yaml'}
-    - { resource: 'event_listener.yaml'}
 
 parameters:
-    videni_rest.formats:
-        json:
-           - 'application/json'
+    videni_rest.data_persister.class: Videni\Bundle\RestBundle\Resolver\DataPersister
 
 services:
     _defaults:
@@ -26,19 +21,6 @@ services:
     Videni\Bundle\RestBundle\Factory\ParametersParserInterface: '@Videni\Bundle\RestBundle\Factory\ParametersParser'
 
     Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
-
-    Videni\Bundle\RestBundle\Validator\Validator:
-        arguments: ['@validator', '@service_container']
-
-    Videni\Bundle\RestBundle\Validator\ValidatorInterface: '@Videni\Bundle\RestBundle\Validator\Validator'
-
-    Videni\Bundle\RestBundle\Hateoas\Representation\Factory\PagerfantaFactory: ~
-
-    Videni\Bundle\RestBundle\Provider\FormatsProvider:
-        arguments:
-            - '%videni_rest.formats%'
-
-    Videni\Bundle\RestBundle\Provider\FormatsProviderInterface: '@Videni\Bundle\RestBundle\Provider\FormatsProvider'
 
     Videni\Bundle\RestBundle\Event\EventDispatcher:
         arguments:
@@ -70,12 +52,47 @@ services:
 
     Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
 
-    Videni\Bundle\RestBundle\Hateoas\Factory\LinksFactory:
-        decorates: 'hateoas.links_factory'
-        public: false
-        autowire: true
-        autoconfigure: true
+    Videni\Bundle\RestBundle\Resolver\DataPersister:
+        class: '%videni_rest.data_persister.class%'
+
+    Videni\Bundle\RestBundle\Resolver\FormHandler: ~
+
+    Videni\Bundle\RestBundle\Resolver\ResourceContextResolver: ~
+
+# Resource provider
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
+
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider: ~
+
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider:
         arguments:
-            - '@hateoas.configuration.metadata_factory'
-            - '@hateoas.link_factory'
-            - '@hateoas.serializer.exclusion_manager'
+            - '@service_container'
+            - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'
+            - '@Doctrine\Common\Persistence\ManagerRegistry'
+
+    Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider:
+        calls:
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider', 5]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider', 0]]
+            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider', -5]]
+
+# Resolver
+    Videni\Bundle\RestBundle\Resolver\Update:
+        tags:
+            - { name: overblog_graphql.mutation, alias: update }
+
+    Videni\Bundle\RestBundle\Resolver\Create:
+        tags:
+            - { name: overblog_graphql.mutation, alias: create }
+
+    Videni\Bundle\RestBundle\Resolver\Delete:
+        tags:
+            - { name: overblog_graphql.mutation, alias: delete }
+
+    Videni\Bundle\RestBundle\Resolver\Index:
+        tags:
+            - { name: overblog_graphql.resolver, alias: index }
+
+    Videni\Bundle\RestBundle\Resolver\View:
+        tags:
+            - { name: overblog_graphql.resolver, alias: view }

@@ -7,9 +7,6 @@ class Operation
     private $actions = [];
     private $resource;
 
-    private $formats = null;
-    private $routePrefix;
-
     private $validationGroups = null;
     private $normalizationContext = null;
 
@@ -110,46 +107,6 @@ class Operation
         unset($this->actions[$actionName]);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRoutePrefix()
-    {
-        return $this->routePrefix;
-    }
-
-    /**
-     * @param mixed $routePrefix
-     *
-     * @return self
-     */
-    public function setRoutePrefix($routePrefix)
-    {
-        $this->routePrefix = $routePrefix;
-
-        return $this;
-    }
-
-        /**
-     * @return mixed
-     */
-    public function getFormats()
-    {
-        return $this->formats;
-    }
-
-    /**
-     * @param mixed $formats
-     *
-     * @return self
-     */
-    public function setFormats($formats)
-    {
-        $this->formats = $formats;
-
-        return $this;
-    }
-
      /**
      * @param mixed $validationGroups
      *
@@ -168,18 +125,6 @@ class Operation
     public function getValidationGroups()
     {
         return $this->validationGroups;
-    }
-
-    public function setNormalizationContext(?Serialization $normalizationContext)
-    {
-        $this->normalizationContext = $normalizationContext;
-
-        return $this;
-    }
-
-    public function getNormalizationContext(): ?Serialization
-    {
-        return $this->normalizationContext;
     }
 
     public function getActionAttribute(string $actionName, string $key, $fallback = false)
@@ -220,20 +165,11 @@ class Operation
     {
         $operationConfig = new self();
 
-        if (array_key_exists('normalization_context', $config)) {
-            $operationConfig->setNormalizationContext(Serialization::fromArray($config['normalization_context']));
-        }
         if (array_key_exists('validation_groups', $config)) {
             $operationConfig->setValidationGroups($config['validation_groups']);
         }
-        if (array_key_exists('formats', $config)) {
-            $operationConfig->setFormats($config['formats']);
-        }
         if (array_key_exists('resource', $config)) {
             $operationConfig->setResource($config['resource']);
-        }
-        if (array_key_exists('route_prefix', $config)) {
-            $operationConfig->setRoutePrefix($config['route_prefix']);
         }
         if (array_key_exists('actions', $config)) {
             foreach ($config['actions'] as $actionName => $actionConfig) {

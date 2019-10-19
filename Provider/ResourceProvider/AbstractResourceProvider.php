@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
 use Videni\Bundle\RestBundle\Config\Resource\Service;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Factory\FactoryInterface;
 
 abstract class AbstractResourceProvider implements ResourceProviderInterface
 {
@@ -26,12 +22,17 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
         $this->parametersParser = $parametersParser;
     }
 
-    public function getResource(ResourceContext $context, Request $request)
+    public function getResource(ResourceContext $context, callable $getter)
     {
         /** @var Service */
         $providerConfig = $context->getAction()->getResourceProvider();
         if (null === $providerConfig) {
-            throw new \RuntimeException(sprintf('No resource provider found for class %s', $context->getClassName()));
+            throw new \RuntimeException(sprintf(
+                'No resource provider found for resource %s operation %s action %s',
+                $context->getClassName(),
+                $context->getOperationName(),
+                $context->getAction()
+            ));
         }
 
         if (!$this->container->has($providerConfig->getId())) {
@@ -43,26 +44,26 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
             );
         }
 
-        $providerInstance = $this->container->get($providerConfig->getId());
+        $providerService = $this->container->get($providerConfig->getId());
 
-        $method = $this->getMethod($providerInstance, $providerConfig);
-        $arguments = $this->getArguments($request, $providerConfig);
+        $method = $this->getMethod($providerService, $providerConfig);
+        $arguments = $this->getArguments($getter, $providerConfig);
 
-        return $providerConfig->getSpreadArguments() ? $providerInstance->$method(...array_values($arguments)) : $providerInstance->$method($arguments);
+        return $providerConfig->getSpread() ? $providerService->$method(...array_values($arguments)) : $providerService->$method($arguments);
     }
 
-    protected function getMethod($providerInstance, Service $providerConfig): string
+    protected function getMethod($providerService, Service $providerConfig): string
     {
         return $providerConfig->getMethod();
     }
 
-    protected function getArguments(Request $request, Service $providerConfig): array
+    protected function getArguments(callable $getter, Service $providerConfig): array
     {
         $arguments = $providerConfig->getArguments() ?? [];
         if (!is_array($arguments)) {
             $arguments = [$arguments];
         }
 
-        return $this->parametersParser->parseRequestValues($arguments, $request);
+        return $this->parametersParser->parseRequestValues($arguments, $getter);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
 
-use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RestBundle\Context\ResourceContext;
 use Zend\Stdlib\PriorityQueue;
 
@@ -29,13 +28,13 @@ class ChainResourceProvider
         $this->providers->insert($orderProcessor, $priority);
     }
 
-    public function getResource(ResourceContext $context, Request $request)
+    public function getResource(ResourceContext $context, callable $getter)
     {
         foreach($this->providers as $provider) {
-            if (!$provider->supports($context, $request)) {
+            if (!$provider->supports($context)) {
                 continue;
             }
-            $resource = $provider->getResource($context, $request);
+            $resource = $provider->getResource($context, $getter);
             if(null !== $resource) {
                 return $resource;
             }

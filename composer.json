@@ -15,16 +15,14 @@
         "php": "^7.1.3",
         "oro/config": "^1.0@dev",
         "oro/doctrine-utils": "^1.0@dev",
-        "pagerfanta/pagerfanta": "^2.0",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "^4.1",
         "symfony/validator": "^4.1",
         "symfony/yaml": "^4.1",
-        "willdurand/hateoas-bundle": "^2.0",
-        "willdurand/negotiation": "^2.3",
         "zendframework/zend-stdlib": "^3.2",
         "pintushi/grid-bundle": "^1.0@dev",
-        "limenius/liform-bundle": "^0.13.0"
+        "limenius/liform-bundle": "^0.13.0",
+        "overblog/graphql-bundle": "^0.12.3"
     },
     "repositories": [
         {

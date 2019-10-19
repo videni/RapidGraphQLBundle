@@ -12,15 +12,18 @@ use JMS\Serializer\SerializationContext;
 
 class FormHandler
 {
+    use FormSchemaTrait {
+        FormSchemaTrait::__construct as private formSchemaTraitConstructor;
+    }
     protected $serializer;
-    protected $liform;
 
     public function __construct(
         SerializerInterface $serializer,
         Liform $liform
     ) {
+        $this->formSchemaTraitConstructor($liform);
+
         $this->serializer = $serializer;
-        $this->liform = $liform;
     }
 
     public function createResponse($request, $data, $status, SerializationContext $context)
@@ -46,15 +49,5 @@ class FormHandler
         $context->setAttribute('form_schema_on_validation_error', true);
 
         return $context;
-    }
-
-    public function createFormSchema(FormInterface $form)
-    {
-       return [
-            'form' => [
-                'data' => $form->createView(),
-                'schema' => $this->liform->transform($form),
-            ],
-        ];
     }
 }

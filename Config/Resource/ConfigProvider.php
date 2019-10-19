@@ -7,9 +7,9 @@ use Videni\Bundle\RestBundle\Exception\ConfigNotFoundException;
 class ConfigProvider
 {
     private $resourceConfigurations;
-    private $operationConfigurations;
-
     private $resourceConfigsCache = [];
+
+    private $operationConfigurations;
     private $operationConfigsCache = [];
 
     public function __construct(
@@ -17,7 +17,7 @@ class ConfigProvider
         array $operationConfigurations
     ) {
         $this->resourceConfigurations = $resourceConfigurations;
-        $this->opertaionConfigurations = $operationConfigurations;
+        $this->operationConfigurations = $operationConfigurations;
     }
 
     public function getResource($resourceName)
@@ -67,8 +67,8 @@ class ConfigProvider
             return  $this->operationConfigsCache[$operationName];
         }
 
-        if (isset($this->opertaionConfigurations[$operationName])) {
-            $operationConfig  = Operation::fromArray($this->opertaionConfigurations[$operationName]);
+        if (isset($this->operationConfigurations[$operationName])) {
+            $operationConfig  = Operation::fromArray($this->operationConfigurations[$operationName]);
 
             $this->operationConfigsCache[$operationName] = $operationConfig;
 
@@ -80,7 +80,7 @@ class ConfigProvider
 
     public function getAllOperations()
     {
-        foreach ($this->opertaionConfigurations as $operationName => $operationConfig) {
+        foreach ($this->operationConfigurations as $operationName => $operationConfig) {
             $this->operationConfigsCache[$operationName] = Operation::fromArray($operationConfig);
         }
 

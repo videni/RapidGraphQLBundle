@@ -47,7 +47,7 @@ class FormDataNormalizer implements SubscribingHandlerInterface
 
         $data = $this->formViewNormalizer->normalize($form, $formView, $context);
 
-        return $data;
+        return (object)$data;
     }
 
 }

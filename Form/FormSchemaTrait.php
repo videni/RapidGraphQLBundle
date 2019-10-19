@@ -17,7 +17,7 @@ trait FormSchemaTrait
         $this->liform = $liform;
     }
 
-    protected function createFormSchema(FormInterface $form)
+    public function createFormSchema(FormInterface $form)
     {
         $schema = $this->liform->transform($form);
         $uiSchema = UiSchema::extract($schema);
@@ -25,7 +25,7 @@ trait FormSchemaTrait
         return [
             'formData' => $form->createView(),
             'schema' => $schema,
-            'uiSchema' => $uiSchema,
+            'uiSchema' => (object)$uiSchema,
         ];
     }
 }

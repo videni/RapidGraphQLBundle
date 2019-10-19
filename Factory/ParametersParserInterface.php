@@ -10,12 +10,12 @@ interface ParametersParserInterface
 {
     /**
      * @param array $parameters
-     * @param Request $request
+     * @param callable $getter
      *
      * @return array
      */
-    public function parseRequestValues(array $parameters, Request $request): array;
+    public function parseRequestValues(array $parameters, callable $getter): array;
 
-    public function parseRequestValueExpression(string $expression, Request $request);
+    public function parseRequestValueExpression(string $expression, callable $getter);
 }
 

@@ -6,17 +6,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\GlobFileLoader;
-use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Oro\Component\ChainProcessor\Debug\TraceableActionProcessor;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
-use Oro\Component\ChainProcessor\Debug\TraceLogger;
 use Oro\Component\Config\Loader\ContainerBuilderAdapter;
-use Videni\Bundle\RestBundle\Decoder\ContainerDecoderProvider;
-use Videni\Bundle\RestBundle\EventListener\BodyListener;
 use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
@@ -41,14 +33,10 @@ class VideniRestExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $this->configureBodyListener($container, $config);
         $this->configureResourceProvider($container);
         $this->configureResource($container, $config['operations'], $resourceConfigs['resources']);
 
         DependencyInjectionUtil::setConfig($container, $config);
-
-        $container->setParameter('videni_rest.exception_to_status', $config['exception_to_status']);
-        $container->setParameter('videni_rest.api_version', $config['api_version']);
 
         $container
             ->registerForAutoconfiguration(FormViewNormalizerInterface::class)
@@ -84,37 +72,6 @@ class VideniRestExtension extends Extension
         );
 
         return $configs;
-    }
-
-    private function configureBodyListener($container, $config)
-    {
-        $bodyListenerDef = $container->getDefinition(BodyListener::class);
-        if (!empty($config['body_listener']['service'])) {
-            $bodyListenerDef->clearTag('kernel.event_listener');
-        }
-
-        $bodyListenerDef->replaceArgument(2, $config['body_listener']['throw_exception_on_unsupported_content_type']);
-
-        //decoder
-        $decoderProviderDef = $container->getDefinition(ContainerDecoderProvider::class);
-        $decoderProviderDef->replaceArgument(1, $config['body_listener']['decoders']);
-
-        $decoderServicesMap = array();
-        foreach ($config['body_listener']['decoders'] as $id) {
-            $decoderServicesMap[$id] = new Reference($id);
-        }
-
-        $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
-
-        $decoderProviderDef->replaceArgument(0, $decodersServiceLocator);
-
-        //normalizer
-        $arrayNormalizer = $config['body_listener']['array_normalizer'];
-
-        if (null !== $arrayNormalizer['service']) {
-            $bodyListener = $container->getDefinition('fos_rest.body_listener');
-            $bodyListener->replaceArgument(0, new Reference($arrayNormalizer['service']));
-        }
     }
 
     public function configureResourceProvider($container)

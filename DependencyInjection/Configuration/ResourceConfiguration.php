@@ -3,9 +3,7 @@
 namespace Videni\Bundle\RestBundle\DependencyInjection\Configuration;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
 use Videni\Bundle\RestBundle\Factory\Factory;
 

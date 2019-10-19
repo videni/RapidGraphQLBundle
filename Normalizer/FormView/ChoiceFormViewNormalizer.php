@@ -10,7 +10,7 @@ use JMS\Serializer\Context;
 
 class ChoiceFormViewNormalizer implements FormViewNormalizerInterface
 {
-    public function support(FormInterface $form, FormView $formView, $ancestries = [])
+    public function support(FormInterface $form, FormView $formView, array $ancestries = [])
     {
         return in_array('choice', $ancestries) &&
             $formView->vars['expanded'];
