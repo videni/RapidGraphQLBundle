@@ -18,7 +18,7 @@ use Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Configuration\ResourceC
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizerInterface;
 
-class VideniRestRapidGraphQLExtension extends Extension
+class VideniRapidGraphQLExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -42,6 +42,11 @@ class VideniRestRapidGraphQLExtension extends Extension
             ->registerForAutoconfiguration(FormViewNormalizerInterface::class)
             ->addTag('videni_rapid_graphql.form_view.normalizer')
             ->setPublic(false);
+    }
+
+    public function getAlias()
+    {
+        return Configuration::NAME;
     }
 
     /**

@@ -12,7 +12,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
-use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Service;
 use Videni\Bundle\RapidGraphQLBundle\Factory\Factory;
 use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\ServiceEntityRepository;
 use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\EntityRepository;

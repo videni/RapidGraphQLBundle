@@ -9,6 +9,8 @@ use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
 
 class Configuration implements ConfigurationInterface
 {
+    public const NAME = 'videni_rapid_graphql';
+
     public const RESOURCE_PROVIDER_KEY = 'resource_provider';
 
     private $resourceConfigs;
@@ -24,7 +26,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('videni_rapid_graphql');
+        $rootNode = $treeBuilder->root(self::NAME);
 
         $node = $rootNode
             ->children()
