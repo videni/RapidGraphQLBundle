@@ -22,7 +22,7 @@
         "zendframework/zend-stdlib": "^3.2",
         "pintushi/grid-bundle": "^1.0@dev",
         "limenius/liform-bundle": "^0.13.0",
-        "overblog/graphql-bundle": "^0.12.3"
+        "overblog/graphql-bundle": "^0.12"
     },
     "repositories": [
         {
