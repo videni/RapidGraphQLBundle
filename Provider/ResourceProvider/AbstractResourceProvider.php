@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
+namespace Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
-use Videni\Bundle\RestBundle\Config\Resource\Service;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParserInterface;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Service;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 
 abstract class AbstractResourceProvider implements ResourceProviderInterface
 {

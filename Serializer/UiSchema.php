@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Serializer;
+namespace Videni\Bundle\RapidGraphQLBundle\Serializer;
 
 class UiSchema {
     /**

@@ -1,12 +1,12 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\EventListener;
+namespace Videni\Bundle\RapidGraphQLBundle\EventListener;
 
-use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RapidGraphQLBundle\Util\DoctrineHelper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
-use Videni\Bundle\RestBundle\Security\ResourceAccessCheckerInterface;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContextStorage;
+use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DenyAccessListener

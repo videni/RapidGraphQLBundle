@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Exception;
+namespace Videni\Bundle\RapidGraphQLBundle\Exception;
 
 
 class InvalidArgumentException extends \InvalidArgumentException

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Factory;
+namespace Videni\Bundle\RapidGraphQLBundle\Factory;
 
 use Symfony\Component\HttpFoundation\Request;
 

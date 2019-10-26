@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RapidGraphQLBundle\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Util;
+namespace Videni\Bundle\RapidGraphQLBundle\Util;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;

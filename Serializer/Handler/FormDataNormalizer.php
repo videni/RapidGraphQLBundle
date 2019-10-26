@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Serializer\Handler;
+namespace Videni\Bundle\RapidGraphQLBundle\Serializer\Handler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
@@ -10,7 +10,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\Context;
-use Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizer;
+use Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizer;
 
 class FormDataNormalizer implements SubscribingHandlerInterface
 {

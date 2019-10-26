@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Doctrine\EventListener;
+namespace Videni\Bundle\RapidGraphQLBundle\Doctrine\EventListener;
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RestBundle\Resolver\DataPersister;
+use Videni\Bundle\RapidGraphQLBundle\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 
 class Delete implements MutationInterface

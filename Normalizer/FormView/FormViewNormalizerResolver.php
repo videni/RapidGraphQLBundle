@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Normalizer\FormView;
+namespace Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView;
 
 use Zend\Stdlib\PriorityQueue;
 use Symfony\Component\Form\FormInterface;

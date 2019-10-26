@@ -1,12 +1,12 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\EventListener;
+namespace Videni\Bundle\RapidGraphQLBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContextStorage;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 
 class ResourceContextListener
 {

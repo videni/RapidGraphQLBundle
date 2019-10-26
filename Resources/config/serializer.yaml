@@ -4,11 +4,11 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Serializer\Handler\FormDataNormalizer:
+    Videni\Bundle\RapidGraphQLBundle\Serializer\Handler\FormDataNormalizer:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }
 
-    Videni\Bundle\RestBundle\Serializer\Handler\FormErrorNormalizer:
+    Videni\Bundle\RapidGraphQLBundle\Serializer\Handler\FormErrorNormalizer:
         tags:
             - { name: 'jms_serializer.subscribing_handler' }
 

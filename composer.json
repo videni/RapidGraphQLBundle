@@ -1,6 +1,6 @@
 {
-    "name": "videni/rest-bundle",
-    "description": "A rapid RESTfull API bundle for Symfony4",
+    "name": "videni/rapid-graphql-bundle",
+    "description": "A rapid GraphQL bundle for Symfony4",
     "type": "symfony-bundle",
     "keywords": [ "rest", "rapid CRUD" ],
     "license": "MIT",
@@ -39,7 +39,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Videni\\Bundle\\RestBundle\\": "" }
+        "psr-4": { "Videni\\Bundle\\RapidGraphQLBundle\\": "" }
     },
      "extra": {
         "branch-alias": {

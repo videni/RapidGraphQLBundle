@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -10,12 +10,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Event\ResolveFormEvent;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use Videni\Bundle\RestBundle\Form\FormSchemaTrait;
+use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 use Overblog\GraphQLBundle\Validator\Exception\ArgumentsValidationException;
 use Symfony\Component\Validator\ConstraintViolationList;
 

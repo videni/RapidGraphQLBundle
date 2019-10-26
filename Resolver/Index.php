@@ -1,12 +1,12 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Pintushi\Bundle\GridBundle\Grid\Manager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider;
+use Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ChainResourceProvider;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 
 class Index implements ResolverInterface

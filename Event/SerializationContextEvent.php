@@ -1,14 +1,14 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Event;
+namespace Videni\Bundle\RapidGraphQLBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use JMS\Serializer\Context;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 
 class SerializationContextEvent extends Event
 {
-    const EVENT_NAME = 'videni_rest.serialization_context';
+    const EVENT_NAME = 'videni_rapid_graphql.serialization_context';
 
     protected $context;
 

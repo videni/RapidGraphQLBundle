@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
+namespace Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider;
 
-use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Zend\Stdlib\PriorityQueue;
 
 class ChainResourceProvider

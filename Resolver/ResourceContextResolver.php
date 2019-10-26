@@ -1,11 +1,11 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider;
-use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ChainResourceProvider;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
 
 class ResourceContextResolver
 {

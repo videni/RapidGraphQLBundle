@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
+namespace Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider;
 
-use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Factory\ParametersParserInterface;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParserInterface;
 
 class ExpressionResourceProvider implements ResourceProviderInterface
 {

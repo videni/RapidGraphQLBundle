@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Normalizer\Exception;
+namespace Videni\Bundle\RapidGraphQLBundle\Normalizer\Exception;
 
 /**
  * Exception thrown when the normalization failed.

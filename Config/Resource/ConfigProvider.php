@@ -1,8 +1,8 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Config\Resource;
+namespace Videni\Bundle\RapidGraphQLBundle\Config\Resource;
 
-use Videni\Bundle\RestBundle\Exception\ConfigNotFoundException;
+use Videni\Bundle\RapidGraphQLBundle\Exception\ConfigNotFoundException;
 
 class ConfigProvider
 {

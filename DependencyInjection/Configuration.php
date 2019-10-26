@@ -1,11 +1,11 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RapidGraphQLBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Doctrine\Common\Inflector\Inflector;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
+use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
 
 class Configuration implements ConfigurationInterface
 {
@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('videni_rest');
+        $rootNode = $treeBuilder->root('videni_rapid_graphql');
 
         $node = $rootNode
             ->children()

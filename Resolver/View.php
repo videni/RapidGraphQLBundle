@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;

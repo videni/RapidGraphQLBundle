@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Security;
+namespace Videni\Bundle\RapidGraphQLBundle\Security;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 

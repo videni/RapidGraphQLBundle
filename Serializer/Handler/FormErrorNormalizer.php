@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Serializer\Handler;
+namespace Videni\Bundle\RapidGraphQLBundle\Serializer\Handler;
 
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;

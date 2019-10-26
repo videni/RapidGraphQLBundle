@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Doctrine\EventListener;
+namespace Videni\Bundle\RapidGraphQLBundle\Doctrine\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\Mapping\ReflectionService;
 use Doctrine\Common\Persistence\Mapping\RuntimeReflectionService;
-use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
-use Videni\Bundle\RestBundle\Model\ResourceInterface;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Model\ResourceInterface;
 
 abstract class AbstractDoctrineSubscriber implements EventSubscriber
 {

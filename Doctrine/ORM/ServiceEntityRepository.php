@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Doctrine\ORM;
+namespace Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM;
 
 use Doctrine\ORM\QueryBuilder;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;

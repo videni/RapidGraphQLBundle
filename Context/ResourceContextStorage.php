@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Context;
+namespace Videni\Bundle\RapidGraphQLBundle\Context;
 
 class ResourceContextStorage
 {

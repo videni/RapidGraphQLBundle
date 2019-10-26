@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\EventListener;
+namespace Videni\Bundle\RapidGraphQLBundle\EventListener;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -14,16 +14,16 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Videni\Bundle\RestBundle\Context\ResourceContextStorage;
-use Videni\Bundle\RestBundle\Validator\Exception\ValidationException;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Event\ResolveFormEvent;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContextStorage;
+use Videni\Bundle\RapidGraphQLBundle\Validator\Exception\ValidationException;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
+use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
+use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use Videni\Bundle\RestBundle\Form\FormSchemaTrait;
+use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 
 final class FormListener
 {

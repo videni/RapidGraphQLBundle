@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Security;
+namespace Videni\Bundle\RapidGraphQLBundle\Security;
 
 /**
  * Checks if the logged user has sufficient permissions to access the given resource.

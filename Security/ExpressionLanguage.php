@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Security;
+namespace Videni\Bundle\RapidGraphQLBundle\Security;
 
 use Symfony\Component\Security\Core\Authorization\ExpressionLanguage as BaseExpressionLanguage;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\DependencyInjection\ExpressionLanguageProvider;
-use Videni\Bundle\RestBundle\ExpressionLanguage\NotNullExpressionFunctionProvider;
+use Videni\Bundle\RapidGraphQLBundle\ExpressionLanguage\NotNullExpressionFunctionProvider;
 
 /**
  * Adds some function to the default Symfony Security ExpressionLanguage.

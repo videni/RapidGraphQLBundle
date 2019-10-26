@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Model;
+namespace Videni\Bundle\RapidGraphQLBundle\Model;
 
 interface ResourceInterface
 {

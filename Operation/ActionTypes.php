@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Operation;
+namespace Videni\Bundle\RapidGraphQLBundle\Operation;
 
 final class ActionTypes
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\DependencyInjection\Configuration;
+namespace Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Configuration;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
-use Videni\Bundle\RestBundle\Factory\Factory;
+use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RapidGraphQLBundle\Factory\Factory;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
@@ -59,7 +59,7 @@ class ResourceConfiguration implements ConfigurationInterface
             ->useAttributeAsKey('resource_name')
             ->arrayPrototype()
                 ->children()
-                    ->scalarNode('scope')->defaultValue('videni_rest')->cannotBeEmpty()->end()
+                    ->scalarNode('scope')->defaultValue('videni_rapid_graphql')->cannotBeEmpty()->end()
                     ->scalarNode('short_name')->end()
                     ->arrayNode('form')
                         ->beforeNormalization()

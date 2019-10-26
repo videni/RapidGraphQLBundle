@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Form;
+namespace Videni\Bundle\RapidGraphQLBundle\Form;
 
 use Limenius\Liform\Liform;
-use Videni\Bundle\RestBundle\Serializer\UiSchema;
+use Videni\Bundle\RapidGraphQLBundle\Serializer\UiSchema;
 use Symfony\Component\Form\FormInterface;
 
 trait FormSchemaTrait

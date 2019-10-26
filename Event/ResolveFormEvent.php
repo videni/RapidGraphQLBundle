@@ -1,17 +1,17 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Event;
+namespace Videni\Bundle\RapidGraphQLBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Form\FormInterface;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ResolveFormEvent extends Event
 {
-    const BEFORE_RESOLVE = 'videni_rest.resolve_form.before';
-    const AFTER_RESOLVE  = 'videni_rest.resolve_form.after';
+    const BEFORE_RESOLVE = 'videni_rapid_graphql.resolve_form.before';
+    const AFTER_RESOLVE  = 'videni_rapid_graphql.resolve_form.after';
 
     protected $context;
 

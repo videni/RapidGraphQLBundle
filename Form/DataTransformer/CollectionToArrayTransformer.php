@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Form\DataTransformer;
+namespace Videni\Bundle\RapidGraphQLBundle\Form\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\DataTransformerInterface;

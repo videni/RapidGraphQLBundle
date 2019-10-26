@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Normalizer\FormView;
+namespace Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormView;

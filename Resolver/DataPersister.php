@@ -1,10 +1,10 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
 
-use Videni\Bundle\RestBundle\Util\DoctrineHelper;
+use Videni\Bundle\RapidGraphQLBundle\Util\DoctrineHelper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Videni\Bundle\RestBundle\Exception\DeleteHandlingException;
+use Videni\Bundle\RapidGraphQLBundle\Exception\DeleteHandlingException;
 
 class DataPersister
 {

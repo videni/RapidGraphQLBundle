@@ -4,15 +4,15 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Security\ResourceAccessChecker:
+    Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessChecker:
         arguments:
-            - '@Videni\Bundle\RestBundle\Security\ExpressionLanguage'
+            - '@Videni\Bundle\RapidGraphQLBundle\Security\ExpressionLanguage'
             - '@service_container'
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@security.authentication.trust_resolver'
             - '@?security.role_hierarchy'
 
-    Videni\Bundle\RestBundle\Security\ResourceAccessCheckerInterface: '@Videni\Bundle\RestBundle\Security\ResourceAccessChecker'
+    Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface: '@Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessChecker'
 
-    Videni\Bundle\RestBundle\Security\ExpressionLanguage: ~
+    Videni\Bundle\RapidGraphQLBundle\Security\ExpressionLanguage: ~

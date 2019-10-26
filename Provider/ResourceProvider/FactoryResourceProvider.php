@@ -1,11 +1,11 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Provider\ResourceProvider;
+namespace Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider;
 
-use Videni\Bundle\RestBundle\Config\Resource\Service;
-use Videni\Bundle\RestBundle\Context\ResourceContext;
-use Videni\Bundle\RestBundle\Operation\ActionTypes;
-use Videni\Bundle\RestBundle\Factory\FactoryInterface;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Service;
+use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
+use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
+use Videni\Bundle\RapidGraphQLBundle\Factory\FactoryInterface;
 
 class FactoryResourceProvider extends AbstractResourceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Event;
+namespace Videni\Bundle\RapidGraphQLBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyEventDispatcherInterface;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
 
 interface EventDispatcherInterface
 {

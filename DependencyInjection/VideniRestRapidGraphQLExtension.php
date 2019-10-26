@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\DependencyInjection;
+namespace Videni\Bundle\RapidGraphQLBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -9,16 +9,16 @@ use Symfony\Component\Config\FileLocator;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\ContainerBuilderAdapter;
-use Videni\Bundle\RestBundle\Provider\ResourceProvider\ResourceProviderInterface;
-use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
-use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
-use Videni\Bundle\RestBundle\Factory\FactoryInterface;
-use Videni\Bundle\RestBundle\Util\DependencyInjectionUtil;
-use Videni\Bundle\RestBundle\DependencyInjection\Configuration\ResourceConfiguration;
-use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
-use Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerInterface;
+use Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ResourceProviderInterface;
+use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\ServiceEntityRepository;
+use Videni\Bundle\RapidGraphQLBundle\Factory\FactoryInterface;
+use Videni\Bundle\RapidGraphQLBundle\Util\DependencyInjectionUtil;
+use Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Configuration\ResourceConfiguration;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizerInterface;
 
-class VideniRestExtension extends Extension
+class VideniRestRapidGraphQLExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -40,7 +40,7 @@ class VideniRestExtension extends Extension
 
         $container
             ->registerForAutoconfiguration(FormViewNormalizerInterface::class)
-            ->addTag('videni_rest.form_view.normalizer')
+            ->addTag('videni_rapid_graphql.form_view.normalizer')
             ->setPublic(false);
     }
 
@@ -58,7 +58,7 @@ class VideniRestExtension extends Extension
 
         $config = [];
 
-        $configLoader = new CumulativeConfigLoader('videni_rest', $configFileLoaders);
+        $configLoader = new CumulativeConfigLoader('videni_rapid_graphql', $configFileLoaders);
         $resources = $configLoader->load(new ContainerBuilderAdapter($container));
         foreach ($resources as $resource) {
             if (array_key_exists(ResourceConfiguration::ROOT_NODE, $resource->data)) {
@@ -78,7 +78,7 @@ class VideniRestExtension extends Extension
     {
         $container
             ->registerForAutoconfiguration(ResourceProviderInterface::class)
-            ->addTag('videni_rest.resource_provider')
+            ->addTag('videni_rapid_graphql.resource_provider')
             ->setPublic(true)
         ;
         $container

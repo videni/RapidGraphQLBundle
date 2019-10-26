@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\DependencyInjection\Compiler;
+namespace Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -10,13 +10,13 @@ use Symfony\Component\DependencyInjection\Alias;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\Common\Inflector\Inflector;
-use Videni\Bundle\RestBundle\Config\Resource\ConfigProvider;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
-use Videni\Bundle\RestBundle\Config\Resource\Service;
-use Videni\Bundle\RestBundle\Factory\Factory;
-use Videni\Bundle\RestBundle\Doctrine\ORM\ServiceEntityRepository;
-use Videni\Bundle\RestBundle\Doctrine\ORM\EntityRepository;
-use Videni\Bundle\RestBundle\Form\Type\AbstractResourceType;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Service;
+use Videni\Bundle\RapidGraphQLBundle\Factory\Factory;
+use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\ServiceEntityRepository;
+use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\EntityRepository;
+use Videni\Bundle\RapidGraphQLBundle\Form\Type\AbstractResourceType;
 
 class RegisterResourcesCompilerPass implements CompilerPassInterface
 {

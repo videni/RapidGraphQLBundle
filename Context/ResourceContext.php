@@ -1,10 +1,10 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Context;
+namespace Videni\Bundle\RapidGraphQLBundle\Context;
 
-use Videni\Bundle\RestBundle\Config\Resource\Action;
-use Videni\Bundle\RestBundle\Config\Resource\Operation;
-use Videni\Bundle\RestBundle\Config\Resource\Resource;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Action;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Operation;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
 
 class ResourceContext
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RestBundle\Event;
+namespace Videni\Bundle\RapidGraphQLBundle\Event;
 
 use Symfony\Component\EventDispatcher\GenericEvent;
 

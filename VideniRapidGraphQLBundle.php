@@ -1,12 +1,12 @@
 <?php
 
-namespace Videni\Bundle\RestBundle;
+namespace Videni\Bundle\RapidGraphQLBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Videni\Bundle\RestBundle\DependencyInjection\Compiler;
+use Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Compiler;
 
-class VideniRestBundle extends Bundle
+class VideniRapidGraphQLBundle extends Bundle
 {
      /**
      * {@inheritdoc}

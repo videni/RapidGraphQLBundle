@@ -3,7 +3,7 @@ imports:
     - { resource: 'security.yaml'}
 
 parameters:
-    videni_rest.data_persister.class: Videni\Bundle\RestBundle\Resolver\DataPersister
+    videni_rapid_graphql.data_persister.class: Videni\Bundle\RapidGraphQLBundle\Resolver\DataPersister
 
 services:
     _defaults:
@@ -11,88 +11,88 @@ services:
         autoconfigure: true
         public: false
 
-    Videni\Bundle\RestBundle\Factory\ResourceFactory: ~
+    Videni\Bundle\RapidGraphQLBundle\Factory\ResourceFactory: ~
 
-    Videni\Bundle\RestBundle\Factory\ParametersParser:
+    Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParser:
         arguments:
             - '@service_container'
-            - '@Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage'
+            - '@Videni\Bundle\RapidGraphQLBundle\ExpressionLanguage\ExpressionLanguage'
 
-    Videni\Bundle\RestBundle\Factory\ParametersParserInterface: '@Videni\Bundle\RestBundle\Factory\ParametersParser'
+    Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParserInterface: '@Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParser'
 
-    Videni\Bundle\RestBundle\ExpressionLanguage\ExpressionLanguage: ~
+    Videni\Bundle\RapidGraphQLBundle\ExpressionLanguage\ExpressionLanguage: ~
 
-    Videni\Bundle\RestBundle\Event\EventDispatcher:
+    Videni\Bundle\RapidGraphQLBundle\Event\EventDispatcher:
         arguments:
             - "@event_dispatcher"
 
-    Videni\Bundle\RestBundle\Doctrine\EventListener\ORMMappedSuperClassSubscriber:
+    Videni\Bundle\RapidGraphQLBundle\Doctrine\EventListener\ORMMappedSuperClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}
 
-    Videni\Bundle\RestBundle\Doctrine\EventListener\ORMRepositoryClassSubscriber:
+    Videni\Bundle\RapidGraphQLBundle\Doctrine\EventListener\ORMRepositoryClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}
 
-    Videni\Bundle\RestBundle\Util\DoctrineHelper: ~
+    Videni\Bundle\RapidGraphQLBundle\Util\DoctrineHelper: ~
 
-    Videni\Bundle\RestBundle\Util\EntityClassResolver: ~
+    Videni\Bundle\RapidGraphQLBundle\Util\EntityClassResolver: ~
 
-    Videni\Bundle\RestBundle\Config\Resource\ConfigProvider:
+    Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider:
         public: true
         arguments: []
 
-    Videni\Bundle\RestBundle\Form\FormHandler: ~
+    Videni\Bundle\RapidGraphQLBundle\Form\FormHandler: ~
 
-    Videni\Bundle\RestBundle\Normalizer\FormView\ChoiceFormViewNormalizer:
+    Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\ChoiceFormViewNormalizer:
         tags:
-            - { name: 'videni_rest.form_view.normalizer', priority: 1 }
+            - { name: 'videni_rapid_graphql.form_view.normalizer', priority: 1 }
 
-    Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizer: ~
+    Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizer: ~
 
-    Videni\Bundle\RestBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
+    Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
 
-    Videni\Bundle\RestBundle\Resolver\DataPersister:
-        class: '%videni_rest.data_persister.class%'
+    Videni\Bundle\RapidGraphQLBundle\Resolver\DataPersister:
+        class: '%videni_rapid_graphql.data_persister.class%'
 
-    Videni\Bundle\RestBundle\Resolver\FormHandler: ~
+    Videni\Bundle\RapidGraphQLBundle\Resolver\FormHandler: ~
 
-    Videni\Bundle\RestBundle\Resolver\ResourceContextResolver: ~
+    Videni\Bundle\RapidGraphQLBundle\Resolver\ResourceContextResolver: ~
 
 # Resource provider
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
+    Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider: ~
+    Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ExpressionResourceProvider: ~
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider:
+    Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider:
         arguments:
             - '@service_container'
-            - '@Videni\Bundle\RestBundle\Factory\ParametersParserInterface'
+            - '@Videni\Bundle\RapidGraphQLBundle\Factory\ParametersParserInterface'
             - '@Doctrine\Common\Persistence\ManagerRegistry'
 
-    Videni\Bundle\RestBundle\Provider\ResourceProvider\ChainResourceProvider:
+    Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ChainResourceProvider:
         calls:
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\ExpressionResourceProvider', 5]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\FactoryResourceProvider', 0]]
-            - [add, ['@Videni\Bundle\RestBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider', -5]]
+            - [add, ['@Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ExpressionResourceProvider', 5]]
+            - [add, ['@Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\FactoryResourceProvider', 0]]
+            - [add, ['@Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider', -5]]
 
 # Resolver
-    Videni\Bundle\RestBundle\Resolver\Update:
+    Videni\Bundle\RapidGraphQLBundle\Resolver\Update:
         tags:
             - { name: overblog_graphql.mutation, alias: update }
 
-    Videni\Bundle\RestBundle\Resolver\Create:
+    Videni\Bundle\RapidGraphQLBundle\Resolver\Create:
         tags:
             - { name: overblog_graphql.mutation, alias: create }
 
-    Videni\Bundle\RestBundle\Resolver\Delete:
+    Videni\Bundle\RapidGraphQLBundle\Resolver\Delete:
         tags:
             - { name: overblog_graphql.mutation, alias: delete }
 
-    Videni\Bundle\RestBundle\Resolver\Index:
+    Videni\Bundle\RapidGraphQLBundle\Resolver\Index:
         tags:
             - { name: overblog_graphql.resolver, alias: index }
 
-    Videni\Bundle\RestBundle\Resolver\View:
+    Videni\Bundle\RapidGraphQLBundle\Resolver\View:
         tags:
             - { name: overblog_graphql.resolver, alias: view }

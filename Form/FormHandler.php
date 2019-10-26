@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RestBundle\Form;
+namespace Videni\Bundle\RapidGraphQLBundle\Form;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
