@@ -6,46 +6,63 @@ use Overblog\GraphQLBundle\Definition\Argument;
 use Pintushi\Bundle\GridBundle\Grid\Manager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ChainResourceProvider;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
+use Symfony\Component\HttpFoundation\Request;
+use  Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
 
 class Index implements ResolverInterface
 {
     private $gridManager;
     private $authorizationChecker;
     private $resourceContextResolver;
+    private $connectionBuilder;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
         Manager $gridManager,
-        AuthorizationCheckerInterface $authorizationChecker
+        AuthorizationCheckerInterface $authorizationChecker,
+        ConnectionBuilder $connectionBuilder = null
     ) {
         $this->resourceContextResolver = $resourceContextResolver;
         $this->gridManager = $gridManager;
         $this->authorizationChecker = $authorizationChecker;
+        $this->connectionBuilder = $connectionBuilder ?? new ConnectionBuilder();
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
+        $pagerParams = isset($args['input'])?  $args['input'] : [];
+
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
         $grid = $this->gridManager->getGrid(
             $context->getGrid(),
-            $args->getArrayCopy()
+            $pagerParams
         );
 
         /**
          * @var ResultsObject
          */
-        $data = $grid->getData();
+        $result = $grid->getData();
         $aclResource  = $grid->getConfig()->getAclResource();
 
         if($aclResource && $this->authorizationChecker->isGranted($aclResource)) {
             throw new AccessDeniedHttpException('You are not allowed to access this resource.');
         }
 
-        return $this->connectionBuilder->connectionFromArraySlice($data, $args, [
-            'sliceStart' => $data->getCursor(),
-            'arrayLength' => $data->getTotalRecords(),
-        ]);
+        $arrayLength =  isset($pagerParams['last']) ?  $result->getTotalRecords() : ($result->getCursor() + count($result->getData()));
+
+        $connection = $this
+            ->connectionBuilder
+            ->connectionFromArraySlice(
+                $result->getData(),
+                $pagerParams, [
+                    'sliceStart' =>  $result->getCursor(),
+                    'arrayLength' => $arrayLength
+                ]
+            );
+
+        $connection->setTotalCount($result->getTotalRecords());
+
+        return $connection;
     }
 }

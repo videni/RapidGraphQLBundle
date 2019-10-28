@@ -99,7 +99,7 @@ final class FormHandler
             $isValid = $form->submit($this->prepareRequestData($input, $request), false)->isValid();
             if (false === $isValid) {
                 $violations = [];
-                foreach($form->getErrors() as $error) {
+                foreach($form->getErrors(true) as $error) {
                     $violations[] = $error->getCause();
                 }
 
@@ -108,8 +108,9 @@ final class FormHandler
 
             return $form->getData();
         }
+
         //serialize form and its initial values
-        $this->serializer->serialize($this->createFormSchema($form), 'json', $context);
+        return $this->serializer->serialize($this->createFormSchema($form), 'json', $context);
     }
 
     /**

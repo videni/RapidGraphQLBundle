@@ -10,11 +10,12 @@ use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 
-class FormHandler
+class FormSchemaRespond
 {
     use FormSchemaTrait {
         FormSchemaTrait::__construct as private formSchemaTraitConstructor;
     }
+
     protected $serializer;
 
     public function __construct(

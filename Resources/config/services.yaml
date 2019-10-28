@@ -42,7 +42,7 @@ services:
         public: true
         arguments: []
 
-    Videni\Bundle\RapidGraphQLBundle\Form\FormHandler: ~
+    Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaRespond: ~
 
     Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\ChoiceFormViewNormalizer:
         tags:
