@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Videni\Bundle\RapidGraphQLBundle\Util\DoctrineHelper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

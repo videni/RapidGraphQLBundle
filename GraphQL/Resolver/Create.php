@@ -1,10 +1,10 @@
 <?php
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RapidGraphQLBundle\Resolver\DataPersister;
+use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 
 class Create implements MutationInterface

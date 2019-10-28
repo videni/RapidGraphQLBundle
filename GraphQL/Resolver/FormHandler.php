@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -15,9 +15,9 @@ use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Limenius\Liform\Liform;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 use Overblog\GraphQLBundle\Validator\Exception\ArgumentsValidationException;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 
 final class FormHandler
 {
@@ -25,9 +25,10 @@ final class FormHandler
         FormSchemaTrait::__construct as private formSchemaTraitConstructor;
     }
 
-    private $formFactory;
     private $validator;
     private $eventDispatcher;
+    private $serializer;
+    private $formFactory;
 
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -46,25 +47,30 @@ final class FormHandler
 
     public function handle($data, ResourceContext $context, array $input, Request $request)
     {
-        $resolveFormEvent = new ResolveFormEvent($data, $context, $request);
-
-        $this->eventDispatcher->dispatch(ResolveFormEvent::BEFORE_RESOLVE, $resolveFormEvent);
-
-        $form = $this->resolveForm($context, $data);
-        //pass form to controller
-        $request->attributes->set('form', $form);
-        $resolveFormEvent->setForm($form);
-
-        $this->eventDispatcher->dispatch(ResolveFormEvent::AFTER_RESOLVE, $resolveFormEvent);
-        if ($resolveFormEvent->getResponse()) {
-            return $resolveFormEvent->getResponse();
-        }
+        $form = $this->resolveForm($context, $data, $request);
 
         return $this->processForm($request, $input,  $form);
     }
 
-    protected function resolveForm(ResourceContext $context, $data)
+    public function generateFormSchema($data, ResourceContext $context, Request $request)
     {
+        $form = $this->resolveForm($context, $data, $request);
+
+        $context = new SerializationContext();
+        $context
+            ->setAttribute('form', $form)
+            ->setAttribute('extra_context', new \ArrayObject());
+
+        //serialize form and its initial values
+        return $this->serializer->serialize($this->createFormSchema($form) , 'json', $context);
+    }
+
+    protected function resolveForm(ResourceContext $context, $data, Request $request)
+    {
+        $resolveFormEvent = new ResolveFormEvent($data, $context, $request);
+
+        $this->eventDispatcher->dispatch(ResolveFormEvent::BEFORE_RESOLVE, $resolveFormEvent);
+
         $operationConfig = $context->getOperation();
 
         $formType = $context->getAction()->getForm();
@@ -81,37 +87,36 @@ final class FormHandler
             'allow_extra_fields' => true,
         ];
 
-        return $this->formFactory->create($formType, $data, $options);
+        $form = $this->formFactory->create($formType, $data, $options);
+
+        $resolveFormEvent->setForm($form);
+
+        $this->eventDispatcher->dispatch(ResolveFormEvent::AFTER_RESOLVE, $resolveFormEvent);
+
+        //pass form to controller
+        $request->attributes->set('form', $form);
+
+        return $form;
     }
 
     protected function processForm(Request $request, $input, FormInterface $form)
     {
-        $context = new SerializationContext();
-        $context
-            ->setAttribute('form', $form)
-            ->setAttribute('root_entity', $request->attributes->get('data'))
-            ->setAttribute('extra_context', new \ArrayObject());
-
-        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
-            /**
-             * always use $clearMissing = false
-             */
-            $isValid = $form->submit($this->prepareRequestData($input, $request), false)->isValid();
-            if (false === $isValid) {
-                $violations = [];
-                foreach($form->getErrors(true) as $error) {
-                    $violations[] = $error->getCause();
-                }
-
-                throw new ArgumentsValidationException(new ConstraintViolationList($violations));
+        /**
+         * always use $clearMissing = false
+         */
+        $isValid = $form->submit($this->prepareRequestData($input, $request), false)->isValid();
+        if (false === $isValid) {
+            $violations = [];
+            foreach($form->getErrors(true) as $error) {
+                $violations[] = $error->getCause();
             }
 
-            return $form->getData();
+            throw new ArgumentsValidationException(new ConstraintViolationList($violations));
         }
 
-        //serialize form and its initial values
-        return $this->serializer->serialize($this->createFormSchema($form), 'json', $context);
+        return $form->getData();
     }
+
 
     /**
      * @param FormContext            $context

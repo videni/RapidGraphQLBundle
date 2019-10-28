@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
@@ -25,6 +25,10 @@ class ResourceContextResolver
         $resource = $this->resourceFactory->getResource($context, function($parameterName) use($args) {
             if(isset($args[$parameterName])) {
                 return $args[$parameterName];
+            }
+
+            if(isset($args['input'])) {
+                return $args['input'][$parameterName];
             }
 
             return null;

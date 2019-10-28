@@ -1,6 +1,6 @@
 <?php
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Pintushi\Bundle\GridBundle\Grid\Manager;

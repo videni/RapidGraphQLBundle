@@ -1,33 +1,34 @@
 <?php
 
-namespace Videni\Bundle\RapidGraphQLBundle\Resolver;
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
 use Overblog\GraphQLBundle\Definition\Argument;
 use Symfony\Component\HttpFoundation\Request;
-use Videni\Bundle\RapidGraphQLBundle\Resolver\DataPersister;
-use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
+use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 
-class Delete implements MutationInterface
+class FormSchema implements ResolverInterface
 {
-    private $dataPersister;
     private $resourceContextResolver;
+    private $formHandler;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
-        DataPersister $dataPersister
+        FormHandler $formHandler
     ) {
-        $this->dataPersister = $dataPersister;
         $this->resourceContextResolver = $resourceContextResolver;
+        $this->formHandler = $formHandler;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $resource = $this->resourceContextResolver->resolveResource($args, $context);
+        $data = $this->resourceContextResolver->resolveResource($args, $context);
 
-        $this->dataPersister->remove($resource);
-
-        return null;
+        return $this->formHandler->generateFormSchema(
+            $data,
+            $context,
+            $request
+        );
     }
 }
