@@ -59,6 +59,13 @@ services:
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ResourceContextResolver: ~
 
+    Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver: ~
+
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ControllerExecutor:
+        arguments:
+            - '@Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver'
+            - '@argument_resolver'
+
 # Resource provider
     Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
 
@@ -77,13 +84,10 @@ services:
             - [add, ['@Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\EntityRepositoryResourceProvider', -5]]
 
 # Resolver
-    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Update:
-        tags:
-            - { name: overblog_graphql.mutation, alias: update }
-
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Create:
         tags:
             - { name: overblog_graphql.mutation, alias: create }
+            - { name: overblog_graphql.mutation, alias: update }
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Delete:
         tags:
@@ -100,3 +104,13 @@ services:
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\FormSchema:
         tags:
             - { name: overblog_graphql.resolver, alias: formSchema }
+
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Link:
+        tags:
+            - { name: overblog_graphql.resolver, alias: link }
+
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DateTime:
+        tags:
+            - { name: overblog_graphql.resolver, alias: datetime }
+
+

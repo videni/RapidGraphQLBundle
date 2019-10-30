@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition;
+
+use Overblog\GraphQLBundle\Definition\Builder\MappingInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class LinkFieldDefinition implements MappingInterface
+{
+    public function toMappingDefinition(array $config): array
+    {
+        $options = $this->configureOptions($config);
+
+        $route = $options['route'] ?? null;
+        $routeParams = $options['parameters'] ?? [];
+        $absolute = $options['absolute'];
+
+        return [
+            'type' => "String",
+            'resolve' => sprintf('@=resolver("link", [value, args, context, info, "%s"])', $route)
+        ];
+    }
+
+    protected function configureOptions(array $options)
+    {
+        $optionResolver = new OptionsResolver();
+        $optionResolver
+            ->setRequired(['route'])
+            ->setDefault('absolute', false)
+            ->setDefined(['absolute', 'parameters'])
+            ->setAllowedTypes('absolute', ['bool'])
+            ->setAllowedTypes('parameters', ['array'] )
+        ;
+
+        return $optionResolver->resolve($options);
+    }
+}
