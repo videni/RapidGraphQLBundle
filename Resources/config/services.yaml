@@ -106,6 +106,9 @@ services:
             - { name: overblog_graphql.resolver, alias: formSchema }
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Link:
+        arguments:
+            - '@router'
+            - '@overblog_graphql.expression_language'
         tags:
             - { name: overblog_graphql.resolver, alias: link }
 

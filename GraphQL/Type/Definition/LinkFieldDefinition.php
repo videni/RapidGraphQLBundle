@@ -19,7 +19,7 @@ class LinkFieldDefinition implements MappingInterface
 
         return [
             'type' => "String",
-            'resolve' => sprintf('@=resolver("link", [value, args, context, info, "%s"])', $route)
+            'resolve' => sprintf("@=resolver('link', [value, args, context, info, '%s', '%s', %d])", $route, json_encode($routeParams), $absolute)
         ];
     }
 
