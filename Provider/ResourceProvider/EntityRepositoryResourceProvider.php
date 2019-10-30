@@ -48,7 +48,7 @@ class EntityRepositoryResourceProvider extends AbstractResourceProvider
     protected function getArguments(callable $getter, Service $providerConfig): array
     {
         $arguments = parent::getArguments($getter, $providerConfig);
-        if (empty($arguments) && $id = \call_user_func($getter, ['id'])) {
+        if (empty($arguments) && $id = \call_user_func($getter, 'id')) {
             return ['id' => $id];
         }
 

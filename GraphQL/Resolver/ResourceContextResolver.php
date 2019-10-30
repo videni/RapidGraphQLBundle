@@ -6,6 +6,7 @@ use Overblog\GraphQLBundle\Definition\Argument;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\ChainResourceProvider;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Symfony\Component\HttpFoundation\Request;
 
 class ResourceContextResolver
 {
@@ -20,9 +21,9 @@ class ResourceContextResolver
         $this->resourceConfigProvider = $resourceConfigProvider;
     }
 
-    public function resolveResource(Argument $args, ResourceContext $context)
+    public function resolveResource(Argument $args, ResourceContext $context, Request $request)
     {
-        $resource = $this->resourceFactory->getResource($context, function($parameterName) use($args) {
+        $resource = $this->resourceFactory->getResource($context, function($parameterName) use ($args) {
             if(isset($args[$parameterName])) {
                 return $args[$parameterName];
             }
@@ -33,6 +34,8 @@ class ResourceContextResolver
 
             return null;
         });
+
+        $request->attributes->set('data', $resource);
 
         return $resource;
     }

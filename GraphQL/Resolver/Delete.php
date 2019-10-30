@@ -11,20 +11,23 @@ class Delete implements MutationInterface
 {
     private $dataPersister;
     private $resourceContextResolver;
+    private $controllerExecutor;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
-        DataPersister $dataPersister
+        DataPersister $dataPersister,
+        ControllerExecutor $controllerExecutor
     ) {
         $this->dataPersister = $dataPersister;
         $this->resourceContextResolver = $resourceContextResolver;
+        $this->controllerExecutor = $controllerExecutor;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
-
-        $resource = $this->resourceContextResolver->resolveResource($args, $context);
+        $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
+        $resource = $this->controllerExecutor->execute($context, $request);
 
         $this->dataPersister->remove($resource);
 

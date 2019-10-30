@@ -21,12 +21,14 @@ class Index implements ResolverInterface
         ResourceContextResolver $resourceContextResolver,
         Manager $gridManager,
         AuthorizationCheckerInterface $authorizationChecker,
+        ControllerExecutor $controllerExecutor,
         ConnectionBuilder $connectionBuilder = null
     ) {
         $this->resourceContextResolver = $resourceContextResolver;
         $this->gridManager = $gridManager;
         $this->authorizationChecker = $authorizationChecker;
         $this->connectionBuilder = $connectionBuilder ?? new ConnectionBuilder();
+        $this->controllerExecutor = $controllerExecutor;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
@@ -43,8 +45,11 @@ class Index implements ResolverInterface
          * @var ResultsObject
          */
         $result = $grid->getData();
-        $aclResource  = $grid->getConfig()->getAclResource();
+        $request->attributes->set('data', $result);
 
+        $result = $this->controllerExecutor->execute($context, $request);
+
+        $aclResource  = $grid->getConfig()->getAclResource();
         if($aclResource && $this->authorizationChecker->isGranted($aclResource)) {
             throw new AccessDeniedHttpException('You are not allowed to access this resource.');
         }

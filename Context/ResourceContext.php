@@ -15,7 +15,7 @@ class ResourceContext
     private $operationName;
 
     /**
-     * @var Operation
+     * @var Action
      */
     private $action;
 
@@ -29,8 +29,13 @@ class ResourceContext
      */
     private $resource;
 
-    public function __construct($operationName, Operation $operation, $actionName, Action $action, Resource $resource)
-    {
+    public function __construct(
+        $operationName,
+        Operation $operation,
+        $actionName,
+        Action $action,
+        Resource $resource
+    ) {
         $this->operationName = $operationName;
         $this->operation = $operation;
         $this->actionName = $actionName;

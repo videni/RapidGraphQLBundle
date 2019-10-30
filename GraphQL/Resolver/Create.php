@@ -10,24 +10,27 @@ use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 class Create implements MutationInterface
 {
     private $resourceContextResolver;
+    private $controllerExecutor;
     private $dataPersister;
     private $formHandler;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
         DataPersister $dataPersister,
-        FormHandler $formHandler
+        FormHandler $formHandler,
+        ControllerExecutor $controllerExecutor
     ) {
         $this->resourceContextResolver = $resourceContextResolver;
         $this->dataPersister = $dataPersister;
         $this->formHandler = $formHandler;
+        $this->controllerExecutor = $controllerExecutor;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $data = $this->resourceContextResolver->resolveResource($args, $context);
+        $data = $this->resourceContextResolver->resolveResource($args, $context, $request);
 
         $resource = $this->formHandler->handle(
             $data,
@@ -35,6 +38,8 @@ class Create implements MutationInterface
             isset($args['input']) ? $args['input']: $args->getArrayCopy(),
             $request
         );
+
+        $resource = $this->controllerExecutor->execute($context, $request);
 
         $this->dataPersister->persist($resource);
 

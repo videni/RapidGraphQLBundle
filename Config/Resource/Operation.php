@@ -8,7 +8,6 @@ class Operation
     private $resource;
 
     private $validationGroups = null;
-    private $normalizationContext = null;
 
     /**
      * @return mixed
