@@ -105,12 +105,12 @@ services:
         tags:
             - { name: overblog_graphql.resolver, alias: formSchema }
 
-    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Link:
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\FileLink:
         arguments:
             - '@router'
             - '@overblog_graphql.expression_language'
         tags:
-            - { name: overblog_graphql.resolver, alias: link }
+            - { name: overblog_graphql.resolver, alias: fileLink }
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DateTime:
         tags:

@@ -6,8 +6,9 @@ use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Overblog\GraphQLBundle\Resolver\FieldResolver;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Pintushi\Bundle\FileBundle\Entity\AbstractFile;
 
-class Link implements ResolverInterface
+class FileLink implements ResolverInterface
 {
     /** @var UrlGeneratorInterface */
     private $urLGenerator;
@@ -23,7 +24,7 @@ class Link implements ResolverInterface
     {
         $rawParameters = json_decode($parameters);
         $object = FieldResolver::valueFromObjectOrArray($value, $info->fieldName);
-        if (null == $object) {
+        if(!$object instanceof AbstractFile) {
             return null;
         }
 

@@ -7,7 +7,7 @@ namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition;
 use Overblog\GraphQLBundle\Definition\Builder\MappingInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LinkFieldDefinition implements MappingInterface
+class FileLinkFieldDefinition implements MappingInterface
 {
     public function toMappingDefinition(array $config): array
     {
@@ -19,7 +19,7 @@ class LinkFieldDefinition implements MappingInterface
 
         return [
             'type' => "String",
-            'resolve' => sprintf("@=resolver('link', [value, args, context, info, '%s', '%s', %d])", $route, json_encode($routeParams), $absolute)
+            'resolve' => sprintf("@=resolver('fileLink', [value, args, context, info, '%s', '%s', %d])", $route, json_encode($routeParams), $absolute)
         ];
     }
 
