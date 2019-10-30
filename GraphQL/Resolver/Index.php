@@ -50,7 +50,7 @@ class Index implements ResolverInterface
         $result = $this->controllerExecutor->execute($context, $request);
 
         $aclResource  = $grid->getConfig()->getAclResource();
-        if($aclResource && $this->authorizationChecker->isGranted($aclResource)) {
+        if($aclResource && !$this->authorizationChecker->isGranted($aclResource)) {
             throw new AccessDeniedHttpException('You are not allowed to access this resource.');
         }
 
