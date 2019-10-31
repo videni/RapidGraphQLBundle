@@ -18,6 +18,7 @@ class VideniRapidGraphQLBundle extends Bundle
 
         $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
         $container->addCompilerPass(new Compiler\RegisterFormViewNormalizerPass());
+        $container->addCompilerPass(new Compiler\GraphQLExpressionFunctionPass());
     }
 
     public function getContainerExtension()

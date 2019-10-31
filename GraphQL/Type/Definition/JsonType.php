@@ -9,13 +9,16 @@ use GraphQL\Error\Error;
 use GraphQL\Language\AST\Node;
 use GraphQL\Type\Definition\ScalarType;
 
-class FormSchemaType extends ScalarType
+/**
+ * Turn string in to json
+ */
+class JsonType extends ScalarType
 {
     /** @var string */
-    public $name = 'FormSchema';
+    public $name = 'Json';
 
     /** @var string */
-    public $description ='The `FormSchema` scalar type represents json form schema.';
+    public $description ='The JSON scalar type';
 
     /**
      * @param mixed $value
@@ -26,7 +29,7 @@ class FormSchemaType extends ScalarType
      */
     public function serialize($value)
     {
-        return \json_decode($value);
+        return $value;
     }
 
     /**

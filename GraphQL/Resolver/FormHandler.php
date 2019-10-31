@@ -12,19 +12,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
-use Limenius\Liform\Liform;
-use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\SerializationContext;
 use Overblog\GraphQLBundle\Validator\Exception\ArgumentsValidationException;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 
 final class FormHandler
 {
-    use FormSchemaTrait {
-        FormSchemaTrait::__construct as private formSchemaTraitConstructor;
-    }
-
     private $validator;
     private $eventDispatcher;
     private $serializer;
@@ -33,15 +26,11 @@ final class FormHandler
     public function __construct(
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator,
-        SerializerInterface $serializer,
-        EventDispatcherInterface $eventDispatcher,
-        Liform $liform
+        EventDispatcherInterface $eventDispatcher
     ) {
-        $this->formSchemaTraitConstructor($liform);
 
         $this->formFactory = $formFactory;
         $this->validator = $validator;
-        $this->serializer = $serializer;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -52,20 +41,8 @@ final class FormHandler
         return $this->processForm($request, $input,  $form);
     }
 
-    public function generateFormSchema($data, ResourceContext $context, Request $request)
-    {
-        $form = $this->resolveForm($context, $data, $request);
 
-        $context = new SerializationContext();
-        $context
-            ->setAttribute('form', $form)
-            ->setAttribute('extra_context', new \ArrayObject());
-
-        //serialize form and its initial values
-        return $this->serializer->serialize($this->createFormSchema($form) , 'json', $context);
-    }
-
-    protected function resolveForm(ResourceContext $context, $data, Request $request)
+    public function resolveForm(ResourceContext $context, $data, Request $request)
     {
         $resolveFormEvent = new ResolveFormEvent($data, $context, $request);
 
