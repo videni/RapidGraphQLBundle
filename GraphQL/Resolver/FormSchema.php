@@ -14,8 +14,6 @@ class FormSchema implements ResolverInterface
     private $serializer;
     private $liform;
 
-    private $cache;
-
     public function __construct(
         SerializerInterface $serializer,
         Liform $liform
@@ -26,44 +24,60 @@ class FormSchema implements ResolverInterface
 
     public function __invoke(FormInterface $value)
     {
-        $object = new \stdClass();
-
-        $object->formData = call_user_func([$this, 'getFormData'], $value);
-        $object->schema = call_user_func([$this, 'getSchema'], $value);
-        $object->uiSchema = call_user_func([$this, 'getUiSchema'], $value);
-
-        return $object;
+        return $this->createDeferredObject($value);
     }
 
-    public function getSchema($value)
+    private function createDeferredObject($value)
     {
-        if ($this->cache) {
-            return $this->cache;
-        }
+        return new class($this->serializer, $this->liform, $value) extends FormSchema {
+            private $serializer;
+            private $liform;
 
-        $this->cache = $this->liform->transform($value);
+            private $cache = null;
 
-        return $this->cache;
-    }
+            private $form;
 
-    public function getFormData($value)
-    {
-        $context = new SerializationContext();
-        $context
-            ->setAttribute('form', $value)
-            ->setAttribute('extra_context', new \ArrayObject());
+            public function __construct(
+                SerializerInterface $serializer,
+                Liform $liform,
+                FormInterface $form
+            ) {
+                $this->serializer = $serializer;
+                $this->liform = $liform;
+                $this->form = $form;
+            }
 
-        return $this->serializer->serialize($value->createView() , 'json', $context);
-    }
+            public function getSchema()
+            {
+                if ($this->cache) {
+                    return $this->cache;
+                }
 
-    public function getUiSchema($value)
-    {
-        if (!$this->cache) {
-            $this->cache = $this->liform->transform($value);
-        }
+                $this->cache = $this->liform->transform($this->form);
 
-        $schema = $this->cache;
+                return $this->cache;
+            }
 
-        return (object)UiSchema::extract($schema);
+            public function getFormData()
+            {
+                $context = new SerializationContext();
+                $context
+                    ->setAttribute('form', $this->form)
+                    ->setAttribute('extra_context', new \ArrayObject());
+
+                return $this->serializer->serialize($this->form->createView() , 'json', $context);
+            }
+
+            public function getUiSchema()
+            {
+                if (!$this->cache) {
+                    $this->cache = $this->liform->transform($this->form);
+                }
+
+                $schema = $this->cache;
+
+                return (object)UiSchema::extract($schema);
+            }
+        };
     }
 }

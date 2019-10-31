@@ -26,7 +26,6 @@ class ControllerExecutor
             return $request->attributes->get('data');
         }
 
-        var_dump($request->attributes->get('form'));exit;
         // controller arguments
         $arguments = $this->argumentsResolver->getArguments($request, $controller);
 
