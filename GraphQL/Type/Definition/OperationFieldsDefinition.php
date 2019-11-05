@@ -24,13 +24,15 @@ final class OperationFieldsDefinition implements MappingInterface
         $mapping['fields']['operations'] =  [
             'type' =>  $typeName,
             'resolve' => '@=value',
+            'public' => $options['public']
         ];
 
         $fields = [];
-        foreach($operations as $operationName => $resolver) {
-            $fields[$operationName] = [
+        foreach($operations as $operation) {
+            $fields[$operation['operationName']] = [
                 'type' => 'Boolean',
-                'resolve' => $resolver
+                'resolve' => $operation['resolve'],
+                'public' => $operation['public']?? true
             ];
         }
 
@@ -51,16 +53,21 @@ final class OperationFieldsDefinition implements MappingInterface
         $optionResolver
             ->setRequired(['typeName', 'operations'])
             ->setAllowedTypes('typeName', ['string'])
+            ->setDefaults([
+                'public' => true
+            ])
             ->setDefined(['description'])
-            ->setAllowedTypes('description', ['string', null])
+            ->setAllowedTypes('description', ['string', 'null'])
+            ->setAllowedTypes('public', ['string', 'null', 'bool'])
             ->setAllowedTypes('operations', ['array'] )
             ->setNormalizer(
                 'operations',
                 function (Options $options, $operations) {
-                    if (empty($operations)) {
+                    if (count($operations) == 0) {
                         throw new InvalidConfigurationException('The option "$operations" must not be empty.');
                     }
 
+                    //@todo: Validate operation structure
                     return $operations;
                 }
             )

@@ -14,7 +14,6 @@ use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Overblog\GraphQLBundle\Validator\Exception\ArgumentsValidationException;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaTrait;
 
 final class FormHandler
 {
@@ -38,9 +37,8 @@ final class FormHandler
     {
         $form = $this->resolveForm($context, $data, $request);
 
-        return $this->processForm($request, $input,  $form);
+        return $this->processForm($input,  $form);
     }
-
 
     public function resolveForm(ResourceContext $context, $data, Request $request)
     {
@@ -76,12 +74,12 @@ final class FormHandler
         return $form;
     }
 
-    protected function processForm(Request $request, $input, FormInterface $form)
+    protected function processForm($input, FormInterface $form)
     {
         /**
          * always use $clearMissing = false
          */
-        $isValid = $form->submit($this->prepareRequestData($input, $request), false)->isValid();
+        $isValid = $form->submit($input, false)->isValid();
         if (false === $isValid) {
             $violations = [];
             foreach($form->getErrors(true) as $error) {
@@ -111,29 +109,5 @@ final class FormHandler
         }
 
         return $dataClass;
-    }
-
-    /**
-     * @param array $request
-     *
-     * @return array
-     */
-    protected function prepareRequestData(array $input, Request $request)
-    {
-        /**
-         * as Symfony Form treats false as NULL due to checkboxes
-         * @see \Symfony\Component\Form\Form::submit
-         * we have to convert false to its string representation here
-         */
-        \array_walk_recursive(
-            $input,
-            function (&$value) {
-                if (false === $value) {
-                    $value = 'false';
-                }
-            }
-        );
-
-        return array_replace_recursive($input, $request->files->all());
     }
 }

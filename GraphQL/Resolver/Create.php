@@ -30,10 +30,10 @@ class Create implements MutationInterface
     {
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $data = $this->resourceContextResolver->resolveResource($args, $context, $request);
+        $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
 
         $resource = $this->formHandler->handle(
-            $data,
+            $resource,
             $context,
             isset($args['input']) ? $args['input']: $args->getArrayCopy(),
             $request

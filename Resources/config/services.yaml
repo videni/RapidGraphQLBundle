@@ -66,6 +66,10 @@ services:
             - '@Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver'
             - '@argument_resolver'
 
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\ExecutorContextStorage:
+        tags:
+            - { name: 'overblog_graphql.global_variable', alias: 'executorContextStoreage', public: true }
+
 # Resource provider
     Videni\Bundle\RapidGraphQLBundle\Provider\ResourceProvider\FactoryResourceProvider: ~
 
@@ -121,3 +125,11 @@ services:
             - { name: overblog_graphql.resolver, alias: datetime }
 
     Videni\Bundle\RapidGraphQLBundle\ExpressionLanguage\JsonExpressionLanguageProvider: ~
+
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\EventListener\RequestExecutorListener:
+        tags:
+            - name: kernel.event_listener
+              event: !php/const Overblog\GraphQLBundle\Event\Events::PRE_EXECUTOR
+              method: onPreExecutor
+
+
