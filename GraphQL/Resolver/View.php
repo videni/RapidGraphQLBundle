@@ -24,9 +24,10 @@ class View implements ResolverInterface
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
         $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
-        $resource = $this->controllerExecutor->execute($context, $request);
 
         $request->attributes->set('data', $resource);
+
+        $resource = $this->controllerExecutor->execute($context, $request);
 
         return $resource;
     }

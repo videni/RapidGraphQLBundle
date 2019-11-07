@@ -37,11 +37,10 @@ class JsonType extends ScalarType
      *
      * @return string
      *
-     * @throws Error
      */
     public function parseValue($value)
     {
-        throw new Exception();
+       return $value;
     }
 
     /**
@@ -50,11 +49,9 @@ class JsonType extends ScalarType
      *
      * @return string|null
      *
-     * @throws Exception
      */
     public function parseLiteral($valueNode, ?array $variables = null)
     {
-        // Intentionally without message, as all information already in wrapped Exception
-        throw new Exception();
+        return $valueNode->value;
     }
 }

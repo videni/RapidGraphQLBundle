@@ -7,42 +7,55 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Overblog\GraphQLBundle\Resolver\FieldResolver;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Pintushi\Bundle\FileBundle\Entity\AbstractFile;
+use Doctrine\Common\Collections\Collection;
 
 class FileLink implements ResolverInterface
 {
     /** @var UrlGeneratorInterface */
-    private $urLGenerator;
+    private $urlGenerator;
     private $expressionLanguage;
 
-    public function __construct(UrlGeneratorInterface $urLGenerator, ExpressionLanguage $expressionLanguage)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ExpressionLanguage $expressionLanguage)
     {
-        $this->urLGenerator = $urLGenerator;
+        $this->urlGenerator = $urlGenerator;
         $this->expressionLanguage = $expressionLanguage;
     }
 
     public function __invoke($value, $args, $context , $info, string $route, string $parameters = '[]', $absolute = false)
     {
-        $rawParameters = json_decode($parameters);
+        $rawParameters = json_decode($parameters, true);
+
         $object = FieldResolver::valueFromObjectOrArray($value, $info->fieldName);
-        if(!$object instanceof AbstractFile) {
+        if ($object instanceof Collection) {
+            return array_map(function($file) use ($args, $route, $absolute, $rawParameters) {
+                return $this->generate($file, $args, $route, $absolute, $rawParameters);
+            }, $object->toArray());
+        }
+
+        return $this->generate($object, $args, $route, $absolute, $rawParameters);
+    }
+
+    protected function generate(object $file, $args, $route, $absolute, array $rawParameters)
+    {
+        if(!$file instanceof AbstractFile) {
             return null;
         }
 
         $evaluatedParams = [];
-        foreach($rawParameters as $name => $value) {
-            if(!is_scalar($value)) {
+        foreach($rawParameters as $name => $parameter) {
+            if(!is_scalar($parameter)) {
                 continue;
             }
-            if (is_string($value) &&  0 === \strpos($value, '@=')) {
-                $evaluatedParams[$name] = $this->expressionLanguage->evaluate(substr($value, 2), [
-                    'object' => $object,
+            if (is_string($parameter) &&  0 === \strpos($parameter, '@=')) {
+                $evaluatedParams[$name] = $this->expressionLanguage->evaluate(substr($parameter, 2), [
+                    'object' => $file,
                     'args' => $args
                 ]);
             } else {
-                $evaluatedParams[$name] = $value;
+                $evaluatedParams[$name] = $parameter;
             }
         }
 
-        return $this->urLGenerator->generate($route, $evaluatedParams, (bool)$absolute);
+        return $this->urlGenerator->generate($route, $evaluatedParams, (bool)$absolute);
     }
 }

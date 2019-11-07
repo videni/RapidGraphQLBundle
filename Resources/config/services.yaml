@@ -59,11 +59,11 @@ services:
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ResourceContextResolver: ~
 
-    Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver: ~
+    Videni\Bundle\RapidGraphQLBundle\Controller\ContainerControllerResolver: ~
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ControllerExecutor:
         arguments:
-            - '@Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver'
+            - '@Videni\Bundle\RapidGraphQLBundle\Controller\ContainerControllerResolver'
             - '@argument_resolver'
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\ExecutorContextStorage:

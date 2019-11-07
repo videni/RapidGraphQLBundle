@@ -18,7 +18,7 @@ class FileLinkFieldDefinition implements MappingInterface
         $absolute = $options['absolute'];
 
         return [
-            'type' => "String",
+            'type' => "Json",
             'resolve' => sprintf("@=resolver('fileLink', [value, args, context, info, '%s', '%s', %d])", $route, json_encode($routeParams), $absolute)
         ];
     }
