@@ -42,13 +42,13 @@ class ResourceConfiguration implements ConfigurationInterface
 
                         if (isset($value['repository_class']) && !class_exists($value['repository_class'])) {
                             throw new \InvalidArgumentException(
-                                sprintf('repository_class %s of resource %s is not found', $value['repository_class'], $resourceClass)
+                                sprintf('repository_class %s of resource %s is not found', $value['repository_class'], $resourceName)
                             );
                         }
 
                         if (isset($value['factory_class']) && !class_exists($value['factory_class'])) {
                             throw new \InvalidArgumentException(
-                                sprintf('factory_class %s of resource %s is not found', $value['factory_class'], $resourceClass)
+                                sprintf('factory_class %s of resource %s is not found', $value['factory_class'], $resourceName)
                             );
                         }
                     }
