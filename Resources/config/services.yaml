@@ -26,6 +26,8 @@ services:
         arguments:
             - "@event_dispatcher"
 
+    Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandler: ~
+
     Videni\Bundle\RapidGraphQLBundle\Doctrine\EventListener\ORMMappedSuperClassSubscriber:
         tags:
             - { name: "doctrine.event_subscriber", priority: 8192}

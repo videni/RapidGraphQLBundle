@@ -41,8 +41,8 @@ class Resource
             if(isset($config['form']['validation_groups'])) {
                 $self->setFormValidationGroups($config['form']['validation_groups']);
             }
-            if(isset($config['form']['form_handler'])) {
-                $self->setFormHandler($config['form']['form_handler']);
+            if(isset($config['form']['handler'])) {
+                $self->setFormHandler($config['form']['handler']);
             }
         }
 
@@ -148,7 +148,7 @@ class Resource
      */
     public function setFormHandler($onSuccess)
     {
-        $this->form['form_handler'] = $onSuccess;
+        $this->form['handler'] = $onSuccess;
 
         return $this;
     }

@@ -172,6 +172,10 @@ class Configuration implements ConfigurationInterface
             if (in_array($actionConfig['action'], [ActionTypes::CREATE, ActionTypes::UPDATE])) {
                 if(!isset($actionConfig['form'])) {
                     $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']: null;
+
+                    // if ($resourceName === 'organization_feature') {
+                    //     dump($this->resourceConfigs[$resourceName]['form'], $actionConfig);exit;
+                    // }
                 } else {
                     $toArray = function($formConfig) {
                         return is_array($formConfig)? $formConfig: ['class' => $formConfig];

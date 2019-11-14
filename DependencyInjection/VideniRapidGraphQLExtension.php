@@ -16,6 +16,7 @@ use Videni\Bundle\RapidGraphQLBundle\Factory\FactoryInterface;
 use Videni\Bundle\RapidGraphQLBundle\Util\DependencyInjectionUtil;
 use Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Configuration\ResourceConfiguration;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
+use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandlerInterface;
 use Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizerInterface;
 
 class VideniRapidGraphQLExtension extends Extension
@@ -42,6 +43,11 @@ class VideniRapidGraphQLExtension extends Extension
             ->registerForAutoconfiguration(FormViewNormalizerInterface::class)
             ->addTag('videni_rapid_graphql.form_view.normalizer')
             ->setPublic(false);
+
+        $container
+            ->registerForAutoconfiguration(FormHandlerInterface::class)
+            ->addTag('videni_rapid_graphql.form.handler')
+            ->setPublic(true);
     }
 
     public function getAlias()

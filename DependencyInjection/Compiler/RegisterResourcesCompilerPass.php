@@ -143,7 +143,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $container->setDefinition($formClass, $formDef);
         $container->setAlias($aliasId, $alias);
 
-        if($container->has($resource->getFormHandler())){
+        if(!$container->has($resource->getFormHandler())){
             throw new \Exception(sprintf('%s is not existed in container or it is private', $resource->getFormHandler()));
         }
     }

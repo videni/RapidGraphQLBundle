@@ -227,7 +227,7 @@ class Action
      */
     public function setFormHandler($onSuccess)
     {
-        $this->form['form_handler'] = $onSuccess;
+        $this->form['handler'] = $onSuccess;
 
         return $this;
     }
