@@ -87,7 +87,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         }
 
         if (is_a($repositoryClass, ServiceEntityRepositoryInterface::class, true) && !$container->has($repositoryClass)) {
-            throw new \RuntimeException(sprintf('The repository %s is an instance of %s, please register it into service container yourself', $repositoryClass, ServiceEntityRepositoryInterface::class));
+            throw new \Exception(sprintf('The repository %s is an instance of %s, please register it into service container yourself', $repositoryClass, ServiceEntityRepositoryInterface::class));
         }
 
         $definition = new Definition($repositoryClass);
@@ -129,6 +129,8 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $formDef = (new Definition($formClass))
             ->addTag('form.type')
             ->setPublic(true)
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
         ;
 
         if (is_a($formClass, AbstractResourceType::class, true)) {
@@ -140,6 +142,10 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
 
         $container->setDefinition($formClass, $formDef);
         $container->setAlias($aliasId, $alias);
+
+        if($container->has($resource->getFormHandler())){
+            throw new \Exception(sprintf('%s is not existed in container or it is private', $resource->getFormHandler()));
+        }
     }
 
     protected function getClassMetadataDefinition($entityClass, Resource $resource): Definition

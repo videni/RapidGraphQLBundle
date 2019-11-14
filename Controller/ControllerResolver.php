@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Videni\Bundle\RapidGraphQLBundle\Controller;
 
 use Psr\Log\LoggerInterface;

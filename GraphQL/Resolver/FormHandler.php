@@ -12,32 +12,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
-use Overblog\GraphQLBundle\Validator\Exception\ArgumentsValidationException;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
 
 final class FormHandler
 {
     private $validator;
     private $eventDispatcher;
-    private $serializer;
     private $formFactory;
+    private $container;
 
     public function __construct(
         FormFactoryInterface $formFactory,
         ValidatorInterface $validator,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        ContainerInterface $container
     ) {
 
         $this->formFactory = $formFactory;
         $this->validator = $validator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->container = $container;
     }
 
     public function handle($data, ResourceContext $context, array $input, Request $request)
     {
         $form = $this->resolveForm($context, $data, $request);
 
-        return $this->processForm($input,  $form);
+        return $this->processForm($input, $form, $context->getResource());
     }
 
     public function resolveForm(ResourceContext $context, $data, Request $request)
@@ -46,9 +48,9 @@ final class FormHandler
 
         $this->eventDispatcher->dispatch(ResolveFormEvent::BEFORE_RESOLVE, $resolveFormEvent);
 
-        $operationConfig = $context->getOperation();
+        $action = $context->getAction();
 
-        $formType = $context->getAction()->getForm();
+        $formType = $context->getResource()->getFormClass();
         if (null === $formType) {
             throw new \LogicException(
                 sprintf('The form is required for action %s of operation %s', $context->getActionName(), $context->getOperationName())
@@ -56,11 +58,16 @@ final class FormHandler
         }
 
         $options = [
-            'validation_groups' => $operationConfig->getActionAttribute($context->getActionName(), 'validation_groups', true),
             'data_class' => $this->getFormDataClass($context, $data),
             'csrf_protection' => false,
             'allow_extra_fields' => true,
         ];
+
+        if ($action->getValidationGroups()) {
+            $options += [
+                'validation_groups' => $action->getValidationGroups()
+            ];
+        }
 
         $form = $this->formFactory->create($formType, $data, $options);
 
@@ -74,20 +81,18 @@ final class FormHandler
         return $form;
     }
 
-    protected function processForm($input, FormInterface $form)
+    protected function processForm($input, FormInterface $form, Resource $resource)
     {
+        $formHandler = $resource->getFormHandler() ? $this->container->get($resource->getFormHandler()): null;
         /**
          * always use $clearMissing = false
          */
         $isValid = $form->submit($input, false)->isValid();
         if (false === $isValid) {
-            $violations = [];
-            foreach($form->getErrors(true) as $error) {
-                $violations[] = $error->getCause();
-            }
-
-            throw new ArgumentsValidationException(new ConstraintViolationList($violations));
+            $formHandler && $formHandler->onFailed($form);
         }
+
+        $formHandler && $formHandler->onSuccess($form);
 
         return $form->getData();
     }

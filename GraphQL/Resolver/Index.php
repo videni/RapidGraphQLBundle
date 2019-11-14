@@ -9,30 +9,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use  Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
+use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
 
-class Index implements ResolverInterface
+class Index extends AbstractResolver implements ResolverInterface
 {
     private $gridManager;
     private $authorizationChecker;
-    private $resourceContextResolver;
     private $connectionBuilder;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
+        ControllerResolver $controllerResolver,
+        ControllerExecutor $controllerExecutor,
         Manager $gridManager,
         AuthorizationCheckerInterface $authorizationChecker,
-        ControllerExecutor $controllerExecutor,
         ConnectionBuilder $connectionBuilder = null
     ) {
-        $this->resourceContextResolver = $resourceContextResolver;
+        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor);
+
         $this->gridManager = $gridManager;
         $this->authorizationChecker = $authorizationChecker;
         $this->connectionBuilder = $connectionBuilder ?? new ConnectionBuilder();
-        $this->controllerExecutor = $controllerExecutor;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
+        $request->attributes->set('arguments', $args);
+
         $pagerParams = isset($args['input'])?  $args['input'] : [];
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
@@ -47,7 +50,9 @@ class Index implements ResolverInterface
         $result = $grid->getData();
         $request->attributes->set('data', $result);
 
-        $result = $this->controllerExecutor->execute($context, $request);
+        if ($controller = $this->controllerResolver->getController($context)) {
+            return $this->controllerExecutor->execute($controller, $request);
+        }
 
         $aclResource  = $grid->getConfig()->getAclResource();
         if($aclResource && !$this->authorizationChecker->isGranted($aclResource)) {
@@ -67,6 +72,7 @@ class Index implements ResolverInterface
             );
 
         $connection->setTotalCount($result->getTotalRecords());
+
 
         return $connection;
     }

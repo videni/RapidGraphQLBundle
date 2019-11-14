@@ -6,6 +6,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Videni\Bundle\RapidGraphQLBundle\Doctrine\ORM\EntityRepository;
 use Videni\Bundle\RapidGraphQLBundle\Factory\Factory;
+use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandler;
 
 class ResourceConfiguration implements ConfigurationInterface
 {
@@ -72,6 +73,10 @@ class ResourceConfiguration implements ConfigurationInterface
                             ->scalarNode('class')->end()
                             ->arrayNode('validation_groups')
                                ->prototype('scalar')->end()
+                            ->end()
+                            ->scalarNode('handler')
+                                ->cannotBeEmpty()
+                                ->defaultValue(FormHandler::class)
                             ->end()
                         ->end()
                     ->end()

@@ -2,6 +2,7 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle;
 
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Videni\Bundle\RapidGraphQLBundle\DependencyInjection\Compiler;
@@ -15,8 +16,8 @@ class VideniRapidGraphQLBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-
-        $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass());
+        //make sure RegisterResourcesCompilerPass is registered before FormPass
+        $container->addCompilerPass(new Compiler\RegisterResourcesCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
         $container->addCompilerPass(new Compiler\RegisterFormViewNormalizerPass());
         $container->addCompilerPass(new Compiler\GraphQLExpressionFunctionPass());
     }

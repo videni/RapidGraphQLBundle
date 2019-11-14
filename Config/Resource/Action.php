@@ -9,10 +9,10 @@ class Action
     private $accessControl;
     private $accessControlMessage;
     private $controller;
-
     private $validationGroups = null;
     private $resourceProvider = null;
-    private $form = null;
+
+    private $form = [];
 
     /**
      * @return mixed
@@ -74,9 +74,6 @@ class Action
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAccessControl()
     {
         return $this->accessControl;
@@ -127,9 +124,6 @@ class Action
         if (array_key_exists('action', $config)) {
             $self->setAction($config['action']);
         }
-        if (array_key_exists('form', $config)) {
-            $self->setForm($config['form']);
-        }
         if (array_key_exists('access_control_message', $config)) {
             $self->setAccessControlMessage($config['access_control_message']);
         }
@@ -169,26 +163,6 @@ class Action
     /**
      * @return mixed
      */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * @param mixed $form
-     *
-     * @return self
-     */
-    public function setForm($form)
-    {
-        $this->form = $form;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getResourceProvider()
     {
         return $this->resourceProvider;
@@ -204,5 +178,65 @@ class Action
         $this->resourceProvider = $resourceProvider;
 
         return $this;
+    }
+
+      /**
+     * @return mixed
+     */
+    public function getFormClass()
+    {
+        return  isset($this->form['class'])?  $this->form['class']: null;
+    }
+
+    /**
+     * @param mixed $form
+     *
+     * @return self
+     */
+    public function setFormClass($form)
+    {
+        $this->form['class'] = $form;
+
+        return $this;
+    }
+
+     /**
+     * @param mixed $validationGroups
+     *
+     * @return self
+     */
+    public function setFormValidationGroups($validationGroups)
+    {
+        $this->form['validation_groups'] = $validationGroups;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormValidationGroups()
+    {
+        return isset($this->form['validation_groups']) ? $this->form['validation_groups']: null;
+    }
+
+     /**
+     * @param mixed $validationGroups
+     *
+     * @return self
+     */
+    public function setFormHandler($onSuccess)
+    {
+        $this->form['form_handler'] = $onSuccess;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormHandler()
+    {
+        return isset($this->form['handler']) ? $this->form['handler']: null;
     }
 }

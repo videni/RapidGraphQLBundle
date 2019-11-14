@@ -61,9 +61,11 @@ services:
 
     Videni\Bundle\RapidGraphQLBundle\Controller\ContainerControllerResolver: ~
 
+    Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver:
+        alias: 'Videni\Bundle\RapidGraphQLBundle\Controller\ContainerControllerResolver'
+
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ControllerExecutor:
         arguments:
-            - '@Videni\Bundle\RapidGraphQLBundle\Controller\ContainerControllerResolver'
             - '@argument_resolver'
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\ExecutorContextStorage:
@@ -132,4 +134,6 @@ services:
               event: !php/const Overblog\GraphQLBundle\Event\Events::PRE_EXECUTOR
               method: onPreExecutor
 
-
+    Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentsAttributeValueResolver:
+         tags:
+            - { name: 'controller.argument_value_resolver', priority: 150 }

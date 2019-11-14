@@ -6,29 +6,22 @@ use Overblog\GraphQLBundle\Definition\Argument;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class View implements ResolverInterface
+class View extends AbstractResolver implements ResolverInterface
 {
-    private $resourceContextResolver;
-    private $controllerExecutor;
-
-    public function __construct(
-        ResourceContextResolver $resourceContextResolver,
-        ControllerExecutor $controllerExecutor
-    ) {
-        $this->resourceContextResolver = $resourceContextResolver;
-        $this->controllerExecutor = $controllerExecutor;
-    }
-
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
+        $request->attributes->set('arguments', $args);
+
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
         $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
 
         $request->attributes->set('data', $resource);
 
-        $resource = $this->controllerExecutor->execute($context, $request);
+        if (false === $controller = $this->controllerResolver->getController($context)) {
+            return $resource;
+        }
 
-        return $resource;
+        return $this->controllerExecutor->execute($controller, $request);
     }
 }

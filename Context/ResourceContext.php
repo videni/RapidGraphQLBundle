@@ -60,7 +60,7 @@ class ResourceContext
     }
 
     /**
-     * @return mixed
+     * @return Action
      */
     public function getAction()
     {
@@ -86,7 +86,7 @@ class ResourceContext
     }
 
     /**
-     * @return mixed
+     * @return Resource
      */
     public function getResource()
     {

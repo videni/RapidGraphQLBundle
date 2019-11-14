@@ -41,6 +41,9 @@ class Resource
             if(isset($config['form']['validation_groups'])) {
                 $self->setFormValidationGroups($config['form']['validation_groups']);
             }
+            if(isset($config['form']['form_handler'])) {
+                $self->setFormHandler($config['form']['form_handler']);
+            }
         }
 
         return $self;
@@ -136,6 +139,26 @@ class Resource
     public function getFormValidationGroups()
     {
         return isset($this->form['validation_groups']) ? $this->form['validation_groups']: null;
+    }
+
+     /**
+     * @param mixed $validationGroups
+     *
+     * @return self
+     */
+    public function setFormHandler($onSuccess)
+    {
+        $this->form['form_handler'] = $onSuccess;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormHandler()
+    {
+        return isset($this->form['handler']) ? $this->form['handler']: null;
     }
 
     /**

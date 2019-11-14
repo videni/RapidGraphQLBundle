@@ -6,28 +6,30 @@ use Overblog\GraphQLBundle\Definition\Argument;
 use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
+use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
 
-class Create implements MutationInterface
+class Create extends AbstractResolver implements MutationInterface
 {
-    private $resourceContextResolver;
-    private $controllerExecutor;
-    private $dataPersister;
     private $formHandler;
+    private $dataPersister;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
+        ControllerResolver $controllerResolver,
+        ControllerExecutor $controllerExecutor,
         DataPersister $dataPersister,
-        FormHandler $formHandler,
-        ControllerExecutor $controllerExecutor
+        FormHandler $formHandler
     ) {
-        $this->resourceContextResolver = $resourceContextResolver;
+        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor);
+
         $this->dataPersister = $dataPersister;
         $this->formHandler = $formHandler;
-        $this->controllerExecutor = $controllerExecutor;
     }
 
     public function __invoke(Argument $args, $operationName, $actionName, Request $request)
     {
+        $request->attributes->set('arguments', $args);
+
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
         $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
@@ -39,10 +41,10 @@ class Create implements MutationInterface
             $request
         );
 
-        $resource = $this->controllerExecutor->execute($context, $request);
+        if (false === $controller = $this->controllerResolver->getController($context)) {
+            return $resource;
+        }
 
-        $this->dataPersister->persist($resource);
-
-        return $resource;
+        return $this->controllerExecutor->execute($controller, $request);
     }
 }

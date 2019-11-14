@@ -6,6 +6,8 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
+use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandlerInterface;
+use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandler;
 
 class Configuration implements ConfigurationInterface
 {
@@ -94,7 +96,24 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('grid')->end()
                                 ->scalarNode('controller')->end()
                                 ->scalarNode('access_control')->end()
-                                ->scalarNode('form')->end()
+                                ->arrayNode('form')
+                                    ->beforeNormalization()
+                                        ->ifString()
+                                        ->then(function ($v) {
+                                            return ['class' => $v];
+                                        })
+                                    ->end()
+                                    ->children()
+                                        ->scalarNode('class')->end()
+                                        ->arrayNode('validation_groups')
+                                        ->prototype('scalar')->end()
+                                        ->end()
+                                        ->scalarNode('handler')
+                                            ->cannotBeEmpty()
+                                            ->defaultValue(FormHandler::class)
+                                        ->end()
+                                    ->end()
+                                ->end()
                                 ->scalarNode('access_control_message')->end()
                                 ->scalarNode('action')->end()
                                 ->arrayNode(self::RESOURCE_PROVIDER_KEY)
@@ -152,7 +171,13 @@ class Configuration implements ConfigurationInterface
 
             if (in_array($actionConfig['action'], [ActionTypes::CREATE, ActionTypes::UPDATE])) {
                 if(!isset($actionConfig['form'])) {
-                    $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']['class']: null;
+                    $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']: null;
+                } else {
+                    $toArray = function($formConfig) {
+                        return is_array($formConfig)? $formConfig: ['class' => $formConfig];
+                    };
+
+                    $actionConfig['form'] = array_replace_recursive($toArray($this->resourceConfigs[$resourceName]['form']), $toArray($actionConfig['form']));
                 }
             }
         }
