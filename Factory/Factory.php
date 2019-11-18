@@ -9,7 +9,7 @@ class Factory implements FactoryInterface
    /**
      * @var string
      */
-    private $className;
+    protected $className;
 
     /**
      * @param string $className

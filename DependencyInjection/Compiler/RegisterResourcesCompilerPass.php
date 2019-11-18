@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Alias;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\ConfigProvider;
@@ -45,7 +44,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
 
         $alias = new Alias($factoryClass);
         $alias->setPublic(true);
-        if ($container->has($factoryClass)) {
+        if ($container->has($factoryClass) && $resource->getFactoryAutoAlias()) {
             $container->setAlias($aliasId, $alias);
              //don't register if a factory is associated with this resource
             return;
@@ -56,10 +55,12 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $factoryDef = (new Definition($factoryClass))
             ->addArgument($resource->getEntityClass())
             ->setPublic(true)
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
         ;
 
         //register it with class name as service name and also add an alias
-        if ($factoryClass !== Factory::class) {
+        if ($factoryClass !== Factory::class && $resource->getFactoryAutoAlias()) {
             $container->setDefinition($factoryClass, $factoryDef);
             $container->setAlias($aliasId, $alias);
         } else {
@@ -80,7 +81,7 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
         $alias = new Alias($repositoryClass);
         $alias->setPublic(true);
 
-        if ($container->has($repositoryClass)) {
+        if ($container->has($repositoryClass) && $resource->getRepositoryAutoAlias()) {
             $container->setAlias($aliasId, $alias);
 
             return;
@@ -97,9 +98,11 @@ class RegisterResourcesCompilerPass implements CompilerPassInterface
                 $this->getClassMetadataDefinition($resource->getEntityClass(), $resource),
             ])
             ->setPublic(true)
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
         ;
 
-        if (!in_array($repositoryClass, [ServiceEntityRepository::class, EntityRepository::class])) {
+        if (!in_array($repositoryClass, [ServiceEntityRepository::class, EntityRepository::class]) && $resource->getRepositoryAutoAlias()) {
             $container->setDefinition($repositoryClass, $definition);
             $container->setAlias($aliasId, $alias);
         } else {

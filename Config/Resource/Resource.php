@@ -10,6 +10,8 @@ class Resource
     private $entityClass;
     private $factoryClass = null;
     private $repositoryClass = null;
+    private $repositoryAutoAlias = true;
+    private $factoryAutoAlias = true;
 
     private $form = [];
 
@@ -19,9 +21,6 @@ class Resource
 
         $self = new Resource();
 
-        if (array_key_exists('factory_class', $config)) {
-            $self->setFactoryClass($config['factory_class']);
-        }
         if (array_key_exists('repository_class', $config)) {
             $self->setRepositoryClass($config['repository_class']);
         }
@@ -43,6 +42,22 @@ class Resource
             }
             if(isset($config['form']['handler'])) {
                 $self->setFormHandler($config['form']['handler']);
+            }
+        }
+        if (array_key_exists('repository', $config)) {
+            if(isset($config['repository']['class'])) {
+                $self->setRepositoryClass($config['repository']['class']) ;
+            }
+            if(isset($config['repository']['auto_alias'])) {
+                $self->setRepositoryAutoAlias($config['repository']['auto_alias']);
+            }
+        }
+        if (array_key_exists('factory', $config)) {
+            if(isset($config['factory']['class'])) {
+                $self->setFactoryClass($config['factory']['class']) ;
+            }
+            if(isset($config['factory']['auto_alias'])) {
+                $self->setFactoryAutoAlias($config['factory']['auto_alias']);
             }
         }
 
@@ -237,6 +252,37 @@ class Resource
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
+
+        return $this;
+    }
+
+    public function getRepositoryAutoAlias()
+    {
+        return $this->repositoryAutoAlias;
+    }
+
+    /**
+     *
+     * @return  self
+     */
+    public function setRepositoryAutoAlias($repositoryAutoAlias)
+    {
+        $this->repositoryAutoAlias = $repositoryAutoAlias;
+
+        return $this;
+    }
+
+    public function getFactoryAutoAlias()
+    {
+        return $this->factoryAutoAlias;
+    }
+
+    /**
+     * @return  self
+     */
+    public function setFactoryAutoAlias($factoryAutoAlias)
+    {
+        $this->factoryAutoAlias = $factoryAutoAlias;
 
         return $this;
     }
