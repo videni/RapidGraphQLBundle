@@ -7,7 +7,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
 use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandler;
-use Pintushi\Bundle\RapidGraphQLBundle\Action\DeleteAction;
+use Videni\Bundle\RapidGraphQLBundle\Action\DeleteAction;
+use Videni\Bundle\RapidGraphQLBundle\Action\CreateAction;
 
 class Configuration implements ConfigurationInterface
 {
@@ -171,6 +172,9 @@ class Configuration implements ConfigurationInterface
             }
 
             if (in_array($actionConfig['action'], [ActionTypes::CREATE, ActionTypes::UPDATE])) {
+                if(!isset($actionConfig['action'])) {
+                    $actionConfig['controller'] = CreateAction::class;
+                }
                 if(!isset($actionConfig['form'])) {
                     $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']: null;
                 } else {

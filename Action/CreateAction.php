@@ -7,7 +7,7 @@ namespace Videni\Bundle\RapidGraphQLBundle\Action;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 
-class DeleteAction extends AbstractController
+class CreateAction extends AbstractController
 {
     private $dataPersister;
 
@@ -18,7 +18,7 @@ class DeleteAction extends AbstractController
 
     public function __invoke(object $data)
     {
-        $this->dataPersister->remove($data);
+        $this->dataPersister->persist($data);
 
         return $data;
     }

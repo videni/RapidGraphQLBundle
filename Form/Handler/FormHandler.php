@@ -11,18 +11,9 @@ use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 
 class FormHandler implements FormHandlerInterface
 {
-    protected $dataPersister;
-
-    public function __construct(DataPersister $dataPersister)
-    {
-        $this->dataPersister = $dataPersister;
-    }
-
     public function onSuccess(FormInterface $form): void
     {
-        $data = $form->getData();
 
-        $this->dataPersister->persist($data);
     }
 
     public function onFailed(FormInterface $form): void

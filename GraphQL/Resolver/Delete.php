@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
+use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
 
 class Delete extends AbstractResolver implements MutationInterface
 {
@@ -16,9 +17,10 @@ class Delete extends AbstractResolver implements MutationInterface
         ResourceContextResolver $resourceContextResolver,
         ControllerResolver $controllerResolver,
         ControllerExecutor $controllerExecutor,
+        ResourceAccessCheckerInterface $resourceAccessChecker,
         DataPersister $dataPersister
     ) {
-        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor);
+        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor, $resourceAccessChecker);
 
         $this->dataPersister = $dataPersister;
     }
@@ -28,7 +30,9 @@ class Delete extends AbstractResolver implements MutationInterface
         $request->attributes->set('arguments', $args);
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
-        $this->resourceContextResolver->resolveResource($args, $context, $request);
+        $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
+
+        $this->checkPermission($resource, $context->getAction(), $request);
 
         $controller = $this->controllerResolver->getController($context);
 

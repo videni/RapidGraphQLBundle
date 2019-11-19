@@ -11,9 +11,8 @@ services:
         autoconfigure: true
         public: false
 
-    Pintushi\Bundle\RapidGraphQLBundle\Action\:
-        resource: '../../Action'
-        tags: ['controller.service_arguments']
+    Videni\Bundle\RapidGraphQLBundle\:
+        resource: '../../{Action}'
 
     Videni\Bundle\RapidGraphQLBundle\Factory\ResourceFactory: ~
 

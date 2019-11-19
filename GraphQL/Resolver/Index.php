@@ -5,30 +5,28 @@ namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 use Overblog\GraphQLBundle\Definition\Argument;
 use Pintushi\Bundle\GridBundle\Grid\Manager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use  Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
+use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
 
 class Index extends AbstractResolver implements ResolverInterface
 {
     private $gridManager;
-    private $authorizationChecker;
     private $connectionBuilder;
 
     public function __construct(
         ResourceContextResolver $resourceContextResolver,
         ControllerResolver $controllerResolver,
         ControllerExecutor $controllerExecutor,
+        ResourceAccessCheckerInterface $resourceAccessChecker,
         Manager $gridManager,
-        AuthorizationCheckerInterface $authorizationChecker,
         ConnectionBuilder $connectionBuilder = null
     ) {
-        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor);
+        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor, $resourceAccessChecker);
 
         $this->gridManager = $gridManager;
-        $this->authorizationChecker = $authorizationChecker;
         $this->connectionBuilder = $connectionBuilder ?? new ConnectionBuilder();
     }
 
@@ -39,6 +37,9 @@ class Index extends AbstractResolver implements ResolverInterface
         $pagerParams = isset($args['input'])?  $args['input'] : [];
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
+
+        $this->checkPermission(null, $context->getAction(), $request);
+
         $grid = $this->gridManager->getGrid(
             $context->getGrid(),
             $pagerParams
@@ -52,11 +53,6 @@ class Index extends AbstractResolver implements ResolverInterface
 
         if ($controller = $this->controllerResolver->getController($context)) {
             return $this->controllerExecutor->execute($controller, $request);
-        }
-
-        $aclResource  = $grid->getConfig()->getAclResource();
-        if($aclResource && !$this->authorizationChecker->isGranted($aclResource)) {
-            throw new AccessDeniedHttpException('You are not allowed to access this resource.');
         }
 
         $arrayLength =  isset($pagerParams['last']) ?  $result->getTotalRecords() : ($result->getCursor() + count($result->getData()));

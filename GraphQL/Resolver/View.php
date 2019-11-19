@@ -16,6 +16,8 @@ class View extends AbstractResolver implements ResolverInterface
 
         $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
 
+        $this->checkPermission($resource, $context->getAction(), $request);
+
         $request->attributes->set('data', $resource);
 
         if (false === $controller = $this->controllerResolver->getController($context)) {

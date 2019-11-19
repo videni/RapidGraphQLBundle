@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
+use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
 
 class Create extends AbstractResolver implements MutationInterface
 {
@@ -17,10 +18,11 @@ class Create extends AbstractResolver implements MutationInterface
         ResourceContextResolver $resourceContextResolver,
         ControllerResolver $controllerResolver,
         ControllerExecutor $controllerExecutor,
+        ResourceAccessCheckerInterface $resourceAccessChecker,
         DataPersister $dataPersister,
         FormHandler $formHandler
     ) {
-        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor);
+        parent::__construct($resourceContextResolver, $controllerResolver, $controllerExecutor, $resourceAccessChecker);
 
         $this->dataPersister = $dataPersister;
         $this->formHandler = $formHandler;
@@ -33,6 +35,8 @@ class Create extends AbstractResolver implements MutationInterface
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
         $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
+
+        $this->checkPermission($resource, $context->getAction(), $request);
 
         $resource = $this->formHandler->handle(
             $resource,
