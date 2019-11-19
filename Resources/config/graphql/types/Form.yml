@@ -1,0 +1,19 @@
+Json:
+    type: custom-scalar
+    config:
+        scalarType: '@=newObject("Videni\\Bundle\\RapidGraphQLBundle\\GraphQL\\Type\\Definition\\JsonType")'
+
+FormSchema:
+    type: object
+    config:
+        description: 'JSON form schema'
+        fields:
+            formData:
+                type: "Json"
+                resolve: '@=json_decode(value.getFormData())'
+            schema:
+                type: "Json"
+                resolve: '@=(value.getSchema())'
+            uiSchema:
+                type: "Json"
+                resolve: '@=(value.getUiSchema())'
