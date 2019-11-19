@@ -28,14 +28,9 @@ class Delete extends AbstractResolver implements MutationInterface
         $request->attributes->set('arguments', $args);
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
-        $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
-        $resource = $this->controllerExecutor->execute($context, $request);
+        $this->resourceContextResolver->resolveResource($args, $context, $request);
 
-        $this->dataPersister->remove($resource);
-
-        if (false === $controller = $this->controllerResolver->getController($context)) {
-            return null;
-        }
+        $controller = $this->controllerResolver->getController($context);
 
         return $this->controllerExecutor->execute($controller, $request);
     }

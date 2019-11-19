@@ -6,8 +6,8 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Doctrine\Common\Inflector\Inflector;
 use Videni\Bundle\RapidGraphQLBundle\Operation\ActionTypes;
-use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandlerInterface;
 use Videni\Bundle\RapidGraphQLBundle\Form\Handler\FormHandler;
+use Pintushi\Bundle\RapidGraphQLBundle\Action\DeleteAction;
 
 class Configuration implements ConfigurationInterface
 {
@@ -163,6 +163,7 @@ class Configuration implements ConfigurationInterface
                     )
                 );
             }
+
             if (ActionTypes::CREATE === $actionConfig['action']) {
                 $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceName, 'factory'), $actionConfig);
             } else {
@@ -178,6 +179,12 @@ class Configuration implements ConfigurationInterface
                     };
 
                     $actionConfig['form'] = array_replace_recursive($toArray($this->resourceConfigs[$resourceName]['form']), $toArray($actionConfig['form']));
+                }
+            }
+
+            if (ActionTypes::DELETE == $actionConfig['action']) {
+                if(!isset($actionConfig['controller'])) {
+                    $actionConfig['controller'] = DeleteAction::class;
                 }
             }
         }
