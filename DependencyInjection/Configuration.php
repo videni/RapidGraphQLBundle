@@ -155,6 +155,8 @@ class Configuration implements ConfigurationInterface
 
         foreach($value['actions'] as $actionName => &$actionConfig) {
             $this->setDefaultAction($actionConfig, $actionName, $operationName);
+
+            //Make sure grid is set for index action
             if (ActionTypes::INDEX === $actionConfig['action'] && !isset($actionConfig['grid'])) {
                 throw new \LogicException(
                     sprintf(
@@ -165,6 +167,7 @@ class Configuration implements ConfigurationInterface
                 );
             }
 
+            //Set default service id for resource provider
             if (ActionTypes::CREATE === $actionConfig['action']) {
                 $this->setDefaultResourceProviderConfig($this->getServiceId($scope, $resourceName, 'factory'), $actionConfig);
             } else {
@@ -172,9 +175,8 @@ class Configuration implements ConfigurationInterface
             }
 
             if (in_array($actionConfig['action'], [ActionTypes::CREATE, ActionTypes::UPDATE])) {
-                if(!isset($actionConfig['action'])) {
-                    $actionConfig['controller'] = CreateAction::class;
-                }
+                //If no action level form configured, then copy it from resource level.
+                //otherwise merge them together, note we use  `array_replace_recursive` method insteand of `array_merge_recursive` here
                 if(!isset($actionConfig['form'])) {
                     $actionConfig['form'] =  isset($this->resourceConfigs[$resourceName]['form'])? $this->resourceConfigs[$resourceName]['form']: null;
                 } else {
@@ -184,12 +186,13 @@ class Configuration implements ConfigurationInterface
 
                     $actionConfig['form'] = array_replace_recursive($toArray($this->resourceConfigs[$resourceName]['form']), $toArray($actionConfig['form']));
                 }
-            }
 
+                //Set default action
+                $actionConfig['controller'] = $actionConfig['controller'] ?? CreateAction::class;
+            }
+            //Set default action for delete
             if (ActionTypes::DELETE == $actionConfig['action']) {
-                if(!isset($actionConfig['controller'])) {
-                    $actionConfig['controller'] = DeleteAction::class;
-                }
+                $actionConfig['controller'] = $actionConfig['controller'] ?? DeleteAction::class;
             }
         }
     }
@@ -205,7 +208,7 @@ class Configuration implements ConfigurationInterface
             ActionTypes::BULK_DELETE,
         ];
 
-        if (!isset($actionConfig['action'])) {
+        if (!isset($actionConfig['action']) || null == $actionConfig['action']) {
             if (!in_array($actionName, $defaultActions)) {
                 throw new \LogicException(
                     sprintf(
