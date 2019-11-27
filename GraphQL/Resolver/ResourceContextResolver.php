@@ -29,7 +29,7 @@ class ResourceContextResolver
             }
 
             if(isset($args['input'])) {
-                return $args['input'][$parameterName];
+                return $args['input'][$parameterName] ?? null;
             }
 
             return null;

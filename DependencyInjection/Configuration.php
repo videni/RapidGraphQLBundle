@@ -188,11 +188,13 @@ class Configuration implements ConfigurationInterface
                 }
 
                 //Set default action
-                $actionConfig['controller'] = $actionConfig['controller'] ?? CreateAction::class;
+                $actionConfig['controller'] = isset($actionConfig['controller']) && $actionConfig['controller'] !== false ?
+                    $actionConfig['controller'] : CreateAction::class;
             }
             //Set default action for delete
             if (ActionTypes::DELETE == $actionConfig['action']) {
-                $actionConfig['controller'] = $actionConfig['controller'] ?? DeleteAction::class;
+                $actionConfig['controller'] = isset($actionConfig['controller']) && $actionConfig['controller'] !== false ?
+                    $actionConfig['controller'] : DeleteAction::class;
             }
         }
     }

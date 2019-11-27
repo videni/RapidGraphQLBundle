@@ -2,17 +2,14 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\Config\Resource;
 
-class Action
+class Action extends FormConfig
 {
     private $action;
     private $grid;
     private $accessControl;
     private $accessControlMessage;
     private $controller;
-    private $validationGroups = null;
     private $resourceProvider = null;
-
-    private $form = [];
 
     /**
      * @return mixed
@@ -50,26 +47,6 @@ class Action
     public function setController($controller)
     {
         $this->controller = $controller;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValidationGroups()
-    {
-        return $this->validationGroups;
-    }
-
-    /**
-     * @param mixed $validationGroups
-     *
-     * @return self
-     */
-    public function setValidationGroups($validationGroups)
-    {
-        $this->validationGroups = $validationGroups;
 
         return $this;
     }
@@ -115,9 +92,6 @@ class Action
     {
         $self = new self();
 
-        if (array_key_exists('validation_groups', $config)) {
-            $self->setValidationGroups($config['validation_groups']);
-        }
         if (array_key_exists('grid', $config)) {
             $self->setGrid($config['grid']);
         }
@@ -136,6 +110,8 @@ class Action
         if (array_key_exists('resource_provider', $config)) {
             $self->setResourceProvider(Service::fromArray($config['resource_provider']));
         }
+
+        parent::create($self, $config);
 
         return $self;
     }
@@ -178,65 +154,5 @@ class Action
         $this->resourceProvider = $resourceProvider;
 
         return $this;
-    }
-
-      /**
-     * @return mixed
-     */
-    public function getFormClass()
-    {
-        return  isset($this->form['class'])?  $this->form['class']: null;
-    }
-
-    /**
-     * @param mixed $form
-     *
-     * @return self
-     */
-    public function setFormClass($form)
-    {
-        $this->form['class'] = $form;
-
-        return $this;
-    }
-
-     /**
-     * @param mixed $validationGroups
-     *
-     * @return self
-     */
-    public function setFormValidationGroups($validationGroups)
-    {
-        $this->form['validation_groups'] = $validationGroups;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormValidationGroups()
-    {
-        return isset($this->form['validation_groups']) ? $this->form['validation_groups']: null;
-    }
-
-     /**
-     * @param mixed $validationGroups
-     *
-     * @return self
-     */
-    public function setFormHandler($onSuccess)
-    {
-        $this->form['handler'] = $onSuccess;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormHandler()
-    {
-        return isset($this->form['handler']) ? $this->form['handler']: null;
     }
 }

@@ -14,6 +14,7 @@ use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
+use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Action;
 
 final class FormHandler
 {
@@ -39,7 +40,7 @@ final class FormHandler
     {
         $form = $this->resolveForm($context, $data, $request);
 
-        return $this->processForm($input, $form, $context->getResource());
+        return $this->processForm($input, $form, $context->getAction());
     }
 
     public function resolveForm(ResourceContext $context, $data, Request $request)
@@ -49,8 +50,7 @@ final class FormHandler
         $this->eventDispatcher->dispatch(ResolveFormEvent::BEFORE_RESOLVE, $resolveFormEvent);
 
         $action = $context->getAction();
-
-        $formType = $context->getResource()->getFormClass();
+        $formType = $action->getFormClass();
         if (null === $formType) {
             throw new \LogicException(
                 sprintf('The form is required for action %s of operation %s', $context->getActionName(), $context->getOperationName())
@@ -63,10 +63,8 @@ final class FormHandler
             'allow_extra_fields' => true,
         ];
 
-        if ($action->getValidationGroups()) {
-            $options += [
-                'validation_groups' => $action->getValidationGroups()
-            ];
+        if ($action->getFormValidationGroups()) {
+            $options['validation_groups'] = $action->getFormValidationGroups();
         }
 
         $form = $this->formFactory->create($formType, $data, $options);
@@ -81,9 +79,9 @@ final class FormHandler
         return $form;
     }
 
-    protected function processForm($input, FormInterface $form, Resource $resource)
+    protected function processForm($input, FormInterface $form, Action $action)
     {
-        $formHandler = $resource->getFormHandler() ? $this->container->get($resource->getFormHandler()): null;
+        $formHandler = $action->getFormHandler() ? $this->container->get($action->getFormHandler()): null;
         /**
          * always use $clearMissing = false
          */
