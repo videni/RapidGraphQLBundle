@@ -142,3 +142,7 @@ services:
     Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentsAttributeValueResolver:
          tags:
             - { name: 'controller.argument_value_resolver', priority: 150 }
+
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition\JsonType:
+            tags:
+                - { name: overblog_graphql.type, alias: Json }

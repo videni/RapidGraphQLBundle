@@ -31,6 +31,8 @@ class VideniRapidGraphQLExtension extends Extension
 
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('videni_rapid_graphql.hash_id.prefix', $config['hash_id_prefix']);
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 

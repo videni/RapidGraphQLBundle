@@ -34,6 +34,10 @@ class Configuration implements ConfigurationInterface
         $node = $rootNode
             ->children()
         ;
+        $node
+            ->scalarNode('hash_id_prefix')
+                ->defaultValue('')
+            ->end();
 
         $node->append($this->addOpertaionConfigurationSection());
 

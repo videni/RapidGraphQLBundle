@@ -1,0 +1,6 @@
+Node:
+    type: interface
+    config:
+        fields:
+            id:
+                type: "ID!"
