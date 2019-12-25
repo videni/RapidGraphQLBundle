@@ -2,12 +2,11 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
-use Overblog\GraphQLBundle\Definition\Argument;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 use Pintushi\Bundle\GridBundle\Grid\Manager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
-use Symfony\Component\HttpFoundation\Request;
-use  Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
+use Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
 use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
 
@@ -30,15 +29,13 @@ class Index extends AbstractResolver implements ResolverInterface
         $this->connectionBuilder = $connectionBuilder ?? new ConnectionBuilder();
     }
 
-    public function __invoke(Argument $args, $operationName, $actionName, Request $request)
+    public function __invoke(Argument $args, $operationName, $actionName)
     {
-        $request->attributes->set('arguments', $args);
-
         $pagerParams = isset($args['input'])?  $args['input'] : [];
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $this->checkPermission(null, $context->getAction(), $request);
+        $this->checkPermission(null, $context->getAction(), $args);
 
         $grid = $this->gridManager->getGrid(
             $context->getGrid(),
@@ -49,10 +46,10 @@ class Index extends AbstractResolver implements ResolverInterface
          * @var ResultsObject
          */
         $result = $grid->getData();
-        $request->attributes->set('data', $result);
+        $args->attributes->set('data', $result);
 
         if ($controller = $this->controllerResolver->getController($context)) {
-            return $this->controllerExecutor->execute($controller, $request);
+            return $this->controllerExecutor->execute($controller, $args);
         }
 
         $arrayLength =  isset($pagerParams['last']) ?  $result->getTotalRecords() : ($result->getCursor() + count($result->getData()));

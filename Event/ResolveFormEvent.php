@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Form\FormInterface;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 
 final class ResolveFormEvent extends Event
 {
@@ -26,7 +26,7 @@ final class ResolveFormEvent extends Event
      */
     protected $form;
 
-    public function __construct($data, ResourceContext $context, Request $request)
+    public function __construct($data, ResourceContext $context, Argument $request)
     {
         $this->data = $data;
         $this->context = $context;

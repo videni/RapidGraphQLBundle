@@ -8,13 +8,13 @@ use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Videni\Bundle\RapidGraphQLBundle\Context\ResourceContext;
 use Videni\Bundle\RapidGraphQLBundle\Event\ResolveFormEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Resource;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Action;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 
 final class FormHandler
 {
@@ -36,16 +36,16 @@ final class FormHandler
         $this->container = $container;
     }
 
-    public function handle($data, ResourceContext $context, array $input, Request $request)
+    public function handle($data, ResourceContext $context, array $input, Argument $argument)
     {
-        $form = $this->resolveForm($context, $data, $request);
+        $form = $this->resolveForm($context, $data, $argument);
 
         return $this->processForm($input, $form, $context->getAction());
     }
 
-    public function resolveForm(ResourceContext $context, $data, Request $request)
+    public function resolveForm(ResourceContext $context, $data, Argument $argument)
     {
-        $resolveFormEvent = new ResolveFormEvent($data, $context, $request);
+        $resolveFormEvent = new ResolveFormEvent($data, $context, $argument);
 
         $this->eventDispatcher->dispatch(ResolveFormEvent::BEFORE_RESOLVE, $resolveFormEvent);
 
@@ -74,7 +74,7 @@ final class FormHandler
         $this->eventDispatcher->dispatch(ResolveFormEvent::AFTER_RESOLVE, $resolveFormEvent);
 
         //pass form to controller
-        $request->attributes->set('form', $form);
+        $argument->attributes->set('form', $form);
 
         return $form;
     }

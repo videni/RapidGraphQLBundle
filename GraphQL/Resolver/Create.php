@@ -2,8 +2,7 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
-use Overblog\GraphQLBundle\Definition\Argument;
-use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 use Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister;
 use Overblog\GraphQLBundle\Definition\Resolver\MutationInterface;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
@@ -28,27 +27,25 @@ class Create extends AbstractResolver implements MutationInterface
         $this->formHandler = $formHandler;
     }
 
-    public function __invoke(Argument $args, $operationName, $actionName, Request $request)
+    public function __invoke(Argument $args, $operationName, $actionName)
     {
-        $request->attributes->set('arguments', $args);
-
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $resource = $this->resourceContextResolver->resolveResource($args, $context, $request);
+        $resource = $this->resourceContextResolver->resolveResource($args, $context);
 
-        $this->checkPermission($resource, $context->getAction(), $request);
+        $this->checkPermission($resource, $context->getAction(), $args);
 
         $resource = $this->formHandler->handle(
             $resource,
             $context,
             isset($args['input']) ? $args['input']: $args->getArrayCopy(),
-            $request
+            $args
         );
 
         if (false === $controller = $this->controllerResolver->getController($context)) {
             return $resource;
         }
 
-        return $this->controllerExecutor->execute($controller, $request);
+        return $this->controllerExecutor->execute($controller, $args);
     }
 }

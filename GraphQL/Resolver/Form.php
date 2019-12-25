@@ -2,8 +2,7 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
-use Overblog\GraphQLBundle\Definition\Argument;
-use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 
 class Form implements ResolverInterface
@@ -19,16 +18,16 @@ class Form implements ResolverInterface
         $this->formHandler = $formHandler;
     }
 
-    public function __invoke(Argument $args, $operationName, $actionName, Request $request)
+    public function __invoke(Argument $args, $operationName, $actionName)
     {
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 
-        $data = $this->resourceContextResolver->resolveResource($args, $context, $request);
+        $data = $this->resourceContextResolver->resolveResource($args, $context);
 
         return $this->formHandler->resolveForm(
             $context,
             $data,
-            $request
+            $args
         );
     }
 }

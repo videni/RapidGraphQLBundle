@@ -4,6 +4,7 @@ imports:
 
 parameters:
     videni_rapid_graphql.data_persister.class: Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\DataPersister
+    overblog_graphql.argument_class: Videni\Bundle\RapidGraphQLBundle\Definition\Argument
 
 services:
     _defaults:
@@ -71,7 +72,7 @@ services:
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\ControllerExecutor:
         arguments:
-            - '@argument_resolver'
+            - '@Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolver'
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\ExecutorContextStorage:
         tags:
@@ -139,9 +140,7 @@ services:
               event: !php/const Overblog\GraphQLBundle\Event\Events::PRE_EXECUTOR
               method: onPreExecutor
 
-    Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentsAttributeValueResolver:
-         tags:
-            - { name: 'controller.argument_value_resolver', priority: 150 }
+    Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolver: ~
 
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition\JsonType:
             tags:

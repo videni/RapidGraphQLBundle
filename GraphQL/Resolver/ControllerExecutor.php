@@ -2,8 +2,8 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
+use Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolverInterface;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 
 class ControllerExecutor
 {
@@ -13,10 +13,10 @@ class ControllerExecutor
         $this->argumentsResolver = $argumentsResolver;
     }
 
-    public function execute($controller, Request $request)
+    public function execute($controller, Argument $argument)
     {
         // controller arguments
-        $arguments = $this->argumentsResolver->getArguments($request, $controller);
+        $arguments = $this->argumentsResolver->getArguments($argument, $controller);
 
         return $controller(...$arguments);
     }

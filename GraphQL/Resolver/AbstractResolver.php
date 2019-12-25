@@ -2,10 +2,11 @@
 
 namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver;
 
-use Symfony\Component\HttpFoundation\Request;
+use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 use Videni\Bundle\RapidGraphQLBundle\Config\Resource\Action;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
 use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 abstract class AbstractResolver {
 
@@ -26,20 +27,18 @@ abstract class AbstractResolver {
         $this->resourceAccessChecker = $resourceAccessChecker;
     }
 
-    public function checkPermission($object, Action $action, Request $request)
+    public function checkPermission($object, Action $action, Argument $argument)
     {
         $accessControl = $action->getAccessControl();
         if (null === $accessControl) {
             return;
         }
-
-        $extraVariables = $request->attributes->all();
+        $extraVariables = $argument->attributes->all();
         $extraVariables['object'] = $object;
-        $extraVariables['request'] = $request;
 
         $isGranted = $this->resourceAccessChecker->isGranted($accessControl, $extraVariables);
         if (!$isGranted){
-            throw new AccessDeniedException($action->getAccessControlMessage() ?? 'Access Denied');
+            throw new AccessDeniedHttpException($action->getAccessControlMessage() ?? 'Access Denied');
         }
     }
 }
