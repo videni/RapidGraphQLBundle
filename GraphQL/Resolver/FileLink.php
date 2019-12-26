@@ -26,6 +26,10 @@ class FileLink implements ResolverInterface
         $rawParameters = json_decode($parameters, true);
 
         $object = FieldResolver::valueFromObjectOrArray($value, $info->fieldName);
+        if (null == $object) {
+            return;
+        }
+
         if ($object instanceof Collection) {
             return array_map(function($file) use ($args, $route, $absolute, $rawParameters) {
                 return $this->generate($file, $args, $route, $absolute, $rawParameters);
