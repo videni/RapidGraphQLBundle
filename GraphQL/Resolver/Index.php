@@ -31,7 +31,7 @@ class Index extends AbstractResolver implements ResolverInterface
 
     public function __invoke(Argument $args, $operationName, $actionName)
     {
-        $pagerParams = isset($args['input'])?  $args['input'] : [];
+        $pagerParams = $args->getArrayCopy();
 
         $context = $this->resourceContextResolver->resolveResourceContext($operationName, $actionName);
 

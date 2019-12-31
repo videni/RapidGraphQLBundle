@@ -33,7 +33,7 @@ abstract class AbstractResolver {
         if (null === $accessControl) {
             return;
         }
-        $extraVariables = $argument->attributes->all();
+        $extraVariables =  array_merge($argument->getArrayCopy(), $argument->attributes->all());
         $extraVariables['object'] = $object;
 
         $isGranted = $this->resourceAccessChecker->isGranted($accessControl, $extraVariables);
