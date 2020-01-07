@@ -6,6 +6,7 @@ namespace Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition;
 
 use Overblog\GraphQLBundle\Definition\Builder\MappingInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FileLinkFieldDefinition implements MappingInterface
 {
@@ -28,9 +29,9 @@ class FileLinkFieldDefinition implements MappingInterface
         $optionResolver = new OptionsResolver();
         $optionResolver
             ->setRequired(['route'])
-            ->setDefault('absolute', false)
+            ->setDefault('absolute', UrlGeneratorInterface::ABSOLUTE_URL)
             ->setDefined(['absolute', 'parameters'])
-            ->setAllowedTypes('absolute', ['bool'])
+            ->setAllowedTypes('absolute', ['int'])
             ->setAllowedTypes('parameters', ['array'] )
         ;
 

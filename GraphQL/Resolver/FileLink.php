@@ -21,7 +21,7 @@ class FileLink implements ResolverInterface
         $this->expressionLanguage = $expressionLanguage;
     }
 
-    public function __invoke($value, $args, $context , $info, string $route, string $parameters = '[]', $absolute = false)
+    public function __invoke($value, $args, $context , $info, string $route, string $parameters = '[]', $absolute = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $rawParameters = json_decode($parameters, true);
 
@@ -60,6 +60,6 @@ class FileLink implements ResolverInterface
             }
         }
 
-        return $this->urlGenerator->generate($route, $evaluatedParams, (bool)$absolute);
+        return $this->urlGenerator->generate($route, $evaluatedParams, $absolute);
     }
 }
