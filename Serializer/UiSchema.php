@@ -51,9 +51,16 @@ class UiSchema {
     protected static function extractObject(array &$formSchema)
     {
         $uiSchema = [];
+        $propertyOrders = [];
         if (isset($formSchema['properties'])) {
             $properties = &$formSchema['properties'];
+
             foreach($properties as $propertyName => &$property) {
+                $propertyOrders[$propertyName] = $property['propertyOrder']?? 0;
+                if(isset($property['propertyOrder'])) {
+                    unset($property['propertyOrder']);
+                }
+
                 $data = self::extract($property);
                 if (!empty($data)) {
                     $uiSchema[$propertyName] = $data;
@@ -65,8 +72,22 @@ class UiSchema {
             $uiSchema = self::extractOneOf($formSchema['oneOf']);
         }
 
+        self::sortProperties($propertyOrders);
+        if (!empty($propertyOrders)) {
+            $uiSchema['ui:order'] = array_keys($propertyOrders);
+        }
 
         return self::extractUiOptions($formSchema) + $uiSchema;
+    }
+
+    private static function sortProperties(array &$data)
+    {
+        uasort($data, function($a, $b) {
+            if ($a == $b) {
+                return 0;
+            }
+            return ($a < $b) ? -1 : 1;
+        });
     }
 
     protected static function extractArray(array &$formSchema) {
