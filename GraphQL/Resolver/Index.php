@@ -9,7 +9,13 @@ use Overblog\GraphQLBundle\Definition\Resolver\ResolverInterface;
 use Overblog\GraphQLBundle\Relay\Connection\ConnectionBuilder;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ControllerResolver;
 use Videni\Bundle\RapidGraphQLBundle\Security\ResourceAccessCheckerInterface;
+use Videni\Bundle\RapidGraphQLBundle\Relay\Connection\Output\Connection;
+use Overblog\GraphQLBundle\Relay\Connection\Output\PageInfo;
+use Overblog\GraphQLBundle\Relay\Connection\Output\Edge;
 
+/**
+ * @todo: Don't calculate total count if total is not requested.
+ */
 class Index extends AbstractResolver implements ResolverInterface
 {
     private $gridManager;
@@ -51,21 +57,37 @@ class Index extends AbstractResolver implements ResolverInterface
         if ($controller = $this->controllerResolver->getController($context)) {
             return $this->controllerExecutor->execute($controller, $args);
         }
+        $items = $result->getData();
+        $startOffset = $result->getCursor();
+        $perPage = $result->getPerPage();
 
-        $arrayLength =  isset($pagerParams['last']) ?  $result->getTotalRecords() : ($result->getCursor() + count($result->getData()));
+        $hasNextPage = count($items) == $result->getPerPage()+1;
+        if ($hasNextPage) {
+            $items = $result->isBackward() ? array_slice($items, 1) :  array_slice($items, 0, $perPage);
+        }
 
-        $connection = $this
-            ->connectionBuilder
-            ->connectionFromArraySlice(
-                $result->getData(),
-                $pagerParams, [
-                    'sliceStart' =>  $result->getCursor(),
-                    'arrayLength' => $arrayLength
-                ]
-            );
+        $edges = [];
+        foreach ($items as $index => $value) {
+            $cursor = $this->connectionBuilder->offsetToCursor(($startOffset == 0 ? 1: $startOffset) + $index);
+            $edge = new Edge($cursor, $value);
+            $edges[] = $edge;
+        }
 
-        $connection->setTotalCount($result->getTotalRecords());
+        $firstEdge = $edges[0] ?? null;
+        $lastEdge = \end($edges);
 
+        $total = $result->getTotalRecords();
+        $hasPreviousPage = $result->isBackward() ? ($total - $startOffset)/$perPage > 0 : $startOffset/$perPage > 0;
+
+        $pageInfo = new PageInfo(
+            $firstEdge->getCursor(),
+            $lastEdge->getCursor(),
+            $hasPreviousPage,
+            $hasNextPage
+        );
+
+        $connection = new Connection($edges, $pageInfo);
+        $connection->setTotalCount($total);
 
         return $connection;
     }
