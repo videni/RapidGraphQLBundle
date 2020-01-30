@@ -68,7 +68,7 @@ class Index extends AbstractResolver implements ResolverInterface
 
         $edges = [];
         foreach ($items as $index => $value) {
-            $cursor = $this->connectionBuilder->offsetToCursor(($startOffset == 0 ? 1: $startOffset) + $index);
+            $cursor = $this->connectionBuilder->offsetToCursor($startOffset + 1 + $index);
             $edge = new Edge($cursor, $value);
             $edges[] = $edge;
         }
