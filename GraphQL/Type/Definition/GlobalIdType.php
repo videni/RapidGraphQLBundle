@@ -68,7 +68,12 @@ class GlobalIdType extends ScalarType
 
         $globalId = GlobalId::fromGlobalId($value);
         if ($globalId['type'] !== $this->type) {
-            throw new \LogicException(sprintf('Type %s is required, but got %s', $this->type, $globalId['type']));
+            throw new \LogicException(sprintf(
+                'Decode global id %s failed, Type %s is required, but got %s',
+                $value,
+                $this->type,
+                $globalId['type']
+            ));
         }
 
         return $globalId['id'];

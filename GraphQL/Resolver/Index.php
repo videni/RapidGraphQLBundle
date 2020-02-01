@@ -80,8 +80,8 @@ class Index extends AbstractResolver implements ResolverInterface
         $hasPreviousPage = $result->isBackward() ? ($total - $startOffset)/$perPage > 0 : $startOffset/$perPage > 0;
 
         $pageInfo = new PageInfo(
-            $firstEdge->getCursor(),
-            $lastEdge->getCursor(),
+            $firstEdge ? $firstEdge->getCursor(): null,
+            $lastEdge? $lastEdge->getCursor(): null,
             $hasPreviousPage,
             $hasNextPage
         );
