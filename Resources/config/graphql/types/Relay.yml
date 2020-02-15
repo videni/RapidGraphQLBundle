@@ -4,3 +4,15 @@ Node:
         fields:
             id:
                 type: "ID!"
+
+
+RelayConnection:
+    type: relay-connection
+    config:
+        connectionFields:
+            pageSize:
+                type: Int
+            pageCount:
+                type: Int
+            totalCount:
+                type: Int

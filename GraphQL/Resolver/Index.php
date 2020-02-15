@@ -87,7 +87,9 @@ class Index extends AbstractResolver implements ResolverInterface
         );
 
         $connection = new Connection($edges, $pageInfo);
-        $connection->setTotalCount($total);
+        $connection
+            ->setTotalCount($total)
+            ->setPageSize($perPage);
 
         return $connection;
     }

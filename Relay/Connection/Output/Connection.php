@@ -26,6 +26,8 @@ class Connection
     /** @var int|callable */
     protected $totalCount;
 
+    private $pageSize;
+
     public function __construct($edges = [], PageInfoInterface $pageInfo = null)
     {
         $this->edges = $edges;
@@ -38,9 +40,11 @@ class Connection
     }
 
 
-    public function setEdges(iterable $edges): void
+    public function setEdges(iterable $edges): self
     {
         $this->edges = $edges;
+
+        return $this;
     }
 
     public function getPageInfo(): ? PageInfoInterface
@@ -49,9 +53,11 @@ class Connection
     }
 
 
-    public function setPageInfo(PageInfoInterface $pageInfo): void
+    public function setPageInfo(PageInfoInterface $pageInfo): self
     {
         $this->pageInfo = $pageInfo;
+
+        return $this;
     }
 
     public function getTotalCount()
@@ -59,8 +65,33 @@ class Connection
         return \is_callable($this->totalCount) ? \call_user_func($this->totalCount) : $this->totalCount;
     }
 
-    public function setTotalCount($totalCount): void
+    public function setTotalCount($totalCount): self
     {
         $this->totalCount = $totalCount;
+
+        return $this;
+    }
+
+    public function setPageSize($pageSize): self
+    {
+        $this->pageSize = $pageSize;
+
+        return $this;
+    }
+
+    public function getPageSize()
+    {
+        return $this->pageSize;
+    }
+
+    public function getPageCount()
+    {
+        $totalCount = $this->getTotalCount();
+
+        if (!$this->pageSize) {
+            return null;
+        }
+
+        return ceil($totalCount/$this->pageSize);
     }
 }
