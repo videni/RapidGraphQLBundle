@@ -28,7 +28,7 @@ class UiSchema {
      * @return array
      */
     public static function extract(array &$formSchema) {
-        $type = $formSchema['type'];
+        list($type) = is_array($formSchema['type']) ? $formSchema['type']: [$formSchema['type']];
         if ('object' === $type) {
             return self::extractObject($formSchema);
         }
