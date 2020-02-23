@@ -51,30 +51,33 @@ class UiSchema {
     protected static function extractObject(array &$formSchema)
     {
         $uiSchema = [];
-        $propertyOrders = [];
         if (isset($formSchema['properties'])) {
             $properties = &$formSchema['properties'];
+            $propertyOrders = [];
 
             foreach($properties as $propertyName => &$property) {
-                $propertyOrders[$propertyName] = $property['propertyOrder']?? 0;
                 if(isset($property['propertyOrder'])) {
+                    $propertyOrders[$propertyName] = $property['propertyOrder'];
                     unset($property['propertyOrder']);
                 }
-
                 $data = self::extract($property);
                 if (!empty($data)) {
                     $uiSchema[$propertyName] = $data;
                 }
             }
+            self::sortProperties($propertyOrders);
+            if (!empty($propertyOrders)) {
+                $orders = array_keys($propertyOrders);
+                $noneOrderedProperties = array_diff(array_keys($properties), array_keys($propertyOrders));
+                if(count($noneOrderedProperties) > 0) {
+                    array_push($orders, '*');
+                }
+                $uiSchema['ui:order'] = $orders;
+            }
         } else if (isset($formSchema['anyOf'])) {
             $uiSchema = self::extractOneOf($formSchema['anyOf']);
         }else if (isset($formSchema['oneOf'])) {
             $uiSchema = self::extractOneOf($formSchema['oneOf']);
-        }
-
-        self::sortProperties($propertyOrders);
-        if (!empty($propertyOrders)) {
-            $uiSchema['ui:order'] = array_keys($propertyOrders);
         }
 
         return self::extractUiOptions($formSchema) + $uiSchema;
