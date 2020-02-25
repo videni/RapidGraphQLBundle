@@ -38,7 +38,7 @@ class UiSchema {
         }
 
         if (in_array($type, ['number', 'boolean', 'integer', 'number', 'string'])) {
-            return self::extractUiOptions($formSchema);
+            return self::extractUiSchema($formSchema);
         }
 
         throw new \Exception(sprintf(
@@ -66,6 +66,7 @@ class UiSchema {
                 }
             }
             self::sortProperties($propertyOrders);
+            // dump($formSchema, $propertyOrders);
             if (!empty($propertyOrders)) {
                 $orders = array_keys($propertyOrders);
                 $noneOrderedProperties = array_diff(array_keys($properties), array_keys($propertyOrders));
@@ -80,7 +81,7 @@ class UiSchema {
             $uiSchema = self::extractOneOf($formSchema['oneOf']);
         }
 
-        return self::extractUiOptions($formSchema) + $uiSchema;
+        return self::extractUiSchema($formSchema) + $uiSchema;
     }
 
     private static function sortProperties(array &$data)
@@ -105,36 +106,21 @@ class UiSchema {
             //@todo: array ref
             throw new \RuntimeException('$ref is not implemented yet');
         } else { // json object schema
-            $uiSchema['items'] = (object)self::extract($items);
+            $uiSchema['items'] = (object)self::extractUiSchema($formSchema);
         }
 
-        return self::extractUiOptions($formSchema) + $uiSchema;
+        return self::extractUiSchema($formSchema) + $uiSchema;
     }
 
-    protected static function extractUiOptions(array &$formSchema) {
-        $uiSchema = [];
 
-        if (isset($formSchema['widget'])) {
-            $uiSchema['ui:widget'] = $formSchema['widget'];
-            unset($formSchema['widget']);
-        }
-        if (isset($formSchema['propertyOrder'])) {
-            $uiSchema['ui:order'] = $formSchema['propertyOrder'];
-            unset($formSchema['propertyOrder']);
+    protected static function extractUiSchema(array &$formSchema) {
+        if (isset($formSchema['uiSchema'])) {
+            $uiSchema = $formSchema['uiSchema'];
+             unset($formSchema['uiSchema']);
+             return $uiSchema;
         }
 
-        if(isset($formSchema['ui'])) {
-            $options = [];
-            foreach($formSchema['ui'] as $key => $value) {
-                if (!is_null($value)) {
-                    $uiSchema['ui:'.$key ] = $value;
-                }
-            }
-
-            unset($formSchema['ui']);
-        }
-
-        return $uiSchema;
+        return [];
     }
 
     private static function extractOneOf(array &$oneOf) {

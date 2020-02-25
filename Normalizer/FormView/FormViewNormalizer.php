@@ -20,9 +20,8 @@ class FormViewNormalizer
     public function normalize(FormInterface $form, FormView $formView, Context $context)
     {
         $ancestries = FormUtil::typeAncestry($form);
-
         if(empty($formView->children)) {
-            return $this->getTypedValue($formView, $ancestries);
+            return $this->getTypedValue($formView, $ancestries, $form);
         }
 
         $normalizer = $this->formViewNormalizerResolver->resolve($form, $formView, $ancestries);
@@ -33,11 +32,6 @@ class FormViewNormalizer
         // Force serialization as {} instead of []
         $data = array();
         foreach ($formView->children as $name => $child) {
-            $value = $child->vars['value'];
-            if (empty($child->children) && $this->isEmpty($value)) {
-                continue;
-            }
-
             $childValues = $this->normalize($form[$name], $child, $context);
             if (!$this->isEmpty($childValues)) {
                 $data[$name] = $childValues;
@@ -66,16 +60,22 @@ class FormViewNormalizer
      * @param FormView $formView
      * @return mix
      */
-    private function getTypedValue(FormView $formView, array $ancestries)
+    private function getTypedValue(FormView $formView, array $ancestries, $form)
     {
+
         // handle separatedly the case with checkboxes, so the result is
         // true/false instead of 1/0
         if (isset($formView->vars['checked'])) {
             return $formView->vars['checked'];
         }
 
+        if (in_array('choices', $ancestries)) {
+            return $formView->vars['value'];
+        }
+
         // don't convert string to numeric for autocomplete and select
-        if (isset($formView->vars['widget_options']) && isset($formView->vars['widget_options']['autocomplete_alias']) || isset($formView->vars['choices'])) {
+        if (isset($formView->vars['widget_options']) &&
+            isset($formView->vars['widget_options']['autocomplete_alias'])) {
             return $formView->vars['value'];
         }
 

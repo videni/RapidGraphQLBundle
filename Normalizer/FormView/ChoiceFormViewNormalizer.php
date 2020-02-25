@@ -33,6 +33,7 @@ class ChoiceFormViewNormalizer implements FormViewNormalizerInterface
                 $data[] = $child->vars['value'];
             }
         }
+
         return $data;
     }
 

@@ -32,9 +32,8 @@ class FormSchema implements ResolverInterface
         return new class($this->serializer, $this->liform, $value) extends FormSchema {
             private $serializer;
             private $liform;
-
-            private $cache = null;
-
+            private $jsonSchema = null;
+            private $uiSchema = null;
             private $form;
 
             public function __construct(
@@ -49,13 +48,9 @@ class FormSchema implements ResolverInterface
 
             public function getSchema()
             {
-                if ($this->cache) {
-                    return $this->cache;
-                }
+                $this->extract();
 
-                $this->cache = $this->liform->transform($this->form);
-
-                return $this->cache;
+                return $this->jsonSchema;
             }
 
             public function getFormData()
@@ -70,13 +65,21 @@ class FormSchema implements ResolverInterface
 
             public function getUiSchema()
             {
-                if (!$this->cache) {
-                    $this->cache = $this->liform->transform($this->form);
+                $this->extract();
+
+                return (object)$this->uiSchema;
+            }
+
+            private function extract(): void
+            {
+                if ($this->jsonSchema) {
+                    return;
                 }
 
-                $schema = $this->cache;
+                $formSchema = $this->liform->transform($this->form);
 
-                return (object)UiSchema::extract($schema);
+                $this->uiSchema = (object)UiSchema::extract($formSchema);
+                $this->jsonSchema = $formSchema;
             }
         };
     }
