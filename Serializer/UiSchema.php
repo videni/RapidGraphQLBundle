@@ -66,7 +66,6 @@ class UiSchema {
                 }
             }
             self::sortProperties($propertyOrders);
-            // dump($formSchema, $propertyOrders);
             if (!empty($propertyOrders)) {
                 $orders = array_keys($propertyOrders);
                 $noneOrderedProperties = array_diff(array_keys($properties), array_keys($propertyOrders));
