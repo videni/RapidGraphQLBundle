@@ -22,15 +22,16 @@ class FormHandler implements FormHandlerInterface
     public function onFailed(FormInterface $form): void
     {
         $violations = [];
-        $this->convertFormToArray($form, $violations, '');
+        $this->convertFormToArray($form, $violations);
 
         throw new ArgumentsValidationException(new ConstraintViolationList($violations));
     }
 
-    private function convertFormToArray(FormInterface $form, &$violations, $previousPath): void
+    private function convertFormToArray(FormInterface $form, &$violations, $name = '', $previousPath = ''): void
     {
         $errors = [];
-        $currentPath = $previousPath.'.'.$form->getName();
+
+        $currentPath = $previousPath ?  \implode('.', [$previousPath, $name]): $name ;
 
         foreach ($form->getErrors() as $error) {
             $cause = $error->getCause();
@@ -52,7 +53,7 @@ class FormHandler implements FormHandlerInterface
 
         foreach ($form->all() as $child) {
             if ($child instanceof FormInterface) {
-                $this->convertFormToArray($child, $violations, $currentPath);
+                $this->convertFormToArray($child, $violations, $child->getName(), $currentPath);
             }
         }
     }
