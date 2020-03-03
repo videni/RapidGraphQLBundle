@@ -50,10 +50,6 @@ services:
 
     Videni\Bundle\RapidGraphQLBundle\Form\FormSchemaRespond: ~
 
-    Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\ChoiceFormViewNormalizer:
-        tags:
-            - { name: 'videni_rapid_graphql.form_view.normalizer', priority: 1 }
-
     Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizer: ~
 
     Videni\Bundle\RapidGraphQLBundle\Normalizer\FormView\FormViewNormalizerResolver: ~
