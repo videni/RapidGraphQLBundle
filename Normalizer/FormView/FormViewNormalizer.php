@@ -19,6 +19,15 @@ class FormViewNormalizer
 
     public function normalize(FormInterface $form, FormView $formView, Context $context)
     {
+        $formConfig = $form->getConfig();
+        if($formConfig->hasOption('view_normalizer')) {
+            //this form has custom view normalizer
+            $viewNormalizer = $formConfig->getOption('view_normalizer');
+            if(\is_callable($viewNormalizer)) {
+                return \call_user_func($viewNormalizer, $form, $formView, $context);
+            }
+        }
+
         $ancestries = FormUtil::typeAncestry($form);
         if(empty($formView->children)) {
             return $this->getTypedValue($formView, $ancestries, $form);
@@ -62,7 +71,6 @@ class FormViewNormalizer
      */
     private function getTypedValue(FormView $formView, array $ancestries, $form)
     {
-
         // handle separatedly the case with checkboxes, so the result is
         // true/false instead of 1/0
         if (isset($formView->vars['checked'])) {

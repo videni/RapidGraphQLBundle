@@ -105,6 +105,10 @@ services:
         tags:
             - { name: overblog_graphql.mutation, alias: delete }
 
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\NewPayload:
+        tags:
+            - { name: overblog_graphql.mutation, alias: newPayload }
+
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Index:
         tags:
             - { name: overblog_graphql.resolver, alias: index }
@@ -145,3 +149,8 @@ services:
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Type\Definition\JsonType:
             tags:
                 - { name: overblog_graphql.type, alias: Json }
+
+
+    Videni\Bundle\RapidGraphQLBundle\Form\Extension\ViewNormalizerExtension:
+        tags:
+            - { name: 'form.type_extension', extended_type: 'Symfony\Component\Form\Extension\Core\Type\FormType'}

@@ -5,6 +5,8 @@ namespace Videni\Bundle\RapidGraphQLBundle\Controller;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactoryInterface;
 use Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolver\ArgumentAttributeValueResolver;
+use Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolver\RootArgumentResolver;
+use Videni\Bundle\RapidGraphQLBundle\Controller\ArgumentResolver\DefaultValueResolver;
 use Videni\Bundle\RapidGraphQLBundle\Definition\Argument;
 
 final class ArgumentResolver implements ArgumentResolverInterface
@@ -51,6 +53,7 @@ final class ArgumentResolver implements ArgumentResolverInterface
                 continue 2;
             }
 
+            dump($arguments);
             $representative = $controller;
 
             if (\is_array($representative)) {
@@ -59,6 +62,7 @@ final class ArgumentResolver implements ArgumentResolverInterface
                 $representative = \get_class($representative);
             }
 
+            breakhere();
             throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument. Either the argument is nullable and no null value has been provided, no default value has been provided or because there is a non optional argument after this one.', $representative, $metadata->getName()));
         }
 
@@ -69,6 +73,8 @@ final class ArgumentResolver implements ArgumentResolverInterface
     {
         return [
             new ArgumentAttributeValueResolver(),
+            new RootArgumentResolver(),
+            new DefaultValueResolver(),
         ];
     }
 }
