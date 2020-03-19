@@ -29,7 +29,7 @@ abstract class AbstractResourceProvider implements ResourceProviderInterface
         if (null === $providerConfig) {
             throw new \RuntimeException(sprintf(
                 'No resource provider found for resource %s operation %s action %s',
-                $context->getClassName(),
+                $context->getResource()->getShortName(),
                 $context->getOperationName(),
                 $context->getAction()
             ));
