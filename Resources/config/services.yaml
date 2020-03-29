@@ -109,6 +109,10 @@ services:
         tags:
             - { name: overblog_graphql.resolver, alias: index }
 
+    Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\Relation:
+        tags:
+            - { name: overblog_graphql.resolver, alias: relation }
+
     Videni\Bundle\RapidGraphQLBundle\GraphQL\Resolver\View:
         tags:
             - { name: overblog_graphql.resolver, alias: view }

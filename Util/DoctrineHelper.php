@@ -43,6 +43,76 @@ class DoctrineHelper
     }
 
      /**
+     * Extracts the identifier values of the given entity.
+     *
+     * @param object $entity An entity object
+     *
+     * @return array
+     */
+    public function getEntityIdentifier($entity)
+    {
+        // check if we can use getId method to fast get the identifier
+        if (method_exists($entity, 'getId')) {
+            // This code doesn't support composite keys. See BAP-8835
+            return ['id' => $entity->getId()];
+        }
+
+        return $this
+            ->getEntityMetadata($entity)
+            ->getIdentifierValues($entity);
+    }
+
+     /**
+     * Extracts the single identifier value of the given entity.
+     *
+     * @param object $entity         An entity object
+     * @param bool   $throwException Whether to throw exception in case the entity has several identifier fields
+     *
+     * @return mixed|null
+     *
+     * @throws \RuntimeException
+     */
+    public function getSingleEntityIdentifier($entity, $throwException = true)
+    {
+        $entityIdentifier = $this->getEntityIdentifier($entity);
+
+        $result = null;
+        if (count($entityIdentifier) > 1) {
+            if ($throwException) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Can\'t get single identifier for "%s" entity.',
+                        $this->getEntityClass($entity)
+                    )
+                );
+            }
+        } else {
+            $result = $entityIdentifier ? reset($entityIdentifier) : null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Gets an array of identifier field names for the given entity or class.
+     *
+     * @param object|string $entityOrClass  An entity object, entity class name or entity proxy class name
+     * @param bool          $throwException Whether to throw exception in case the entity is not manageable
+     *
+     * @return string[]
+     *
+     * @throws Exception\InvalidEntityException
+     */
+    public function getEntityIdentifierFieldNames($entityOrClass, $throwException = true)
+    {
+        $em = $this->getEntityMetadata($entityOrClass, $throwException);
+
+        return null !== $em
+            ? $em->getIdentifierFieldNames()
+            : [];
+    }
+
+     /**
      * Gets a real class name for an entity.
      *
      * @param object|string $entityOrClass An entity object, entity class name or entity proxy class name
@@ -61,6 +131,24 @@ class DoctrineHelper
         }
 
         return ClassUtils::getRealClass($entityOrClass);
+    }
+
+     /**
+     * Gets the ORM metadata descriptor for the given entity or class.
+     *
+     * @param object|string $entityOrClass  An entity object, entity class name or entity proxy class name
+     * @param bool          $throwException Whether to throw exception in case the entity is not manageable
+     *
+     * @return ClassMetadata|null
+     *
+     * @throws Exception\NotManageableEntityException if the EntityManager was not found and $throwException is TRUE
+     */
+    public function getEntityMetadata($entityOrClass, $throwException = true)
+    {
+        return $this->getEntityMetadataForClass(
+            $this->getEntityClass($entityOrClass),
+            $throwException
+        );
     }
 
      /**
